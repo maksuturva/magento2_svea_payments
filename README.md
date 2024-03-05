@@ -1,4 +1,4 @@
-# Svea Payments Finland | Payment Module for Adobe Commerce (Magento)
+# Payment Module for Adobe Commerce (Magento)
 
 Contributors: Svea Payments Oy and Svea Bank AB, filial i Finland  
 Tags: svea, payment gateway, finland  

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="bundle.summary">
+            <block class="Magento\Catalog\Block\Product\View" name="calculator.handler"  template="Svea_SveaPayment::calculator/pdp/calculator-handler-pdp.phtml" after="product.info">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Svea\SveaPayment\ViewModel\PartPaymentCalculator</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

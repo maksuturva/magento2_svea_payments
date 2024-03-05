@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="svea_payment_order_status_check" instance="Svea\SveaPayment\Cron\OrderStatusCheck" method="execute">
+            <config_path>svea_config/svea_payment/status_query_schedule</config_path>
+        </job>
+    </group>
+</config>

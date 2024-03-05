@@ -1,0 +1,820 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+
+    <!-- DEPENDENCY INJECTIONS -->
+
+    <type name="Svea\SveaPayment\Gateway\Request\RowDataBuilder">
+        <arguments>
+            <argument name="rowBuilders" xsi:type="array">
+                <item name="discount_row" xsi:type="object">Svea\SveaPayment\Gateway\Request\RowData\DiscountRowBuilder</item>
+                <item name="product_row" xsi:type="object">Svea\SveaPayment\Gateway\Request\RowData\ProductRowBuilder</item>
+                <item name="shipping_row" xsi:type="object">Svea\SveaPayment\Gateway\Request\RowData\ShippingRowBuilder</item>
+                <item name="handling_fee_row" xsi:type="object">Svea\SveaPayment\Gateway\Request\RowData\HandlingFeeRowBuilder</item>
+                <item name="gift_card_row" xsi:type="object">Svea\SveaPayment\Gateway\Request\RowData\GiftCardRowBuilder</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Quote\Total\HandlingFeeResolver">
+        <arguments>
+            <argument name="configProvider" xsi:type="object">Svea\SveaPayment\Model\Config\HandlingFee\ConfigProvider</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Config\HandlingFee\ConfigProvider">
+        <arguments>
+            <argument name="feesConfigPaths" xsi:type="array">
+                <item name="svea_collated_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_1_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_2_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_3_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_4_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_5_handling_fee</item>
+                <item name="svea_card_payment" xsi:type="string">payment/svea_card_payment/handling_fee</item>
+                <item name="svea_generic_payment" xsi:type="string">payment/svea_generic_payment/handling_fee</item>
+                <item name="svea_invoice_payment" xsi:type="string">payment/svea_invoice_payment/handling_fee</item>
+                <item name="svea_part_payment" xsi:type="string">payment/svea_part_payment/handling_fee</item>
+                <item name="svea_bank_payment" xsi:type="string">payment/svea_bank_payment/handling_fee</item>
+            </argument>
+            <argument name="defaultFeesConfigPaths" xsi:type="array">
+                <item name="svea_collated_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_1_default_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_2_default_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_3_default_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_4_default_handling_fee</item>
+                <item name="svea_collated_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_5_default_handling_fee</item>
+                <item name="svea_card_payment" xsi:type="string">payment/svea_card_payment/default_handling_fee</item>
+                <item name="svea_generic_payment" xsi:type="string">payment/svea_generic_payment/default_handling_fee</item>
+                <item name="svea_invoice_payment" xsi:type="string">payment/svea_invoice_payment/default_handling_fee</item>
+                <item name="svea_part_payment" xsi:type="string">payment/svea_part_payment/default_handling_fee</item>
+                <item name="svea_bank_payment" xsi:type="string">payment/svea_bank_payment/default_handling_fee</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Command\CaptureCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Shipment\DeliveryManagement">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Request\DeliveryInfo\MethodResolver">
+        <arguments>
+            <argument name="mappings" xsi:type="array">
+                <item name="dhl" xsi:type="string">DHLDP</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PAYMENT METHOD FACADE CONFIGURATION -->
+
+    <!--    Svea Payment Facade-->
+    <virtualType name="SveaPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--    Svea Card Payment Facade-->
+    <virtualType name="CardSveaPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_card_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CardSveaPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">CardSveaPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Collated Svea Payment Facade-->
+    <virtualType name="SveaCollatedPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_collated_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaCollatedPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaCollatedPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--    Svea Generic Payment Facade-->
+    <virtualType name="SveaGenericFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_generic_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaGenericValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaGenericValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Svea Invoice Payment Facade-->
+    <virtualType name="SveaInvoicePaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_invoice_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaInvoicePaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaInvoicePaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--    Svea Part Payment Facade-->
+    <virtualType name="SveaPartPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_part_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaPartPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaPartPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Base Svea Payment Facade-->
+    <virtualType name="SveaBankPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_bank_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaBankPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaBankPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Maksuturva Substitution Payment Facade -->
+    <virtualType name="SveaMaksuturvaSubstitutionFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Svea\SveaPayment\Model\Creditmemo\SveaMaksuturvaSubstitution::SVEA_MAKSUTURVA_SUBSTITUTION_PAYMENT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaMaksuturvaSubstitutionPaymentValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- COMMANDS INFRASTRUCTURE -->
+
+    <virtualType name="SveaCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">SveaInitializeCommand</item>
+                <item name="capture" xsi:type="string">Svea\SveaPayment\Gateway\Command\CaptureCommand</item>
+                <item name="refund" xsi:type="string">Svea\SveaPayment\Gateway\Command\RefundCommand</item>
+                <item name="svea_delivery" xsi:type="string">Svea\SveaPayment\Gateway\Command\DeliveryCommand</item>
+                <item name="svea_delivery_add" xsi:type="string">SveaDeliveryAddCommand</item>
+                <item name="svea_delivery_update" xsi:type="string">SveaDeliveryUpdateCommand</item>
+                <item name="svea_delivery_delete" xsi:type="string">SveaDeliveryDeleteCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPaymentTransferFactory" type="Svea\SveaPayment\Gateway\Http\TransferFactory">
+        <arguments>
+            <argument name="service" xsi:type="const">Svea\SveaPayment\Gateway\Config\Config::PAYMENT_SERVICE_URN</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryAddTransferFactory" type="Svea\SveaPayment\Gateway\Http\TransferFactory">
+        <arguments>
+            <argument name="service" xsi:type="const">Svea\SveaPayment\Gateway\Config\Config::PAYMENT_ADD_DELIVERYINFO_URN</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryUpdateTransferFactory" type="Svea\SveaPayment\Gateway\Http\TransferFactory">
+        <arguments>
+            <argument name="service" xsi:type="const">Svea\SveaPayment\Gateway\Config\Config::PAYMENT_UPDATE_DELIVERYINFO_URN</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryDeleteTransferFactory" type="Svea\SveaPayment\Gateway\Http\TransferFactory">
+        <arguments>
+            <argument name="service" xsi:type="const">Svea\SveaPayment\Gateway\Config\Config::PAYMENT_DELETE_DELIVERYINFO_URN</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CardSveaPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_card_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCollatedPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_collated_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaGenericConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_generic_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaInvoicePaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_invoice_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPartPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_part_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaBankPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_bank_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaMaksuturvaSubstitutionPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Svea\SveaPayment\Model\Creditmemo\SveaMaksuturvaSubstitution::SVEA_MAKSUTURVA_SUBSTITUTION_PAYMENT_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- SVEA COMMANDS  -->
+
+    <virtualType name="SveaInitializeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Svea\SveaPayment\Gateway\Request\PaymentInitializeRequestBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">SveaPaymentTransferFactory</argument>
+            <argument name="validator" xsi:type="object">Svea\SveaPayment\Gateway\Validator\ResponseValidator</argument>
+            <argument name="handler" xsi:type="object">SveaPaymentResponseHandlers</argument>
+            <argument name="client" xsi:type="object">Svea\SveaPayment\Gateway\Http\Client\PaymentClient</argument>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryAddCommand" type="Svea\SveaPayment\Gateway\Command\SveaCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">SveaDeliveryRequest</argument>
+            <argument name="transferFactory" xsi:type="object">SveaDeliveryAddTransferFactory</argument>
+            <argument name="validator" xsi:type="object">Svea\SveaPayment\Gateway\Validator\DeliveryResponseValidator</argument>
+            <argument name="client" xsi:type="object">Svea\SveaPayment\Gateway\Http\Client\SveaClient</argument>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryUpdateCommand" type="Svea\SveaPayment\Gateway\Command\SveaCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">SveaDeliveryRequest</argument>
+            <argument name="transferFactory" xsi:type="object">SveaDeliveryUpdateTransferFactory</argument>
+            <argument name="validator" xsi:type="object">Svea\SveaPayment\Gateway\Validator\DeliveryResponseValidator</argument>
+            <argument name="client" xsi:type="object">Svea\SveaPayment\Gateway\Http\Client\SveaClient</argument>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaDeliveryDeleteCommand" type="Svea\SveaPayment\Gateway\Command\SveaCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">SveaDeliveryRequest</argument>
+            <argument name="transferFactory" xsi:type="object">SveaDeliveryDeleteTransferFactory</argument>
+            <argument name="validator" xsi:type="object">Svea\SveaPayment\Gateway\Validator\DeliveryResponseValidator</argument>
+            <argument name="client" xsi:type="object">Svea\SveaPayment\Gateway\Http\Client\SveaClient</argument>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Gateway\Command\DeliveryCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Command\RefundCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Svea\SveaPayment\Gateway\Request\Refund\PaymentCancelDataBuilder</argument>
+            <argument name="handler" xsi:type="object">Svea\SveaPayment\Gateway\Response\Refund\PaymentCancelHandler</argument>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- SVEA REQUEST BUILDERS  -->
+
+    <type name="Svea\SveaPayment\Gateway\Request\PaymentInitializeRequestBuilder">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="address" xsi:type="string">Svea\SveaPayment\Gateway\Request\AddressDataBuilder</item>
+                <item name="customer" xsi:type="string">Svea\SveaPayment\Gateway\Request\CustomerDataBuilder</item>
+                <item name="order_data" xsi:type="string">Svea\SveaPayment\Gateway\Request\OrderDataBuilder</item>
+                <item name="payment_config" xsi:type="string">Svea\SveaPayment\Gateway\Request\PaymentConfigBuilder</item>
+                <item name="response_url" xsi:type="string">Svea\SveaPayment\Gateway\Request\ResponseUrlBuilder</item>
+                <item name="row_data" xsi:type="string">Svea\SveaPayment\Gateway\Request\RowDataBuilder</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="SveaDeliveryRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="delivery_info" xsi:type="string">Svea\SveaPayment\Gateway\Request\DeliveryInfo\DataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- VALUE HANDLERS INFRASTRUCTURE -->
+
+    <virtualType name="SveaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPaymentResponseHandlers"
+                 type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="redirectUrlHandler" xsi:type="string">Svea\SveaPayment\Gateway\Response\RedirectUrlHandler</item>
+                <item name="orderStateFlagsHandler" xsi:type="string">Svea\SveaPayment\Gateway\Response\OrderStateObjectFlags</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Card Payment -->
+
+    <virtualType name="CardSveaPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">CardSveaPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CardSveaPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CardSveaPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CardSveaPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">CardSveaPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CardSveaPaymentCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">CardSveaPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Collated Payment -->
+
+    <virtualType name="SveaCollatedPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaCollatedPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCollatedPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaCollatedPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCollatedPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaCollatedPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCollatedPaymentCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaCollatedPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Generic -->
+
+    <virtualType name="SveaGenericValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaGenericValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaGenericValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaGenericConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaGenericValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaGenericCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaGenericCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaGenericConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Invoice -->
+
+    <virtualType name="SveaInvoicePaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaInvoicePaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaInvoicePaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaInvoicePaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaInvoicePaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaInvoicePaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaInvoicePaymentCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaInvoicePaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Part Payment -->
+    <virtualType name="SveaPartPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaPartPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPartPaymentValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaPartPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPartPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaPartPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPartPaymentCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaPartPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Bank Payment -->
+    <virtualType name="SveaBankPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaBankPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaBankPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaBankPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaBankPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaBankPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaBankPaymentCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaBankPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Maksuturva Substitution -->
+
+    <virtualType name="SveaMaksuturvaSubstitutionPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaMaksuturvaSubstitutionConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaMaksuturvaSubstitutionConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaMaksuturvaSubstitutionPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- QUERY VALIDATORS -->
+
+    <type name="Svea\SveaPayment\Model\Order\Status\Query\QueryValidator">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="sellerId" xsi:type="object">Svea\SveaPayment\Model\Order\Validators\SellerIdValidator</item>
+                <item name="sameDate" xsi:type="object">Svea\SveaPayment\Model\Order\Status\Query\Validators\CreationDateValidator</item>
+                <item name="nextDays" xsi:type="object">Svea\SveaPayment\Model\Order\Status\Query\Validators\NextDaysValidator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- GATEWAY VALIDATORS -->
+
+    <virtualType name="RefundOrderValidator" type="Svea\SveaPayment\Gateway\Validator\OrderValidator">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="sellerId" xsi:type="object">Svea\SveaPayment\Model\Order\Validators\SellerIdValidator</item>
+                <item name="refundMethod" xsi:type="object">Svea\SveaPayment\Model\Order\Validators\RefundMethodValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Gateway\Command\RefundCommand">
+        <arguments>
+            <argument name="orderValidator" xsi:type="object">RefundOrderValidator</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="DeliveryOrderValidator" type="Svea\SveaPayment\Gateway\Validator\OrderValidator">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="sellerId" xsi:type="object">Svea\SveaPayment\Model\Order\Validators\SellerIdValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Gateway\Command\DeliveryCommand">
+        <arguments>
+            <argument name="orderValidator" xsi:type="object">DeliveryOrderValidator</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CaptureOrderValidator" type="Svea\SveaPayment\Gateway\Validator\OrderValidator">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="sellerId" xsi:type="object">Svea\SveaPayment\Model\Order\Validators\SellerIdValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Gateway\Command\CaptureCommand">
+        <arguments>
+            <argument name="orderValidator" xsi:type="object">CaptureOrderValidator</argument>
+        </arguments>
+    </type>
+
+    <!-- LOGGER DEFINITIONS -->
+
+    <virtualType name="SveaLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">Svea\SveaPayment\Logger\Handlers\Debug</item>
+                <item name="error" xsi:type="object">errorHandler</item>
+                <item name="info" xsi:type="object">auditLogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Gateway\Http\Client\SveaClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Controller\Index\Success">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Response\RedirectUrlHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Cron\OrderStatusCheck">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Controller\Index\Cancel">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Command\SveaCommand">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Order\Cancellation">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Order\Status\Query">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Request\DeliveryInfo\MethodResolver">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Request\DeliveryInfo\DataBuilder">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Order\Status\Query\QueryProcessor">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Gateway\Response\Payment\SuccessHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Model\Quote\QuoteCancellation">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\ViewModel\PartPaymentCalculator">
+        <arguments>
+            <argument name="logger" xsi:type="object">SveaLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- LOGGER VIRTUAL HANDLERS -->
+
+    <virtualType name="errorHandler" type="Svea\SveaPayment\Logger\Handlers\Generic">
+        <arguments>
+            <argument name="fileName" xsi:type="string">var/log/svea_payment_error.log</argument>
+            <argument name="loggerType" xsi:type="const">Monolog\Logger::ERROR</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="auditLogHandler" type="Svea\SveaPayment\Logger\Handlers\Generic">
+        <arguments>
+            <argument name="fileName" xsi:type="string">var/log/svea_payment_audit.log</argument>
+            <argument name="loggerType" xsi:type="const">Monolog\Logger::INFO</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Svea\SveaPayment\Logger\Handlers\Generic">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Logger\Handlers\Debug">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+
+    <!-- PART PAYMENT CALCULATOR MODIFIERS-->
+
+    <type name="Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\ModifierPool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="data-price" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataPrice</item>
+                <item name="data-showprice" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataShowPrice</item>
+                <item name="data-seller-id" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataSellerId</item>
+                <item name="data-host" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataHost</item>
+                <item name="data-locale" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataLocale</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PLUGINS -->
+    <type name="Magento\Framework\Logger\Monolog">
+        <plugin name="svea_payment_monolog_plugin" type="Svea\SveaPayment\Plugin\Framework\Logger\MonologPlugin"/>
+    </type>
+
+    <!-- PROXIES -->
+    <type name="Svea\SveaPayment\Command\Console\MigrateSalesCommand">
+        <arguments>
+            <argument name="migrateOrders" xsi:type="object">Svea\SveaPayment\Model\ResourceModel\Migrate\MigrateSalesInterface\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="Svea\SveaPayment\Controller\Redirect\GetPaymentData">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- COMMANDS -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="svea:migrate:sales" xsi:type="object">Svea\SveaPayment\Command\Console\MigrateSalesCommand</item>
+                <item name="svea:migrate:config" xsi:type="object">Svea\SveaPayment\Command\Console\MigrateConfigCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PREFERENCES -->
+    <preference for="Svea\SveaPayment\Gateway\SubjectReaderInterface" type="Svea\SveaPayment\Gateway\SubjectReader"/>
+    <preference for="Svea\SveaPayment\Api\Checkout\PaymentMethodCollectorInterface" type="Svea\SveaPayment\Model\Checkout\PaymentMethodCollector"/>
+    <preference for="Magento\Sales\Model\Order\CreditmemoFactory" type="Svea\SveaPayment\Model\Order\CreditMemoFactory"/>
+    <preference for="Svea\SveaPayment\Api\HandlingFee\HandlingFeeApplierInterface" type="Svea\SveaPayment\Model\Quote\HandlingFeeApplier"/>
+    <preference for="Svea\SveaPayment\Api\HandlingFee\ConfigProviderInterface" type="Svea\SveaPayment\Model\Config\HandlingFee\ConfigProvider"/>
+    <preference for="Svea\SveaPayment\Api\Delivery\MethodResolverInterface" type="Svea\SveaPayment\Gateway\Request\DeliveryInfo\MethodResolver"/>
+    <preference for="Magento\Payment\Gateway\Data\Order\OrderAdapter" type="Svea\SveaPayment\Gateway\Data\Order\OrderAdapter"/>
+    <preference for="Svea\SveaPayment\Model\ResourceModel\Migrate\MigrateSalesInterface" type="Svea\SveaPayment\Model\ResourceModel\Migrate\MigrateSales"/>
+    <preference for="Svea\SveaPayment\Model\ResourceModel\Migrate\MigrateConfigInterface" type="Svea\SveaPayment\Model\ResourceModel\Migrate\MigrateConfig"/>
+    <preference for="Svea\SveaPayment\Api\PartPaymentCalculator\ModifierInterface" type="Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\ModifierPool"/>
+    <preference for="Svea\SveaPayment\Api\PartPaymentCalculator\CalculatorProviderInterface" type="Svea\SveaPayment\Model\PartPaymentCalculator\CalculatorProvider"/>
+</config>

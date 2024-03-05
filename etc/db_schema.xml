@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order_payment">
+        <column xsi:type="varchar" name="svea_payment_id" length="255" nullable="true" comment="Svea Payment Id"/>
+        <column xsi:type="varchar" name="svea_seller_id" length="255" nullable="true" comment="Svea Seller Id"/>
+    </table>
+    <table name="sales_order">
+        <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>
+        <column xsi:type="decimal" name="svea_base_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee"/>
+        <column xsi:type="decimal" name="svea_refunded_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Refunded Handling Fee"/>
+        <column xsi:type="timestamp" name="svea_last_status_query" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Svea Last Status Query"/>
+    </table>
+    <table name="quote">
+        <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>
+        <column xsi:type="decimal" name="svea_base_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee"/>
+    </table>
+    <table name="quote_address">
+        <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>
+        <column xsi:type="decimal" name="svea_base_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee"/>
+    </table>
+</schema>

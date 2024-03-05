@@ -1,0 +1,20 @@
+.svea-payment-methods .sub-method-title {
+    width: 100%;
+    clear: both;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-top: 0.5rem;
+    padding-right: 0;
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.2em;
+    border-bottom: 1px solid #eee;
+}
+
+#payment_form_svea_collated_payment .svea-payment-methods .payment-method .radio-active {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid #00aece;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 40%);
+}
+
+

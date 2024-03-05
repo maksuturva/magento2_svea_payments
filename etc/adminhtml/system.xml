@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="svea" translate="label" sortOrder="500">
+            <label>Svea Payments</label>
+        </tab>
+        <section id="svea_config" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Svea Payments Configuration</label>
+            <tab>svea</tab>
+            <resource>Svea_SveaPayment::system_config</resource>
+            <group id="svea_payment_migration" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\GroupFilter</frontend_model>
+                <label>Svea Migration</label>
+                <attribute type="expanded">1</attribute>
+                <field id="migration" type="text" translate="label button_label" sortOrder="40" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\MigrateConfigurationButton</frontend_model>
+                    <button_label>Start</button_label>
+                    <label>Migrate configuration</label>
+                    <comment><![CDATA[Only available if you upgraded from old module.<br \><p style="color: #f00; font-weight: bold">Doing this will clear current Svea module configuration!</p>]]></comment>
+                </field>
+            </group>
+            <group id="svea_payment" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Svea Payments Configuration</label>
+                <attribute type="expanded">1</attribute>
+                <field id="sellerid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Seller ID</label>
+                    <validate>required-entry</validate>
+                    <comment><![CDATA[8 or more characters. See <a target="_blank" href="http://docs.sveapayments.fi/testing/personal-test-credentials/">Personal test credentials</a> for further information on how to test Svea Payments integration.]]></comment>
+                </field>
+                <field id="secretkey" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Secret Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <validate>required-entry</validate>
+                    <comment>40 or more characters.</comment>
+                </field>
+                <field id="keyversion" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Key Version</label>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="commurl" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Svea Payments Endpoint</label>
+                    <source_model>Svea\SveaPayment\Model\Source\CommunicationEndpoint</source_model>
+                    <tooltip><![CDATA[
+                        Production: https://www.maksuturva.fi/<br/>
+                        Test: https://test1.maksuturva.fi/<br/>
+                         ]]></tooltip>
+                </field>
+                <field id="cron_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Scheduled payment status check</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment><![CDATA[<b>You should always ask Svea to enable callbacks.</b> That is,Svea will confirm the payments using server to server notifications. This setting can be disabled as soon as Svea has enabled callbacks.]]></comment>
+                    <tooltip>If payment method can't verify payment immediately or customer fails to return to webshop with payment data, this option enables cronjob to query status of orders pending payment. The status check is scheduled to run every 30 minutes.</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="status_query_schedule" translate="label" type="label" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Status Check Schedule</label>
+                    <frontend_model>Svea\SveaPayment\Model\Source\StatusQuerySchedule</frontend_model>
+                    <depends>
+                        <field id="cron_active">1</field>
+                    </depends>
+                </field>
+                <field id="manual_query_check_short" translate="label button_label" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Manual payment status check</label>
+                    <button_label>Check orders created in past 1 hour</button_label>
+                    <comment>This can be clicked once per minute</comment>
+                    <attribute type="time_period">-1 hour</attribute>
+                    <attribute type="query_type">manual_query_check_short</attribute>
+                    <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\OrderStatusQueryButton</frontend_model>
+                </field>
+                <field id="manual_query_check_long" translate="label button_label" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Manual payment status check</label>
+                    <button_label>Check orders created in past 1 week</button_label>
+                    <comment>This can be clicked once per 30 minutes</comment>
+                    <attribute type="time_period">-1 week</attribute>
+                    <attribute type="query_type">manual_query_check_long</attribute>
+                    <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\OrderStatusQueryButton</frontend_model>
+                </field>
+                <field id="delivery_mode" translate="label" type="select" sortOrder="70" showInDefault="1">
+                    <label>Delivery mode</label>
+                    <source_model>Svea\SveaPayment\Model\System\Config\Source\DeliveryMode</source_model>
+                    <comment><![CDATA[
+                        Disabled: Delivery information is not sent to Svea Payments.<br/><br/>
+                        Real: Track information set on Shipments are sent to Svea Payments as delivery methods
+                              (carrier code => pkg_deliverymethodid, track number => pkg_adddeliveryinfo).<br/><br/>
+                        Custom: Delivery method specified in "Custom delivery method" setting is sent to Svea Payments as delivery method.<br/><br/>
+                        Delivery information is sent automatically on shipment creation, shipment track addition and shipment track removal when enabled.
+                    ]]></comment>
+                </field>
+                <field id="delivery_custom_method" translate="label" type="select" sortOrder="80" showInDefault="1">
+                    <label>Custom delivery method</label>
+                    <source_model>Svea\SveaPayment\Model\System\Config\Source\CustomDeliveryMethod</source_model>
+                    <depends>
+                        <field id="delivery_mode">2</field>
+                    </depends>
+                </field>
+                <field id="delivery_payment_methods" translate="label" type="select" sortOrder="90" showInDefault="1">
+                    <label>Payment Methods for which Delivery info sent to Svea</label>
+                    <comment><![CDATA[All: Delivery info is sent to Svea in case of all Svea payment methods.<br/><br/>
+                                Specific: Delivery info is sent to Svea in case of specific Svea payment method entered below.<br/><br/>
+                                When enabled, shipment tracking codes or shipment notices are sent to Svea. In case
+                                of shipment tracking codes, Svea tracks the shipments which then affects for
+                                example invoicing, refunds and settlements.]]></comment>
+                    <options>
+                        <option label="All">0</option>
+                        <option label="Specific">1</option>
+                    </options>
+                    <depends>
+                        <field id="delivery_mode" separator="," negative="1">0</field>
+                    </depends>
+                </field>
+                <field id="delivery_payment_methods_specific" translate="label" type="multiselect" sortOrder="100" showInDefault="1">
+                    <label>Specific Payment Methods for which Delivery Info is sent to Svea</label>
+                    <comment>Specific Payment Methods for which Delivery Info is sent to Svea.
+                        When enabled, shipment tracking codes or shipment notices are sent to Svea.
+                        In case of shipment tracking codes, Svea tracks the shipments which then affects for example invoicing, refunds and settlements.
+                    </comment>
+                    <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                    <depends>
+                        <field id="delivery_mode" separator="," negative="1">0</field>
+                        <field id="delivery_payment_methods">1</field>
+                    </depends>
+                </field>
+                <field id="delayed_capture" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Payment Methods supporting Delayed Capture</label>
+                    <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                    <comment>When using Svea payment methods supporting delayed capture(ie.shipment notices), those methods can be specified here.
+                        These methods must be verified together with Svea Payments.
+                    </comment>
+                </field>
+                <field id="order_status" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Default: Pending.</comment>
+                </field>
+                <field id="paid_order_status" translate="label" type="select" sortOrder="130" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Paid Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Default: Processing.</comment>
+                </field>
+                <field id="restore_shopping_cart" translate="label" type="select" sortOrder="140" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Restore Shopping Cart on Cancel/Error</label>
+                    <source_model>Svea\SveaPayment\Model\Source\RestoreShoppingCart</source_model>
+                    <comment>Restore Shopping Cart in case of cancel or error return from Svea. Default: On Both.</comment>
+                </field>
+                <field id="can_cancel_settled" translate="label" type="select" sortOrder="150" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable refunds after settlement</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable refunds to orders or payments that Svea has already settled to webstore.
+                        When enabled, these will be then attempted if the normal refund fails.
+                        And if the refund after settlement succeeds, directions on how to pay back the refund amount the Svea are displayed.
+                        These include for example target bank account (IBAN), reference number and money amount. Default: No.
+                    </comment>
+                </field>
+            </group>
+        </section>
+        <section id="svea_part_payment_calculator" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Svea Part Payment Calculator</label>
+            <tab>svea</tab>
+            <resource>Svea_SveaPayment::system_config</resource>
+            <include path="Svea_SveaPayment::system/svea_part_payment_calculator.xml"/>
+        </section>
+        <section id="payment">
+            <group id="svea_payments" translate="label" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Svea Payments</label>
+                <fieldset_css>complex svea-top-section svea-other-header</fieldset_css>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+                <attribute type="displayIn">recommended_solutions</attribute>
+                <include path="Svea_SveaPayment::system/svea_collated_payment.xml"/>
+                <include path="Svea_SveaPayment::system/svea_separate_payment_methods.xml"/>
+                <include path="Svea_SveaPayment::system/svea_payment.xml"/>
+            </group>
+        </section>
+    </system>
+</config>

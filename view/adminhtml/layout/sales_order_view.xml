@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order_totals">
+            <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\HandlingFee" name="svea_handling_fee"/>
+        </referenceContainer>
+        <referenceBlock name="sales_order_edit">
+            <block class="Svea\SveaPayment\Block\Adminhtml\Order\View\Buttons" name="custom_edit_buttons"/>
+        </referenceBlock>
+        <referenceBlock name="order_tab_info">
+            <action method="setTemplate">
+                <argument name="template" translate="true" xsi:type="string">Svea_SveaPayment::order/view/tab/info.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

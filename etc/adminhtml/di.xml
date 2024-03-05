@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Svea\SveaPayment\Block\Info">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item xsi:type="string" name="is_secure_mode">0</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PLUGINS -->
+    <type name="Magento\Sales\Model\Order\Payment\Info">
+        <plugin name="svea_payment_sales_payment_info_plugin" type="Svea\SveaPayment\Plugin\Sales\Model\Order\Payment\InfoPlugin"/>
+    </type>
+
+    <!-- SCRIPT VALIDATORS -->
+    <type name="Svea\SveaPayment\Model\PartPaymentCalculator\ScriptValidator\Validator">
+        <arguments>
+            <argument name="request" xsi:type="object">Magento\Framework\App\Request\Http</argument>
+            <argument name="validators" xsi:type="array">
+                <item name="opening" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptValidator\Validators\OpeningTag</item>
+                <item name="closing" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptValidator\Validators\ClosingTag</item>
+                <item name="attributes" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptValidator\Validators\Attributes</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PREFERENCES -->
+
+    <preference for="Magento\Sales\Block\Adminhtml\Order\View\Tab\Info"
+                type="Svea\SveaPayment\Block\Adminhtml\Order\View\Tab\Info"
+    />
+</config>

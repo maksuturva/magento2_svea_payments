@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="svea_payment" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>Redirect to Svea’s Payment Method Selection Page</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/svea_payment/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Title</label>
+            <config_path>payment/svea_payment/title</config_path>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/svea_payment/sort_order</config_path>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1">
+            <label>Payment From Applicable Countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <comment>Based on the delivery address given by the buyer.</comment>
+            <config_path>payment/svea_payment/allowspecific</config_path>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1">
+            <label>Payment From Specific Countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <config_path>payment/svea_payment/specificcountry</config_path>
+            <depends>
+                <field id="allowspecific">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

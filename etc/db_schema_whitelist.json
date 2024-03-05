@@ -1,0 +1,27 @@
+{
+    "sales_order_payment": {
+        "column": {
+            "svea_payment_id": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "svea_handling_fee": true,
+            "svea_base_handling_fee": true,
+            "svea_refunded_handling_fee": true,
+            "svea_last_status_query": true
+        }
+    },
+    "quote": {
+        "column": {
+            "svea_handling_fee": true,
+            "svea_base_handling_fee": true
+        }
+    },
+    "quote_address": {
+        "column": {
+            "svea_handling_fee": true,
+            "svea_base_handling_fee": true
+        }
+    }
+}

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <svea_config>
+            <svea_payment>
+                <order_status>pending</order_status>
+                <paid_order_status>processing</paid_order_status>
+                <commurl>https://test1.maksuturva.fi/</commurl>
+                <secretkey backend_model="Magento\Config\Model\Config\Backend\Encrypted">11223344556677889900</secretkey>
+                <keyversion>001</keyversion>
+                <restore_shopping_cart>both</restore_shopping_cart>
+                <can_cancel_settled>0</can_cancel_settled>
+            </svea_payment>
+        </svea_config>
+        <svea_part_payment_calculator>
+            <calculator_config>
+                <enabled>0</enabled>
+                <placement>checkout_cart_index,checkout_index_index,catalog_product_view</placement>
+                <purchase_price_visibility>1</purchase_price_visibility>
+            </calculator_config>
+        </svea_part_payment_calculator>
+        <payment>
+            <svea_collated_payment>
+                <active>0</active>
+                <title>Svea Collated Payment</title>
+                <model>SveaCollatedPaymentFacade</model>
+                <order_status>pending</order_status>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <payment_method_subgroup_3_title>Pay Later</payment_method_subgroup_3_title>
+                <payment_method_subgroup_3_method_filter>FI70,FI71,FI72,FIIN,FIPP,FIBI</payment_method_subgroup_3_method_filter>
+                <payment_method_subgroup_2_title>Pay now with mobile payment or card</payment_method_subgroup_2_title>
+                <payment_method_subgroup_2_method_filter>FI50,FI51,FI52,FI53,FI54,PIVO,SIIR</payment_method_subgroup_2_method_filter>
+                <payment_method_subgroup_1_title>Pay now with online banking</payment_method_subgroup_1_title>
+                <payment_method_subgroup_1_method_filter>FI01,FI02,FI03,FI04,FI05,FI06,FI07,FI08,FI09,FI10,FI11,FI12,FI13,FI14,FI15</payment_method_subgroup_1_method_filter>
+            </svea_collated_payment>
+            <svea_part_payment>
+                <active>0</active>
+                <model>SveaPartPaymentFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Part Payment</title>
+                <method_filter>FI71,FIPP</method_filter>
+                <preselect_form_type>1</preselect_form_type>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_part_payment>
+            <svea_invoice_payment>
+                <active>0</active>
+                <model>SveaInvoicePaymentFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Invoice</title>
+                <method_filter>FI70,FI72,FIIN,FIBI</method_filter>
+                <preselect_form_type>1</preselect_form_type>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_invoice_payment>
+            <svea_card_payment>
+                <active>0</active>
+                <model>CardSveaPaymentFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Card and Mobile Payments</title>
+                <method_filter>FI50,FI51,FI52,FI53,FI54,PIVO,SIIR</method_filter>
+                <preselect_form_type>1</preselect_form_type>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_card_payment>
+            <svea_bank_payment>
+                <active>0</active>
+                <model>SveaBankPaymentFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Bank Payment</title>
+                <method_filter>FI01,FI02,FI03,FI04,FI05,FI06,FI07,FI08,FI09,FI10,FI11,FI12,FI13,FI14,FI15</method_filter>
+                <preselect_form_type>1</preselect_form_type>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_bank_payment>
+            <svea_generic_payment>
+                <active>0</active>
+                <debug>1</debug>
+                <model>SveaGenericFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Payments</title>
+                <method_filter>FI71,FIPP,FI70,FIIN,FI72,FIBI,FI50,FI51,FI52,FI53,FI54,PIVO,SIIR,FI01,FI02,FI03,FI04,FI05,FI06,FI07,FI08,FI09,FI10,FI11,FI12,FI13,FI14,FI15</method_filter>
+                <preselect_form_type>1</preselect_form_type>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_generic_payment>
+            <svea_payment>
+                <active>0</active>
+                <model>SveaPaymentFacade</model>
+                <title>Svea Payments</title>
+                <preselect_form_type>-1</preselect_form_type>
+                <is_preselect_required>0</is_preselect_required>
+                <order_status>pending</order_status>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+            </svea_payment>
+            <svea_maksuturva_substitution_payment>
+                <model>SveaMaksuturvaSubstitutionFacade</model>
+                <order_status>pending</order_status>
+                <title>Svea Maksuturva Substitution</title>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <is_gateway>1</is_gateway>
+            </svea_maksuturva_substitution_payment>
+        </payment>
+    </default>
+</config>

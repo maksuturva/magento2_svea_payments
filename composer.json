@@ -1,0 +1,19 @@
+{
+  "name": "svea/module-payment",
+  "description": "Base payment module for Svea Maksuturva payments.",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "type": "magento2-module",
+  "version": "2.6.9",
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "files": [ "registration.php" ],
+    "psr-4": {
+      "Svea\\SveaPayment\\": ""
+    }
+  }
+}

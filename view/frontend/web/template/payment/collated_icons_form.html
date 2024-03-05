@@ -1,0 +1,79 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+
+        <form data-bind="attr: {id: 'svea_' + getCode() +'-form'}, data-role: 'svea_' + getCode() + '-form'" class="form form-purchase-order" >
+            <div class="svea-payment-methods" data-bind="attr: {id: 'payment_form_'+ getCode()}">
+
+
+                <div class="svea-payment-methods" data-bind="foreach: {data: allMethods, as: 'smethod'} ">
+                    <div class="sub-method-title" data-bind="text: smethod.title"><hr></div>
+                        <!-- ko foreach: smethod.methods -->
+                        <div class="payment-method">
+                            <input class="payment-method-radio"
+                                   type="radio"
+                                   data-bind="
+                                    attr: { id: identifier, name: identifier },
+                                    css: {'radio-active': (code == $parents[1].selectedMethod()) },
+                                    value: code,
+                                    event:{ click: $parents[1].selectMethod.bind($parents[1], $parent) }"
+                                   tabindex="0"
+                                   data-validate="{required:true}">
+                            <label class="payment-method-label"
+                                   data-bind="attr: { for: identifier },
+                                              css: {'radio-active': (code == $parents[1].selectedMethod()) }
+                                            ">
+                                <img data-bind="attr: { src: imageurl, alt: displayname } "/>
+                            </label>
+                        </div>
+                        <!-- /ko -->
+                </div>
+            </div>
+        </form>
+
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+
+            <div class="svea-method-terms">
+                <!-- ko if: getTermsUrl() -->
+                <a data-bind="attr: { href: getTermsUrl() }" target="_blank">
+                    <span data-bind="text: getTermsText()"></span>
+                </a>
+                <!-- /ko -->
+            </div>
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {'title': $t('Place Order')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isOrderButtonActive()}
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

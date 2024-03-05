@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="svea_payment_config_provider" xsi:type="object">SveaConfigProvider</item>
+                <item name="svea_card_payment_config_provider" xsi:type="object">CardSveaPaymentConfigProvider</item>
+                <item name="svea_collated_payment_config_provider" xsi:type="object">SveaCollatedPaymentConfigProvider</item>
+                <item name="svea_generic_payment_config_provider" xsi:type="object">SveaGenericConfigProvider</item>
+                <item name="svea_invoice_payment_config_provider" xsi:type="object">SveaInvoicePaymentConfigProvider</item>
+                <item name="svea_part_payment_config_provider" xsi:type="object">SveaPartPaymentConfigProvider</item>
+                <item name="svea_bank_payment_config_provider" xsi:type="object">SveaBankPaymentConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Svea Config Providers -->
+    <virtualType name="SveaConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CardSveaPaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_card_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaCollatedPaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Collated\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_collated_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaGenericConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_generic_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaInvoicePaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_invoice_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPartPaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_part_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaBankPaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_bank_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- PROXIES -->
+    <type name="Svea\SveaPayment\Model\PartPaymentCalculator\CalculatorProvider">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>

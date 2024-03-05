@@ -1,0 +1,23 @@
+<?php
+
+use Magento\Backend\Block\Template;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ */
+?>
+<br>
+<div class="admin__page-section-item-title">
+    <span class="title"><?= $escaper->escapeHtml(\__('IBAN Information')) ?></span>
+    <div>
+        <label for="svea_iban"><?= $escaper->escapeHtml(\__('Buyer Refund IBAN')) ?></label>
+        <input type="text"
+               class="input-text admin__control-text iban-input"
+               name="creditmemo[svea_iban]"
+               id="svea_iban"
+               placeholder="FI55 6666 7777 8888 90"
+               value=""/>
+    </div>
+</div>

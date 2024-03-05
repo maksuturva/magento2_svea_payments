@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="sidebar" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="summary" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="totals" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="svea_handling_fee" xsi:type="array">
+                                                            <item name="component"  xsi:type="string">Svea_SveaPayment/js/view/checkout/summary/handling</item>
+                                                            <item name="sortOrder" xsi:type="string">20</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="template" xsi:type="string">Svea_SveaPayment/checkout/summary/handling</item>
+                                                                <item name="title" xsi:type="string" translate="true">Invoicing Fee</item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                                <item name="svea_btn_trigger" xsi:type="array">
+                                                    <item name="component"  xsi:type="string">Svea_SveaPayment/js/view/checkout/calculator-btn-handler</item>
+                                                    <item name="sortOrder" xsi:type="string">20</item>
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="template" xsi:type="string">Svea_SveaPayment/checkout/calculator-btn</item>
+                                                        <item name="title" xsi:type="string" translate="true">TEST Fee</item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="svea_payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea_payment</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea_card_payment_payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/card-svea-payments</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_card_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea_collated_payment-payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea-collated-payments</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_collated_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea_generic_payment-payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/generic-svea-payments</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_generic_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea_invoice_payment_payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/invoice-svea-payments</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_invoice_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea_part_payment-payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea-part-payment</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_part_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="svea-bank-payment-payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea-bank-payments</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="svea_bank_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+
+                                                        </item>
+                                                        <item name="svea_btn_trigger_test" xsi:type="array">
+                                                            <item name="component"  xsi:type="string">Svea_SveaPayment/js/view/checkout/calculator-btn-handler</item>
+                                                            <item name="sortOrder" xsi:type="string">20</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="template" xsi:type="string">Svea_SveaPayment/checkout/calculator-btn</item>
+                                                                <item name="title" xsi:type="string" translate="true">TEST Fee</item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+        <referenceContainer name="content">
+            <block name="calculator.handler"  template="Svea_SveaPayment::calculator/calculator-handler.phtml" after="checkout.cart.methods.bottom">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Svea\SveaPayment\ViewModel\PartPaymentCalculator</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

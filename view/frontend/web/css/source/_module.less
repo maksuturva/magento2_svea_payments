@@ -1,0 +1,145 @@
+/**
+ * Copyright © Vaimo Group. All rights reserved.
+ * See LICENSE_VAIMO.txt for license details.
+ */
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+
+    .column.main {
+
+        .calculator-holder {
+            display: none;
+
+            .calc-btn {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px 0;
+                padding: 14px 17px;
+                font-size: 1.8rem;
+                line-height: 2.2rem;
+
+                .svea-img-holder {
+                    margin: 0 0 -10px 10px;
+                    width: 60px;
+                }
+            }
+
+            .calculator-message-info {
+                display: none;
+
+                &.show-notification {
+                    display: block;
+                }
+
+                > span {
+                    // Information message style
+                    display: block;
+                    margin: 0 0 10px;
+                    padding: 12px 20px 12px 25px;
+                    text-align: center;
+                    font-size: 1.3rem;
+                    background: #fdf0d5;
+                    color: #6f4400;
+                }
+            }
+        }
+
+        .product-info-main,
+        .bundle-options-container {
+            .calculator-holder {
+                width: 100%;
+
+                .action.calc-btn {
+                    width: 100%;
+                }
+            }
+        }
+
+        .opc-block-summary .calculator-holder,
+        .cart-summary .calculator-holder {
+            display: inline-block;
+            width: 100%;
+
+            .calc-btn {
+                width: 100%;
+            }
+        }
+
+    }
+
+    .content {
+        .svea-script-holder {
+            display: none;
+        }
+    }
+
+    .modal-popup {
+        .content {
+            .svea-script-holder {
+                display: inline-block;
+            }
+        }
+    }
+
+    ._has-modal {
+        .modal-popup.svea-modal {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 800px;
+            left: 0;
+        }
+    }
+
+}
+
+//
+//  Desktop medium
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+
+    .column.main {
+        .product-info-main,
+        .bundle-options-container {
+            .calculator-holder {
+                .action.calc-btn,
+                .calculator-message-info {
+                    margin-right: 1%;
+                    width: 49%;
+                }
+
+                .svea-img-holder {
+                    margin: 0 0 -8px 10px;
+                    width: 85px;
+                }
+            }
+        }
+
+        .cart-summary {
+            .calculator-holder {
+                .svea-img-holder {
+                    margin: 0 0 -8px 10px;
+                    width: 70px;
+                }
+            }
+        }
+    }
+
+    .checkout-index-index {
+        &._has-modal {
+            .modal-popup.svea-modal {
+                .modal-inner-wrap {
+                    margin-left: auto;
+                    width: 75%;
+                    left: 0;
+                }
+            }
+        }
+    }
+
+}

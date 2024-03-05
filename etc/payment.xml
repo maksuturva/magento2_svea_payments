@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <method name="svea_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_card_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_collated_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_generic_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_invoice_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_part_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="svea_bank_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="calculator_config" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Calculator Configuration</label>
+        <field id="enabled" type="select" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Calculator</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="placement" type="multiselect" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Calculator Placement</label>
+            <source_model>Svea\SveaPayment\Model\Source\CalculatorPlacement</source_model>
+            <validate>required-entry</validate>
+            <comment>Where to display the calculator.</comment>
+        </field>
+        <field id="purchase_price_visibility" type="select" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Show Purchase Price In Widget</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>Show or hide the product/order purchase price information from the Svea calculator widget.</comment>
+        </field>
+        <field id="threshold_minimum" type="text" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Price Threshold Minimum</label>
+            <validate>validate-number</validate>
+            <comment>
+                <![CDATA[Enter a custom minimum price threshold only if you want to enable the calculator for more expensive purchases than the default minimum threshold returned by Svea.
+                <br><b>If empty, the minimum threshold is deduced from the payment plans returned by Svea.</b>]]>
+            </comment>
+        </field>
+        <field id="script" type="textarea" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Calculator Script</label>
+            <comment>
+                <![CDATA[First: Log in to <b>Svea Extranet / Materials</b> and create a script for Part Payment Calculator.
+                <br>Then paste the script here.
+                <br><b>It is recommended not to modify the original script.</b>]]>
+            </comment>
+            <backend_model>Svea\SveaPayment\Model\Config\Backend\Script</backend_model>
+        </field>
+    </group>
+</include>

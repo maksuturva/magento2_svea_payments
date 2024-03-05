@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="svea_separate_payment_methods" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>Separate Payment Methods</label>
+        <group id="svea_part_payment" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Part Payment</label>
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>payment/svea_part_payment/active</config_path>
+            </field>
+            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Title</label>
+                <comment>Default: Svea Part Payment</comment>
+                <config_path>payment/svea_part_payment/title</config_path>
+            </field>
+            <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sort Order</label>
+                <config_path>payment/svea_part_payment/sort_order</config_path>
+            </field>
+            <field id="preselect_form_type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visual Presentation</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\FormType</source_model>
+                <validate>required-entry</validate>
+                <config_path>payment/svea_part_payment/preselect_form_type</config_path>
+            </field>
+            <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1">
+                <label>Payment From Applicable Countries</label>
+                <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                <comment>Based on the delivery address given by the buyer.</comment>
+                <config_path>payment/svea_part_payment/allowspecific</config_path>
+            </field>
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1">
+                <label>Payment From Specific Countries</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <config_path>payment/svea_part_payment/specificcountry</config_path>
+                <depends>
+                    <field id="allowspecific">1</field>
+                </depends>
+            </field>
+            <field id="method_filter" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Payment Methods Filter</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <config_path>payment/svea_part_payment/method_filter</config_path>
+            </field>
+            <field id="default_handling_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Invoicing Fee</label>
+                <comment>
+                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
+                    Default: empty.
+                </comment>
+                <config_path>payment/svea_part_payment/default_handling_fee</config_path>
+            </field>
+            <field id="handling_fee" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoicing Fee</label>
+                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
+                <config_path>payment/svea_part_payment/handling_fee</config_path>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
+                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            </field>
+        </group>
+        <group id="svea_invoice_payment" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Invoice</label>
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>payment/svea_invoice_payment/active</config_path>
+            </field>
+            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Title</label>
+                <comment>Default: Svea Invoice</comment>
+                <config_path>payment/svea_invoice_payment/title</config_path>
+            </field>
+            <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sort Order</label>
+                <config_path>payment/svea_invoice_payment/sort_order</config_path>
+            </field>
+            <field id="preselect_form_type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visual Presentation</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\FormType</source_model>
+                <validate>required-entry</validate>
+                <config_path>payment/svea_invoice_payment/preselect_form_type</config_path>
+            </field>
+            <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1">
+                <label>Payment From Applicable Countries</label>
+                <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                <comment>Based on the delivery address given by the buyer.</comment>
+                <config_path>payment/svea_invoice_payment/allowspecific</config_path>
+            </field>
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1">
+                <label>Payment From Specific Countries</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <config_path>payment/svea_invoice_payment/specificcountry</config_path>
+                <depends>
+                    <field id="allowspecific">1</field>
+                </depends>
+            </field>
+            <field id="method_filter" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Payment Methods Filter</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <config_path>payment/svea_invoice_payment/method_filter</config_path>
+            </field>
+            <field id="default_handling_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Invoicing Fee</label>
+                <comment>
+                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
+                    Default: empty.
+                </comment>
+                <config_path>payment/svea_invoice_payment/default_handling_fee</config_path>
+            </field>
+            <field id="handling_fee" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoicing Fee</label>
+                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
+                <config_path>payment/svea_invoice_payment/handling_fee</config_path>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
+                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            </field>
+        </group>
+        <group id="svea_card_payment" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Mobile And Card Payments</label>
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>payment/svea_card_payment/active</config_path>
+            </field>
+            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Title</label>
+                <comment>Default: Svea Card and Mobile Payments</comment>
+                <config_path>payment/svea_card_payment/title</config_path>
+            </field>
+            <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sort Order</label>
+            </field>
+            <field id="preselect_form_type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visual Presentation</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\FormType</source_model>
+                <validate>required-entry</validate>
+                <config_path>payment/svea_card_payment/preselect_form_type</config_path>
+            </field>
+            <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1">
+                <label>Payment From Applicable Countries</label>
+                <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                <comment>Based on the delivery address given by the buyer.</comment>
+                <config_path>payment/svea_card_payment/allowspecific</config_path>
+            </field>
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1">
+                <label>Payment From Specific Countries</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <config_path>payment/svea_card_payment/specificcountry</config_path>
+                <depends>
+                    <field id="allowspecific">1</field>
+                </depends>
+            </field>
+            <field id="method_filter" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Payment Methods Filter</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <config_path>payment/svea_card_payment/method_filter</config_path>
+            </field>
+            <field id="default_handling_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Invoicing Fee</label>
+                <comment>
+                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
+                    Default: empty.
+                </comment>
+                <config_path>payment/svea_card_payment/default_handling_fee</config_path>
+            </field>
+            <field id="handling_fee" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoicing Fee</label>
+                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
+                <config_path>payment/svea_card_payment/handling_fee</config_path>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
+                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            </field>
+        </group>
+        <group id="svea_bank_payment" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Bank Payments</label>
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>payment/svea_bank_payment/active</config_path>
+            </field>
+            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Title</label>
+                <comment>Default: Svea Bank Payments</comment>
+                <config_path>payment/svea_bank_payment/title</config_path>
+            </field>
+            <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sort Order</label>
+                <config_path>payment/svea_bank_payment/sort_order</config_path>
+            </field>
+            <field id="preselect_form_type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visual Presentation</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\FormType</source_model>
+                <validate>required-entry</validate>
+                <config_path>payment/svea_bank_payment/preselect_form_type</config_path>
+            </field>
+            <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1">
+                <label>Payment From Applicable Countries</label>
+                <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                <comment>Based on the delivery address given by the buyer.</comment>
+                <config_path>payment/svea_bank_payment/allowspecific</config_path>
+            </field>
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1">
+                <label>Payment From Specific Countries</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <config_path>payment/svea_bank_payment/specificcountry</config_path>
+                <depends>
+                    <field id="allowspecific">1</field>
+                </depends>
+            </field>
+            <field id="method_filter" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Payment Methods Filter</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <config_path>payment/svea_bank_payment/method_filter</config_path>
+            </field>
+            <field id="default_handling_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Invoicing Fee</label>
+                <comment>
+                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
+                    Default: empty.
+                </comment>
+                <config_path>payment/svea_bank_payment/default_handling_fee</config_path>
+            </field>
+            <field id="handling_fee" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoicing Fee</label>
+                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
+                <config_path>payment/svea_bank_payment/handling_fee</config_path>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
+                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            </field>
+        </group>
+        <group id="svea_generic_payment" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Svea Generic</label>
+            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>payment/svea_generic_payment/active</config_path>
+            </field>
+            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Title</label>
+                <comment>Default: Svea Payments</comment>
+                <config_path>payment/svea_generic_payment/title</config_path>
+            </field>
+            <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sort Order</label>
+                <config_path>payment/svea_generic_payment/sort_order</config_path>
+            </field>
+            <field id="preselect_form_type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visual Presentation</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\FormType</source_model>
+                <validate>required-entry</validate>
+                <config_path>payment/svea_generic_payment/preselect_form_type</config_path>
+            </field>
+            <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1">
+                <label>Payment From Applicable Countries</label>
+                <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                <comment>Based on the delivery address given by the buyer.</comment>
+                <config_path>payment/svea_generic_payment/allowspecific</config_path>
+            </field>
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1">
+                <label>Payment From Specific Countries</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <config_path>payment/svea_generic_payment/specificcountry</config_path>
+                <depends>
+                    <field id="allowspecific">1</field>
+                </depends>
+            </field>
+            <field id="method_filter" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Payment Methods Filter</label>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <config_path>payment/svea_generic_payment/method_filter</config_path>
+            </field>
+            <field id="default_handling_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Invoicing Fee</label>
+                <comment>
+                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
+                    Default: empty.
+                </comment>
+                <config_path>payment/svea_generic_payment/default_handling_fee</config_path>
+            </field>
+            <field id="handling_fee" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoicing Fee</label>
+                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
+                <config_path>payment/svea_generic_payment/handling_fee</config_path>
+                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
+                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            </field>
+        </group>
+    </group>
+</include>

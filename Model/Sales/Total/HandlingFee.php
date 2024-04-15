@@ -10,6 +10,8 @@ class HandlingFee
     const BASE_CODE = 'svea_base_handling_fee';
     const REFUNDED_CODE = 'svea_refunded_handling_fee';
 
+    const TAX_AMOUNT_CODE = 'svea_handling_fee_tax_amount';
+
     /**
      * @param DataObject $model
      *
@@ -71,5 +73,26 @@ class HandlingFee
     public function setBaseValue(DataObject $model, float $value)
     {
         return $model->setData(self::BASE_CODE, $value);
+    }
+
+    /**
+     * @param DataObject $model
+     *
+     * @return float
+     */
+    public function getTaxAmount(DataObject $model): float
+    {
+        return $model->getData(self::TAX_AMOUNT_CODE) ?? 0;
+    }
+
+    /**
+     * @param DataObject $model
+     * @param float $value
+     *
+     * @return DataObject
+     */
+    public function setTaxAmount(DataObject $model, float $value): DataObject
+    {
+        return $model->setData(self::TAX_AMOUNT_CODE, $value);
     }
 }

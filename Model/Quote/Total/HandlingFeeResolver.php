@@ -39,6 +39,57 @@ class HandlingFeeResolver
         return $this->resolveConfiguredHandlingFee($storeId, $method, $methodCode, $methodGroup);
     }
 
+    public function calculateHandlingFeeTax(CartInterface $quote, float $feeAmount): float
+    {
+        $methodCode = $quote->getPayment()->getAdditionalInformation('svea_method_code');
+        $taxableMethods = [
+            'FI72'
+        ];
+
+        if (!$methodCode || !in_array($methodCode, $taxableMethods, true)) {
+            return 0;
+        }
+
+        $maxTaxRate = $this->getMaxTaxRateFromItems($quote);
+
+        if ($maxTaxRate === 0 || $feeAmount === 0) {
+            return 0;
+        }
+
+        return ($feeAmount / 100) * $maxTaxRate;
+    }
+
+    private function getMaxTaxRateFromItems(CartInterface $quote): float
+    {
+        $taxRates = [];
+        foreach ($quote->getAllItems() as $item) {
+            $taxPercent = $item->getTaxPercent();
+            if ($taxPercent === null) {
+                continue;
+            }
+
+            for ($i = 0; $i < $item->getQty(); $i++) {
+                $taxRates[$taxPercent] = ($taxRates[$taxPercent] ?? 0) + 1;
+            }
+        }
+
+        $maxTaxRate = 0;
+        $maxTaxRateCount = 0;
+
+        if (empty($taxRates)) {
+            return $maxTaxRate;
+        }
+
+        foreach ($taxRates as $taxRate => $count) {
+            if ($count > $maxTaxRateCount || ($maxTaxRateCount === $count && $taxRate > $maxTaxRate)) {
+                $maxTaxRate = $taxRate;
+                $maxTaxRateCount = $count;
+            }
+        }
+
+        return (float)$maxTaxRate;
+    }
+
     /**
      * @param int $storeId
      * @param string $method

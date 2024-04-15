@@ -3,6 +3,7 @@
     <section name="quote">
         <group name="totals">
             <item name="svea_handling_fee" instance="Svea\SveaPayment\Model\Quote\Total\HandlingFee" sort_order="100"/>
+            <item name="svea_handling_fee_tax_amount" instance="Svea\SveaPayment\Model\Quote\Total\HandlingFeeTax" sort_order="101"/>
         </group>
     </section>
     <section name="order_invoice">

@@ -10,19 +10,6 @@
             <label>Svea Payments Configuration</label>
             <tab>svea</tab>
             <resource>Svea_SveaPayment::system_config</resource>
-            <group id="svea_payment_migration" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
-                   showInStore="1">
-                <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\GroupFilter</frontend_model>
-                <label>Svea Migration</label>
-                <attribute type="expanded">1</attribute>
-                <field id="migration" type="text" translate="label button_label" sortOrder="40" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
-                    <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\MigrateConfigurationButton</frontend_model>
-                    <button_label>Start</button_label>
-                    <label>Migrate configuration</label>
-                    <comment><![CDATA[Only available if you upgraded from old module.<br \><p style="color: #f00; font-weight: bold">Doing this will clear current Svea module configuration!</p>]]></comment>
-                </field>
-            </group>
             <group id="svea_payment" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
                    showInStore="1">
                 <label>Svea Payments Configuration</label>

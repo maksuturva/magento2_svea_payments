@@ -48,6 +48,8 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
         $payment = $paymentDO->getPayment();
 
         $amount = $this->handlingFee->getValue($payment->getOrder());
+        $taxAmount = $this->handlingFee->getTaxAmount($payment->getOrder());
+        $taxPercent = $this->handlingFee->getTaxAmountPercentage($payment->getOrder());
         $row = [];
 
         if ($amount > 0) {
@@ -57,13 +59,14 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
                 self::QUANTITY => 1,
                 self::DELIVERY_DATE => \date('d.m.Y'),
                 self::PRICE_NET => $this->amountHandler->formatFloat($amount),
-                self::VAT => $this->amountHandler->formatFloat(0),
+                self::VAT => $this->amountHandler->formatFloat($taxPercent),
                 self::DISCOUNT_PERCENTAGE => $this->amountHandler->formatFloat(0),
                 self::TYPE => 3,
             ];
         }
 
         $sellerCosts += $amount;
+        $sellerCosts += $taxAmount;
 
         return [
             self::TOTAL_AMOUNT => $totalAmount,

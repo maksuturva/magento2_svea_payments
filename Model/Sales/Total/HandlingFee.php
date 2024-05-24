@@ -9,8 +9,9 @@ class HandlingFee
     const CODE = 'svea_handling_fee';
     const BASE_CODE = 'svea_base_handling_fee';
     const REFUNDED_CODE = 'svea_refunded_handling_fee';
-
-    const TAX_AMOUNT_CODE = 'svea_handling_fee_tax_amount';
+    const TAX_AMOUNT_CODE = 'svea_handling_fee_tax';
+    const TAX_AMOUNT_BASE_CODE = 'svea_base_handling_fee_tax';
+    const TAX_AMOUNT__PERCENTAGE_CODE = 'svea_handling_fee_tax_percentage';
 
     /**
      * @param DataObject $model
@@ -94,5 +95,25 @@ class HandlingFee
     public function setTaxAmount(DataObject $model, float $value): DataObject
     {
         return $model->setData(self::TAX_AMOUNT_CODE, $value);
+    }
+
+    public function setBaseTaxAmount(DataObject $model, float $value): DataObject
+    {
+        return $model->setData(self::TAX_AMOUNT_BASE_CODE, $value);
+    }
+
+    public function getBaseTaxAmount(DataObject $model): DataObject
+    {
+        return $model->getData(self::TAX_AMOUNT_BASE_CODE);
+    }
+
+    public function getTaxAmountPercentage(DataObject $model): float
+    {
+        return $model->getData(self::TAX_AMOUNT__PERCENTAGE_CODE) ?? 0;
+    }
+
+    public function setTaxAmountPercentage(DataObject $model, float $value): DataObject
+    {
+        return $model->setData(self::TAX_AMOUNT__PERCENTAGE_CODE, $value);
     }
 }

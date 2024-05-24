@@ -43,6 +43,7 @@ class HandlingFeeResolver
     {
         $methodCode = $quote->getPayment()->getAdditionalInformation('svea_method_code');
         $taxableMethods = [
+            'FI01',
             'FI72'
         ];
 
@@ -59,7 +60,7 @@ class HandlingFeeResolver
         return ($feeAmount / 100) * $maxTaxRate;
     }
 
-    private function getMaxTaxRateFromItems(CartInterface $quote): float
+    public function getMaxTaxRateFromItems(CartInterface $quote): float
     {
         $taxRates = [];
         foreach ($quote->getAllItems() as $item) {

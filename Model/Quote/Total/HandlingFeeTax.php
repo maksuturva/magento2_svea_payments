@@ -77,6 +77,10 @@ class HandlingFeeTax extends AbstractTotal
 
         $amount = $this->feeResolver->calculateHandlingFee($quote);
         $handlingFeeTax = $this->feeResolver->calculateHandlingFeeTax($quote, $amount);
+        $handlingFeeTaxRate = $this->feeResolver->getMaxTaxRateFromItems($quote);
+
+        $this->feeManager->setTaxAmountPercentage($quote, $handlingFeeTaxRate);
+        $this->feeManager->setTaxAmountPercentage($total, $handlingFeeTaxRate);
 
         $this->feeManager->setTaxAmount($quote, $handlingFeeTax);
         $this->feeManager->setTaxAmount($total, $handlingFeeTax);

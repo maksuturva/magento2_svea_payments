@@ -9,7 +9,7 @@
     <section name="order_invoice">
         <group name="totals">
             <item name="svea_handling_fee" instance="Svea\SveaPayment\Model\Invoice\Total\HandlingFee" sort_order="110"/>
-<!--            <item name="svea_handling_fee_tax_amount" instance="Svea\SveaPayment\Model\Invoice\Total\HandlingFeeTax" sort_order="111"/>-->
+            <item name="svea_handling_fee_tax_amount" instance="Svea\SveaPayment\Model\Invoice\Total\HandlingFeeTax" sort_order="111"/>
         </group>
     </section>
     <section name="order_creditmemo">

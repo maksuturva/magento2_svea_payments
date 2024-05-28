@@ -10,21 +10,24 @@
             "svea_base_handling_fee": true,
             "svea_refunded_handling_fee": true,
             "svea_last_status_query": true,
-            "svea_handling_fee_tax": true
+            "svea_handling_fee_tax": true,
+            "svea_base_handling_fee_tax": true
         }
     },
     "quote": {
         "column": {
             "svea_handling_fee": true,
             "svea_base_handling_fee": true,
-            "svea_handling_fee_tax": true
+            "svea_handling_fee_tax": true,
+            "svea_base_handling_fee_tax": true
         }
     },
     "quote_address": {
         "column": {
             "svea_handling_fee": true,
             "svea_base_handling_fee": true,
-            "svea_handling_fee_tax": true
+            "svea_handling_fee_tax": true,
+            "svea_base_handling_fee_tax": true
         }
     }
 }

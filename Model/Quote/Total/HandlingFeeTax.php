@@ -83,10 +83,13 @@ class HandlingFeeTax extends AbstractTotal
         $this->feeManager->setTaxAmountPercentage($total, $handlingFeeTaxRate);
 
         $this->feeManager->setTaxAmount($quote, $handlingFeeTax);
-        $this->feeManager->setTaxAmount($total, $handlingFeeTax);
+        $this->feeManager->setBaseTaxAmount($quote, $handlingFeeTax);
 
-        $total->addTotalAmount('svea_handling_fee_tax_amount', $this->feeManager->getTaxAmount($total));
-        $total->addBaseTotalAmount('svea_handling_fee_tax_amount', $this->feeManager->getTaxAmount($total));
+        $this->feeManager->setTaxAmount($total, $handlingFeeTax);
+        $this->feeManager->setBaseTaxAmount($total, $handlingFeeTax);
+
+        $total->addTotalAmount('svea_handling_fee_tax', $this->feeManager->getTaxAmount($total));
+        $total->addBaseTotalAmount('svea_base_handling_fee_tax', $this->feeManager->getTaxAmount($total));
 
         return $this;
     }

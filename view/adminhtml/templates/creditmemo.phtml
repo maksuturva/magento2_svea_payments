@@ -1,10 +1,12 @@
 <?php $order = $block->getOrder() ?>
 
-<td class="label"><?= /* @escapeNotVerified */ \__('Invoicing Fee') ?><div id="svea_handling_fee"></div></td>
-<td>
-    <input type="text"
-           name="creditmemo[svea_handling_fee]"
-           value="<?= (float)$order->getSveaHandlingFee() - (float)$order->getSveaRefundedHandlingFee() ?>"
-           class="input-text admin__control-text not-negative-amount"
-           id="svea_handling_fee" />
-</td>
+<tr>
+    <td class="label"><?= /* @escapeNotVerified */ \__('Invoicing Fee') ?><div id="svea_handling_fee"></div></td>
+    <td>
+        <input type="text"
+               name="creditmemo[svea_handling_fee]"
+               value="<?= (float)$order->getSveaHandlingFee() - (float)$order->getSveaRefundedHandlingFee() ?>"
+               class="input-text admin__control-text not-negative-amount"
+               id="svea_handling_fee" />
+    </td>
+</tr>

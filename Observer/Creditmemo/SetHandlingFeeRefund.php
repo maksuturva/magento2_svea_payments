@@ -29,5 +29,6 @@ class SetHandlingFeeRefund implements ObserverInterface
         $creditmemo = $observer->getEvent()->getCreditmemo();
         $order = $creditmemo->getOrder();
         $this->handlingFee->setRefundedValue($order, (float)$this->handlingFee->getBaseValue($creditmemo));
+        $this->handlingFee->setRefundedTaxValue($order, (float)$this->handlingFee->getBaseTaxAmount($creditmemo));
     }
 }

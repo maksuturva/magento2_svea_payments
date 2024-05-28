@@ -1,0 +1,12 @@
+<?php $order = $block->getOrder() ?>
+
+<tr>
+    <td class="label"><?= /* @escapeNotVerified */ \__('Invoicing Fee Tax') ?><div id="svea_handling_fee_tax"></div></td>
+    <td>
+        <input type="text"
+               name="creditmemo[svea_handling_fee_tax]"
+               value="<?= (float)$order->getSveaHandlingFeeTax() - (float)$order->getSveaRefundedHandlingFeeTax() ?>"
+               class="input-text admin__control-text not-negative-amount"
+               id="svea_handling_fee_tax" />
+    </td>
+</tr>

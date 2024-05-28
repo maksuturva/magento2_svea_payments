@@ -29,6 +29,9 @@ class CreditMemoFactory extends \Magento\Sales\Model\Order\CreditmemoFactory
         if (isset($data['svea_handling_fee'])) {
             $this->handlingFee->setBaseValue($creditmemo, (float)$data['svea_handling_fee']);
         }
+        if (isset($data['svea_handling_fee_tax'])) {
+            $this->handlingFee->setTaxBaseValue($creditmemo, (float)$data['svea_handling_fee_tax']);
+        }
         if (isset($data['svea_iban'])) {
             $creditmemo->setData('svea_iban', $data['svea_iban']);
         }

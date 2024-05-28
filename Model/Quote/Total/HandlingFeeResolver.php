@@ -69,22 +69,26 @@ class HandlingFeeResolver
                 continue;
             }
 
-            for ($i = 0; $i < $item->getQty(); $i++) {
-                $taxRates[$taxPercent] = ($taxRates[$taxPercent] ?? 0) + 1;
+            $totalValue = $item->getPrice() * $item->getQty();
+
+            if (!isset($taxRates[$taxPercent])) {
+                $taxRates[$taxPercent] = 0;
             }
+
+            $taxRates[$taxPercent] += $totalValue;
         }
 
         $maxTaxRate = 0;
-        $maxTaxRateCount = 0;
+        $maxTotalValue = 0;
 
         if (empty($taxRates)) {
             return $maxTaxRate;
         }
 
-        foreach ($taxRates as $taxRate => $count) {
-            if ($count > $maxTaxRateCount || ($maxTaxRateCount === $count && $taxRate > $maxTaxRate)) {
+        foreach ($taxRates as $taxRate => $totalValue) {
+            if ($totalValue > $maxTotalValue) {
+                $maxTotalValue = $totalValue;
                 $maxTaxRate = $taxRate;
-                $maxTaxRateCount = $count;
             }
         }
 

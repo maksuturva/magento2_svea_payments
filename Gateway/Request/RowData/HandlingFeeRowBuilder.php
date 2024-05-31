@@ -49,7 +49,8 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
 
         $amount = $this->handlingFee->getValue($payment->getOrder());
         $taxAmount = $this->handlingFee->getTaxAmount($payment->getOrder());
-        $taxPercent = $this->handlingFee->getTaxAmountPercentage($payment->getOrder());
+        $taxPercent = $taxAmount > 0 ? $this->handlingFee->getTaxAmountPercentage($payment->getOrder()) : 0;
+
         $row = [];
 
         if ($amount > 0) {

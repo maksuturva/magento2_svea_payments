@@ -46,8 +46,10 @@ class SavePaymentMethodToOrder implements \Magento\Framework\Event\ObserverInter
         $this->handlingFee->setTaxAmount($order, $handlingFeeTax);
         $this->handlingFee->setBaseTaxAmount($order, $handlingFeeTax);
 
-        $handlingFeeTaxPercentage = $this->handlingFee->getTaxAmountPercentage($quote);
-        $this->handlingFee->setTaxAmountPercentage($order, $handlingFeeTaxPercentage);
+        if ($handlingFeeTax > 0) {
+            $handlingFeeTaxPercentage = $this->handlingFee->getTaxAmountPercentage($quote);
+            $this->handlingFee->setTaxAmountPercentage($order, $handlingFeeTaxPercentage);
+        }
 
         return $this;
     }

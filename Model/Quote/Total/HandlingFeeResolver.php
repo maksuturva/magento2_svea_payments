@@ -43,8 +43,10 @@ class HandlingFeeResolver
     {
         $methodCode = $quote->getPayment()->getAdditionalInformation('svea_method_code');
         $taxableMethods = [
-            'FI01',
-            'FI72'
+            'FI70',
+            'FI72',
+            'FIIN',
+            'FIBI',
         ];
 
         if (!$methodCode || !in_array($methodCode, $taxableMethods, true)) {

@@ -20,7 +20,7 @@ interface CalculatorProviderInterface
      *
      * @return bool
      */
-    public function validatePrice(float $price): bool;
+    public function validatePrice(float $price, string $location): bool;
 
     /**
      * Validate if the calculator can be displayed. See Model/Source/CalculatorPlacement.php

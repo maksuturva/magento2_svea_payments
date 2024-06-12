@@ -99,7 +99,7 @@ define([
         // Check if product is available to use/show SVEA widget
         checkAvailabilityOfProduct: async function () {
             const dataHandler = this.state.totalPriceOfProduct() > 0 ? this.state.totalPriceOfProduct() : this.productPrice;
-            const URL = `${window.BASE_URL}${this.options.path}${dataHandler}`;
+            const URL = `${window.BASE_URL}${this.options.path}${dataHandler}/catalog_product_view`;
             const calcButtonSelector = '#svea-calc-btn';
             const calcMessageSelector = '#svea-calc-msg-info';
 

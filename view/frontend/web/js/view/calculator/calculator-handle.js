@@ -90,7 +90,7 @@ define([
         isCartTotalAboveThreshold: async function (cartData) {
             if (cartData !== undefined) {
                 const dataHandler = cartData.grand_total;
-                const URL = `${window.BASE_URL}${this.options.path}${dataHandler}`;
+                const URL = `${window.BASE_URL}${this.options.path}${dataHandler}/checkout_index_index`;
                 const calcButtonSelector = '#svea-calc-btn';
                 const calcMessageSelector = '#svea-calc-msg-info';
 

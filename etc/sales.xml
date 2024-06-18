@@ -3,16 +3,19 @@
     <section name="quote">
         <group name="totals">
             <item name="svea_handling_fee" instance="Svea\SveaPayment\Model\Quote\Total\HandlingFee" sort_order="100"/>
+            <item name="svea_handling_fee_tax_amount" instance="Svea\SveaPayment\Model\Quote\Total\HandlingFeeTax" sort_order="101"/>
         </group>
     </section>
     <section name="order_invoice">
         <group name="totals">
             <item name="svea_handling_fee" instance="Svea\SveaPayment\Model\Invoice\Total\HandlingFee" sort_order="110"/>
+            <item name="svea_handling_fee_tax_amount" instance="Svea\SveaPayment\Model\Invoice\Total\HandlingFeeTax" sort_order="111"/>
         </group>
     </section>
     <section name="order_creditmemo">
         <group name="totals">
             <item name="svea_handling_fee" instance="Svea\SveaPayment\Model\Creditmemo\Total\HandlingFee" sort_order="120"/>
+            <item name="svea_handling_fee_tax" instance="Svea\SveaPayment\Model\Creditmemo\Total\HandlingFeeTax" sort_order="121"/>
         </group>
     </section>
 </config>

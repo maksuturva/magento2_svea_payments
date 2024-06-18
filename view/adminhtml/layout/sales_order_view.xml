@@ -4,6 +4,7 @@
     <body>
         <referenceContainer name="order_totals">
             <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\HandlingFee" name="svea_handling_fee"/>
+            <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\HandlingFeeTax" name="svea_handling_fee_tax"/>
         </referenceContainer>
         <referenceBlock name="sales_order_edit">
             <block class="Svea\SveaPayment\Block\Adminhtml\Order\View\Buttons" name="custom_edit_buttons"/>

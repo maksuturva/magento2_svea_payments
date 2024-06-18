@@ -3,6 +3,7 @@
     <body>
         <referenceBlock name="order_totals">
             <block class="Svea\SveaPayment\Block\Sales\Order\HandlingFee" name="svea_handling_fee"/>
+            <block class="Svea\SveaPayment\Block\Sales\Order\HandlingFeeTax" name="svea_handling_fee_tax"/>
         </referenceBlock>
     </body>
 </page>

@@ -7,6 +7,11 @@
                    name="svea_handling_fee"
                    template="Svea_SveaPayment::creditmemo.phtml" />
         </referenceBlock>
+        <referenceBlock name="creditmemo_totals">
+            <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\Creditmemo\HandlingFeeTax"
+                   name="svea_handling_fee_tax"
+                   template="Svea_SveaPayment::creditmemo_tax.phtml" />
+        </referenceBlock>
         <referenceContainer name="form">
             <block class="Magento\Backend\Block\Template" name="order_payment_additional" template="Svea_SveaPayment::creditmemo/iban.phtml"/>
         </referenceContainer>

@@ -6,6 +6,9 @@
             <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\Creditmemo\HandlingFee"
                    name="svea_handling_fee"
                    template="Svea_SveaPayment::creditmemo_view.phtml" />
+            <block class="Svea\SveaPayment\Block\Adminhtml\Sales\Order\Creditmemo\HandlingFeeTax"
+                   name="svea_handling_fee_tax"
+                   template="Svea_SveaPayment::creditmemo_tax_view.phtml" />
         </referenceBlock>
     </body>
 </page>

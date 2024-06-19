@@ -147,7 +147,7 @@ class CalculatorProvider implements CalculatorProviderInterface
             }
             $total = $quote->getBaseGrandTotal();
 
-            return $this->validatePrice($total);
+            return $this->validatePrice($total, CalculatorPlacement::CART);
         }
 
         return true;
@@ -156,9 +156,17 @@ class CalculatorProvider implements CalculatorProviderInterface
     /**
      * @inheritDoc
      */
-    public function validatePrice(float $price): bool
+    public function validatePrice(float $price, string $location): bool
     {
+        if (!$this->config->isCalculatorEnabled() || !$this->isCalculatorPlacementAvailable($location)) {
+            return false;
+        }
+
         $plans = $this->getProviderPaymentPlans();
+
+        if (empty($plans)) {
+            return false;
+        }
 
         $min = !empty($this->config->getCalculatorMinimumThreshold())
             ? $this->config->getCalculatorMinimumThreshold()
@@ -169,20 +177,25 @@ class CalculatorProvider implements CalculatorProviderInterface
         return $price >= $min && $price <= $max;
     }
 
-    private function getProviderPaymentPlans(): array
+    private function getProviderPaymentPlans(): ?array
     {
         $plans = $this->cache->load(self::PART_PAYMENT_PLANS_CACHE_KEY);
 
         if (empty($plans)) {
             $plans = $this->doGetProviderPaymentPlans();
-            $this->cache->save($plans, self::PART_PAYMENT_PLANS_CACHE_KEY, ['SVEA'], 60 * 15);
+
+            if (!empty($plans)) {
+                $this->cache->save($plans, self::PART_PAYMENT_PLANS_CACHE_KEY, ['SVEA'], 60 * 15);
+            }
         }
 
-        if (empty($plans)) {
-            return [];
+        $decodedPlans = json_decode($plans, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return null;
         }
 
-        return json_decode($plans, true);
+        return $decodedPlans;
     }
 
     private function getProviderMinimumPaymentPlanFromAmount(array $plans): float|int

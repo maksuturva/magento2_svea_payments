@@ -1,4 +1,4 @@
-<!-- ko if: state.isShowed() -->
+<!-- ko if: state.isShowed() && state.isPriceAboveThreshold() -->
     <div data-bind="scope: 'calculator-holder'" class="calculator-holder">
 
         <button id="svea-calc-btn" type="button" class="action primary calc-btn" data-trigger="" data-bind="afterRender: replacePriceAmount, attr: {'data-trigger': state.triggerEvent()}">

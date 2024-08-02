@@ -72,12 +72,13 @@ class HandlingFeeResolver
             }
 
             $totalValue = $item->getPrice() * $item->getQty();
+            $taxPercentKey = (string)$taxPercent;
 
-            if (!isset($taxRates[$taxPercent])) {
-                $taxRates[$taxPercent] = 0;
+            if (!isset($taxRates[$taxPercentKey])) {
+                $taxRates[$taxPercentKey] = 0;
             }
 
-            $taxRates[$taxPercent] += $totalValue;
+            $taxRates[$taxPercentKey] += $totalValue;
         }
 
         $maxTaxRate = 0;

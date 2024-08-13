@@ -44,7 +44,7 @@ class MigrateConfigCommand extends Command
         $question = $this->createQuestion();
         if ($helper->ask($input, $output, $question) || !$input->isInteractive()) {
             try {
-                $this->migrateConfig->execute();
+                $this->migrateConfig->execute($output);
                 $output->writeln('Configs migrated successfully.');
             } catch (Exception $e) {
                 $output->writeln(sprintf(

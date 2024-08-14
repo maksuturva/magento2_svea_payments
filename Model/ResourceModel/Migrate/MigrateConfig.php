@@ -10,6 +10,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Svea\SveaPayment\Gateway\Config\Config;
+use Symfony\Component\Console\Output\OutputInterface;
 use function __;
 use function array_diff;
 use function explode;
@@ -118,14 +119,14 @@ class MigrateConfig implements MigrateConfigInterface
     /**
      * @inheritDoc
      */
-    public function execute(): void
+    public function execute(OutputInterface $output): void
     {
         if (!$this->maksuturvaConfigValueExists()) {
             throw new LocalizedException(__('No existing config value found for Maksuturva.'));
         }
         foreach ($this->maksuturvaConfigPaths as $mPath => $sPath) {
             $this->removeSveaConfigs($sPath);
-            $this->migrateMaksuturvaConfigs($mPath);
+            $this->migrateMaksuturvaConfigs($mPath, $output);
         }
         $this->typeListInterface->cleanType("config");
     }
@@ -246,33 +247,70 @@ class MigrateConfig implements MigrateConfigInterface
      *
      * @return void
      */
-    private function migrateMaksuturvaConfigs(string $path)
+    private function migrateMaksuturvaConfigs(string $path, OutputInterface $output)
     {
         $configPath = explode('/', $path);
         $maksuturvaConfig = [];
         $maksuturvaConfig["default"][0] =
             $this->getDefaultConfigs(0)[$configPath[0]][$configPath[1]] ?? [];
+
         foreach ($this->getWebSiteIds() as $websiteId) {
             $websiteData = $this->getWebsiteConfigs($websiteId)[$configPath[0]][$configPath[1]] ?? [];
+            $websiteData = $this->purgeLegacyConfig($websiteData, $output);
+
             $maksuturvaConfig["websites"][$websiteId] = array_diff($websiteData, $maksuturvaConfig["default"][0]);
         }
+
         foreach ($this->getStoresIds() as $storeId => $storeWebsiteId) {
             $storedata = $this->getStoreConfigs($storeId)[$configPath[0]][$configPath[1]] ?? [];
+            $storedata = $this->purgeLegacyConfig($storedata, $output);
+
             $maksuturvaConfig["stores"][$storeId] = array_diff(
                 $storedata, $maksuturvaConfig["websites"][$storeWebsiteId],
                 $maksuturvaConfig["default"][0]
             );
         }
+
         foreach ($maksuturvaConfig as $scope => $scopeData) {
             foreach ($scopeData as $scopeId => $scopeValues) {
                 foreach ($scopeValues as $maksuturvapath => $value) {
                     $this->maksuturvaConfig[$scope][$scopeId][$path][$maksuturvapath] = $value;
+
                     $spath = $this->getSveaPath($path, $maksuturvapath);
                     $value = $this->resolveValue($spath, $value, $scope, $scopeId);
+
                     $this->configWriterInterface->save($spath, $value, $scope, $scopeId);
                 }
             }
         }
+    }
+
+    /**
+     * Purge nested configuration values from the legacy version
+     *
+     * @param array $config
+     * @param OutputInterface $output
+     *
+     * @return array
+     */
+    private function purgeLegacyConfig(array $config, OutputInterface $output): array {
+        foreach ($config as $key => $val) {
+            if (!is_array($val)) {
+                continue;
+            }
+
+            $output->writeln(
+                sprintf(
+                    'Nested legacy value will be purged from configs. Key "%s" containing values "%s"',
+                    $key,
+                    implode(', ', $val)
+                )
+            );
+
+            unset($config[$key]);
+        }
+
+        return $config;
     }
 
     /**
@@ -323,7 +361,7 @@ class MigrateConfig implements MigrateConfigInterface
             case ($configPath === Config::SECRET_KEY):
                 return $this->encrypted->encrypt($value);
             case (str_contains($configPath, 'method_filter')):
-                return str_replace(';', ',', $value);
+                return !empty($value) ? str_replace(';', ',', $value) : $value;
             case (str_contains($configPath, 'handling_fee')):
                 return $this->migrateHandlingFees->resolveHandlingFees($configPath, $value, $scope, $scopeId);
             default:

@@ -1,5 +1,8 @@
 # Changelog
 
+### [Unreleased]
+* Limit payment methods available for invoicing fees
+
 ### [1.0.5] - 2024-08-14
 * Prevent legacy data migration
 

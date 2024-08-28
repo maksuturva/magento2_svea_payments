@@ -49,14 +49,14 @@ class HandlingFee extends AbstractFieldArray
     }
 
     /**
-     * @return PaymentMethod
+     * @return LimitedPaymentMethod
      * @throws LocalizedException
      */
-    private function getPaymentMethodRenderer(): PaymentMethod
+    private function getPaymentMethodRenderer(): LimitedPaymentMethod
     {
         if (!$this->paymentMethodRenderer) {
             $this->paymentMethodRenderer = $this->getLayout()->createBlock(
-                PaymentMethod::class,
+                LimitedPaymentMethod::class,
                 '',
                 ['data' => ['is_render_to_js_template' => true]]
             );

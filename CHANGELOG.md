@@ -1,5 +1,8 @@
 # Changelog
 
+### [Unreleased]
+* Sales migration legacy support for the payment method code
+
 ### [1.0.5] - 2024-08-14
 * Prevent legacy data migration
 

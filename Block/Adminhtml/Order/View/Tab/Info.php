@@ -60,7 +60,11 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\View\Tab\Info
     {
         $code = $this->getOrder()->getPayment()->getAdditionalInformation()["svea_method_code"] ?? '';
         if ($code === '') {
-            return $code;
+            // in case this payment is from the old payment module, check the old field name too
+            $code = $this->getOrder()->getPayment()->getAdditionalInformation()["sub_payment_method"] ?? '';
+            if ($code === '') {
+                return $code;
+            }
         }
 
         return $this->getPaymentMethodLabelByCode($code);

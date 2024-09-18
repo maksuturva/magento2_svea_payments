@@ -1,5 +1,8 @@
 # Changelog
 
+### [Unreleased]
+* Hide empty fees in checkout
+
 ### [1.0.6] - 2024-09-17
 * Limit payment methods available for invoicing fees
 * Sales migration legacy support for the payment method code

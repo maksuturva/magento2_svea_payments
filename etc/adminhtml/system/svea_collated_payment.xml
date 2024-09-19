@@ -47,14 +47,6 @@
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_1_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="default_handling_fee" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Default Invoicing Fee</label>
-                <comment>
-                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
-                    Default: empty.
-                </comment>
-                <config_path>payment/svea_collated_payment/payment_method_subgroup_1_default_handling_fee</config_path>
-            </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>
                 <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
@@ -76,14 +68,6 @@
                 <comment>Default: FI50;FI51;FI52;FI53;FI54;PIVO;SIIR</comment>
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_2_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
-            </field>
-            <field id="default_handling_fee" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Default Invoicing Fee</label>
-                <comment>
-                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
-                    Default: empty.
-                </comment>
-                <config_path>payment/svea_collated_payment/payment_method_subgroup_2_default_handling_fee</config_path>
             </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>
@@ -107,14 +91,6 @@
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_3_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="default_handling_fee" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Default Invoicing Fee</label>
-                <comment>
-                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
-                    Default: empty.
-                </comment>
-                <config_path>payment/svea_collated_payment/payment_method_subgroup_3_default_handling_fee</config_path>
-            </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>
                 <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
@@ -137,14 +113,6 @@
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_4_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="default_handling_fee" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Default Invoicing Fee</label>
-                <comment>
-                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
-                    Default: empty.
-                </comment>
-                <config_path>payment/svea_collated_payment/payment_method_subgroup_4_default_handling_fee</config_path>
-            </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>
                 <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
@@ -166,14 +134,6 @@
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_5_method_filter</config_path>
                 <comment>Default: Empty</comment>
                 <can_be_empty>1</can_be_empty>
-            </field>
-            <field id="default_handling_fee" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Default Invoicing Fee</label>
-                <comment>
-                    Enter default Invoicing fee amount that will be added to total when a payment method is not having specific configured Invoicing fee value.
-                    Default: empty.
-                </comment>
-                <config_path>payment/svea_collated_payment/payment_method_subgroup_5_default_handling_fee</config_path>
             </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>

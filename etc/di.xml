@@ -36,18 +36,6 @@
                 <item name="svea_part_payment" xsi:type="string">payment/svea_part_payment/handling_fee</item>
                 <item name="svea_bank_payment" xsi:type="string">payment/svea_bank_payment/handling_fee</item>
             </argument>
-            <argument name="defaultFeesConfigPaths" xsi:type="array">
-                <item name="svea_collated_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_1_default_handling_fee</item>
-                <item name="svea_collated_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_2_default_handling_fee</item>
-                <item name="svea_collated_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_3_default_handling_fee</item>
-                <item name="svea_collated_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_4_default_handling_fee</item>
-                <item name="svea_collated_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_5_default_handling_fee</item>
-                <item name="svea_card_payment" xsi:type="string">payment/svea_card_payment/default_handling_fee</item>
-                <item name="svea_generic_payment" xsi:type="string">payment/svea_generic_payment/default_handling_fee</item>
-                <item name="svea_invoice_payment" xsi:type="string">payment/svea_invoice_payment/default_handling_fee</item>
-                <item name="svea_part_payment" xsi:type="string">payment/svea_part_payment/default_handling_fee</item>
-                <item name="svea_bank_payment" xsi:type="string">payment/svea_bank_payment/default_handling_fee</item>
-            </argument>
         </arguments>
     </type>
 

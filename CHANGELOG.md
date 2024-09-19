@@ -2,6 +2,8 @@
 
 ### [Unreleased]
 * Hide empty fees in checkout
+* Remove default handling fee
+  * Default fee is removed when migrating from the old module. Please make sure you have set up invoicing fees per payment method, since this default is no longer applied anywhere.
 
 ### [1.0.6] - 2024-09-17
 * Limit payment methods available for invoicing fees

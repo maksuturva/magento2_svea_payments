@@ -2,6 +2,7 @@
 
 ### [Unreleased]
 * Hide empty fees in checkout
+* Remove default handling fee
 
 ### [1.0.6] - 2024-09-17
 * Limit payment methods available for invoicing fees

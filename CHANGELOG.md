@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.0.7] - 2024-09-25
 * Remove non existent file include
 * Hide empty fees in checkout
 * Remove default handling fee

@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.0.9] - 2024-10-04
+* Check order status when captured order is shipped
+
 ### [1.0.8] - 2024-10-04
 * Fix delivery info sending when using delayed capture
 

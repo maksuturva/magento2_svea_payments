@@ -14,6 +14,7 @@ use Svea\SveaPayment\Gateway\Config\Config;
 use Svea\SveaPayment\Gateway\Request\DeliveryInfo\DataBuilder;
 use Svea\SveaPayment\Gateway\SubjectReaderInterface;
 use Svea\SveaPayment\Gateway\Validator\OrderValidatorInterface;
+use Svea\SveaPayment\Model\Order\Status\Query;
 use Svea\SveaPayment\Model\System\Config\Source\DeliveryMode;
 use function array_merge;
 use function count;
@@ -55,18 +56,25 @@ class DeliveryCommand implements CommandInterface
      */
     private OrderValidatorInterface $orderValidator;
 
+    /**
+     * @var Query
+     */
+    private Query $query;
+
     public function __construct(
         CommandPoolInterface    $commandPool,
         SubjectReaderInterface  $subjectReader,
         ArrayResultFactory      $resultFactory,
         Config                  $config,
-        OrderValidatorInterface $orderValidator
+        OrderValidatorInterface $orderValidator,
+        Query  $query,
     ) {
         $this->commandPool = $commandPool;
         $this->subjectReader = $subjectReader;
         $this->resultFactory = $resultFactory;
         $this->config = $config;
         $this->orderValidator = $orderValidator;
+        $this->query = $query;
     }
 
     /**
@@ -152,6 +160,7 @@ class DeliveryCommand implements CommandInterface
                 $commandSubject[DataBuilder::ALL_SENT_FLAG] = true;
 
                 $results = [$this->executeCommand(self::COMMAND_CODE_ADD, $commandSubject)->get()];
+                $queryResult = $this->query->queryOrders([$order], true);
             }
 
         } elseif (!$additions && !$updates && !$removals) {

@@ -133,10 +133,27 @@ class DeliveryCommand implements CommandInterface
         $additions = $commandSubject[self::TARGET_ADDITIONS] ?? false;
         $removals = $commandSubject[self::TARGET_REMOVALS] ?? false;
         $updates = $commandSubject[self::TARGET_UPDATES] ?? false;
+        $order = $commandSubject['shipment']->getOrder();
+
         if ($this->config->getDeliveryMode() == DeliveryMode::MODE_CUSTOM) {
             $commandSubject[DataBuilder::METHOD_CODE] = $this->config->getDeliveryCustomMethod();
             $commandSubject[DataBuilder::INFO_ADD] = DataBuilder::INFO_VALUE_BY_METHOD;
-            $results = [$this->executeCommand(self::COMMAND_CODE_ADD, $commandSubject)->get()];
+
+            // Check if we are sending all the products in the order
+            $allProducts = true;
+            foreach ($order->getAllItems() as $item) {
+                if ($item->getQtyShipped() != $item->getQtyOrdered()) {
+                    $allProducts = false;
+                    break;
+                }
+            }
+
+            if ($allProducts) {
+                $commandSubject[DataBuilder::ALL_SENT_FLAG] = true;
+
+                $results = [$this->executeCommand(self::COMMAND_CODE_ADD, $commandSubject)->get()];
+            }
+
         } elseif (!$additions && !$updates && !$removals) {
             $commandSubject[DataBuilder::INFO_ADD] = DataBuilder::INFO_VALUE_BY_METHOD;
             $results = [$this->executeCommand(self::COMMAND_CODE_ADD, $commandSubject)->get()];

@@ -90,13 +90,15 @@ class ResponseHandler
             case static::STATUS_QUERY_PAID:
             case static::STATUS_QUERY_PAID_DELIVERY:
             case static::STATUS_QUERY_COMPENSATED:
-                // Is delayed capture check happens here, if it's true => order is set as paid
-                // otherwise invoice is prepared.
-                // However, invoice prepare eventually calls capture command, and in
-                // https://github.com/maksuturva/magento2_payment_module/blob/master/app/code/Svea/Maksuturva/Model/PaymentAbstract.php#L232-L257
-                // that capture does only something if the method is delayed capture? Is this right?
+                $statusCode = $response[static::RESPONSE_STATUS_CODE];
 
-                if ($this->methodData->isDelayedCapture($response[static::RESPONSE_PAYMENT_METHOD])) {
+                if ($this->methodData->isDelayedCapture($statusCode)) {
+                    if (in_array($statusCode, [static::STATUS_QUERY_PAID_DELIVERY,static::STATUS_QUERY_COMPENSATED], true)) {
+                        if ($order->canInvoice()) {
+                            $this->prepareInvoice($order);
+                        }
+                    }
+
                     $this->setOrderAsPaid($order, \__('Payment capture authorized by Svea Payments.'));
                     $result->setCode(Status::CODE_SUCCESS)
                            ->setMessage(\__('Payment capture authorized by Svea Payments.'));
@@ -202,9 +204,8 @@ class ResponseHandler
      */
     private function setOrderAsPaid(Order $order, $comment): void
     {
-        $state = Order::STATE_PROCESSING;
         $status = $this->getPaidOrderStatus();
-        $this->updateOrderStatus($order, $status, $comment, $state);
+        $this->updateOrderStatus($order, $status, $comment);
     }
 
     /**

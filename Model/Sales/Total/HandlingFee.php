@@ -110,12 +110,12 @@ class HandlingFee
      */
     public function setTaxAmount(DataObject $model, float $value): DataObject
     {
-        return $model->setData(self::TAX_AMOUNT_CODE, $value);
+        return $model->setData(self::TAX_AMOUNT_CODE, round($value, 2));
     }
 
     public function setBaseTaxAmount(DataObject $model, float $value): DataObject
     {
-        return $model->setData(self::TAX_AMOUNT_BASE_CODE, $value);
+        return $model->setData(self::TAX_AMOUNT_BASE_CODE, round($value, 2));
     }
 
     public function getBaseTaxAmount(DataObject $model): float

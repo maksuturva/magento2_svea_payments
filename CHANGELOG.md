@@ -1,5 +1,8 @@
 # Changelog
 
+### [Unreleased]
+* Handling fee tax rounding
+
 ### [1.0.9] - 2024-10-04
 * Check order status when captured order is shipped
 

@@ -11,6 +11,7 @@
                 <keyversion>001</keyversion>
                 <restore_shopping_cart>both</restore_shopping_cart>
                 <can_cancel_settled>0</can_cancel_settled>
+                <generate_invoice>0</generate_invoice>
             </svea_payment>
         </svea_config>
         <svea_part_payment_calculator>

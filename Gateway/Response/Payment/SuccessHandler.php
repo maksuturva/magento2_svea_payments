@@ -337,8 +337,10 @@ class SuccessHandler
         }
 
         if (!$isDelayedCapture) {
-            /* create invice and add transaction */
-            $this->invoicing->createInvoice($order);
+            /* create invoice and add transaction */
+            if ($this->config->getGenerateInvoice()) {
+                $this->invoicing->createInvoice($order);
+            }
         }
         if (!$order->getEmailSent()) {
             try {

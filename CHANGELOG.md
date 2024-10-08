@@ -1,5 +1,8 @@
 # Changelog
 
+### [Unreleased]
+* Add setting for generating invoice on order creation
+
 ### [1.0.10] - 2024-10-08
 * Handling fee tax rounding
 * Invoice is not created when delayed capture is used

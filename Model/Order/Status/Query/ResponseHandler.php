@@ -97,7 +97,7 @@ class ResponseHandler
                            ->setMessage(\__('Payment capture authorized by Svea Payments.'));
                 } else {
                     if ($order->hasInvoices() == false) {
-                        if ($order->canInvoice()) {
+                        if ($order->canInvoice() && $this->config->getGenerateInvoice()) {
                             $this->prepareInvoice($order);
                             $this->setOrderAsPaid($order, \__('Payment confirmed by Svea Payments.'));
                             $result->setCode(Status::CODE_SUCCESS)

@@ -93,12 +93,7 @@ class ResponseHandler
                 $statusCode = $response[static::RESPONSE_STATUS_CODE];
 
                 if ($this->methodData->isDelayedCapture($statusCode)) {
-                    if (in_array($statusCode, [static::STATUS_QUERY_PAID_DELIVERY,static::STATUS_QUERY_COMPENSATED], true)) {
-                        if ($order->canInvoice()) {
-                            $this->prepareInvoice($order);
-                        }
-                    }
-
+                    // In case of delayed capture, payment module never prepares invoice
                     $this->setOrderAsPaid($order, \__('Payment capture authorized by Svea Payments.'));
                     $result->setCode(Status::CODE_SUCCESS)
                            ->setMessage(\__('Payment capture authorized by Svea Payments.'));

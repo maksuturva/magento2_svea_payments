@@ -56,25 +56,18 @@ class DeliveryCommand implements CommandInterface
      */
     private OrderValidatorInterface $orderValidator;
 
-    /**
-     * @var Query
-     */
-    private Query $query;
-
     public function __construct(
         CommandPoolInterface    $commandPool,
         SubjectReaderInterface  $subjectReader,
         ArrayResultFactory      $resultFactory,
         Config                  $config,
         OrderValidatorInterface $orderValidator,
-        Query  $query,
     ) {
         $this->commandPool = $commandPool;
         $this->subjectReader = $subjectReader;
         $this->resultFactory = $resultFactory;
         $this->config = $config;
         $this->orderValidator = $orderValidator;
-        $this->query = $query;
     }
 
     /**
@@ -160,7 +153,6 @@ class DeliveryCommand implements CommandInterface
                 $commandSubject[DataBuilder::ALL_SENT_FLAG] = true;
 
                 $results = [$this->executeCommand(self::COMMAND_CODE_ADD, $commandSubject)->get()];
-                $queryResult = $this->query->queryOrders([$order], true);
             }
 
         } elseif (!$additions && !$updates && !$removals) {

@@ -2,6 +2,7 @@
 
 ### [Unreleased]
 * Handling fee tax rounding
+* Invoice is not created when delayed capture is used
 
 ### [1.0.9] - 2024-10-04
 * Check order status when captured order is shipped

@@ -610,10 +610,8 @@
     <type name="Svea\SveaPayment\Gateway\Command\DeliveryCommand">
         <arguments>
             <argument name="orderValidator" xsi:type="object">DeliveryOrderValidator</argument>
-            <argument name="query" xsi:type="object">Svea\SveaPayment\Model\Order\Status\Query</argument>
         </arguments>
     </type>
-
 
     <virtualType name="CaptureOrderValidator" type="Svea\SveaPayment\Gateway\Validator\OrderValidator">
         <arguments>

@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.0.11] - 2024-10-09
 * Add setting for generating invoice on order creation
 
 ### [1.0.10] - 2024-10-08

@@ -70,7 +70,6 @@ class CreateTransactionForDelayedCapture implements ObserverInterface
             $transaction = $this->transactionBuilder->setPayment($payment)
                 ->setOrder($order)
                 ->setTransactionId($sveaTransactionId)
-                ->setAdditionalInformation([Transaction::RAW_DETAILS, ['invoice_id' => $invoice->getIncrementId()]])
                 ->setFailSafe(true)
                 ->build(TransactionInterface::TYPE_CAPTURE);
 

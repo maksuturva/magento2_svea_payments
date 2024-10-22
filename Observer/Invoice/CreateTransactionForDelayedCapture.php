@@ -6,8 +6,8 @@ use Magento\Framework\Logger\Monolog as Logger;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
-use Svea\SveaPayment\Api\Checkout\PaymentMethodCollectorInterface;
 use Svea\SveaPayment\Model\Payment\Method;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
@@ -19,14 +19,14 @@ class CreateTransactionForDelayedCapture implements ObserverInterface
     private $methodResolver;
 
     /**
-     * @var PaymentMethodCollectorInterface
-     */
-    private $methodCollector;
-
-    /**
      * @var BuilderInterface
      */
     private $transactionBuilder;
+
+    /**
+     * @var TransactionRepositoryInterface
+     */
+    private $transactionRepository;
 
     /**
      * @var Logger
@@ -35,27 +35,25 @@ class CreateTransactionForDelayedCapture implements ObserverInterface
 
     /**
      * @param Method $methodResolver
-     * @param PaymentMethodCollectorInterface $methodCollector
      * @param BuilderInterface $transactionBuilder
      * @param Logger $logger
      */
     public function __construct(
-        Method                          $methodResolver,
-        PaymentMethodCollectorInterface $methodCollector,
-        BuilderInterface                $transactionBuilder,
-        Logger                          $logger
+        Method                         $methodResolver,
+        BuilderInterface               $transactionBuilder,
+        TransactionRepositoryInterface $transactionRepository,
+        Logger                         $logger
     )
     {
         $this->methodResolver = $methodResolver;
-        $this->methodCollector = $methodCollector;
         $this->transactionBuilder = $transactionBuilder;
+        $this->transactionRepository = $transactionRepository;
         $this->logger = $logger;
     }
 
     public function execute(Observer $observer)
     {
         try {
-
             $invoice = $observer->getEvent()->getInvoice();
             $order = $invoice->getOrder();
             $payment = $invoice->getOrder()->getPayment();
@@ -78,7 +76,8 @@ class CreateTransactionForDelayedCapture implements ObserverInterface
 
             $payment->setLastTransId($sveaTransactionId);
             $transaction->setIsClosed(true);
-            $transaction->save();
+
+            $this->transactionRepository->save($transaction);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }

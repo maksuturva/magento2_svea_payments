@@ -9,6 +9,9 @@
     <event name="payment_method_is_active">
         <observer name="svea_payment_method_is_active" instance="Svea\SveaPayment\Observer\PaymentMethodIsActive" />
     </event>
+    <event name="sales_order_invoice_register">
+        <observer name="svea_create_transaction_for_delayed_capture" instance="Svea\SveaPayment\Observer\Invoice\CreateTransactionForDelayedCapture" />
+    </event>
     <event name="sales_order_creditmemo_refund">
         <observer name="svea_set_refunded_handling_fee" instance="Svea\SveaPayment\Observer\Creditmemo\SetHandlingFeeRefund" />
     </event>

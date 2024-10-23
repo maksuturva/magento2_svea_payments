@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.0.12] - 
+### [1.0.12] - 2024-10-23
 * Create transactions for delayed capture orders when creating an invoice
 
 ### [1.0.11] - 2024-10-09

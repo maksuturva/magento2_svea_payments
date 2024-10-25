@@ -45,7 +45,9 @@ class MigrateSales implements MigrateSalesInterface
     }
 
     /**
-     * @param int|null $fromDate
+     * Use migrated payment ids list to update payment additional info
+     * 
+     * @param array $migratedIds
      * from:
      *      3 | {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"} |
      *      4 | {"sub_payment_method":"FI01","collated_method":"","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"} |
@@ -80,13 +82,6 @@ class MigrateSales implements MigrateSalesInterface
                 $value = $additional_info[0]['additional_information'];
                 
                 print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
-                /**
-                 * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
-                 * 
-                 * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
-                 * 
-                 * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
-                 */
                 $value = json_decode($value, true);
                 $value['svea_method_code'] = $value['sub_payment_method'];
                 $value['svea_method_group'] = $value['collated_method'];
@@ -116,7 +111,7 @@ class MigrateSales implements MigrateSalesInterface
      */
     private function getPaymentAdditionalInfo(string $table, string $paymentId): array
     {
-        $selectClause = "select entity_id,additional_information where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        $selectClause = "select entity_id,additional_information from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
         return $this->connection->fetchAll($selectClause);
     }
 
@@ -274,7 +269,7 @@ class MigrateSales implements MigrateSalesInterface
                 foreach ($valuesByIds as $id => $value) {
                     $where = $this->connection->quoteInto("entity_id = ? AND svea_payment_id IS NULL", $id);
                     $this->connection->update($table, ['svea_payment_id' => $value], [$where]);
-                    $migratedIds[] = $id; // Add migrated id to the list
+                    $migratedIds[] = $value; // Add migrated id to the list
                 }
                 $this->connection->commit();
                 return $migratedIds; // Return migrated ids

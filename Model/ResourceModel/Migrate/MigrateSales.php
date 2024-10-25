@@ -71,8 +71,7 @@ class MigrateSales implements MigrateSalesInterface
         $table = $this->connection->getTableName("sales_order_payment");
 
         foreach ($migratedIds as $id) {
-            $additional_info = $this->getPaymentAdditionalInfo($table, $id);
-            print("Additional info array size for id: {$id} = " . count($additional_info) . "\n");
+            $additional_info = $this->getPaymentInfo($table, $id);
             if (empty($additional_info)) {
                 continue;
             }
@@ -89,8 +88,8 @@ class MigrateSales implements MigrateSalesInterface
                 $value = json_encode($value);
                 
                 print("New additional_info: {$value}\n");
-                $where = $this->connection->quoteInto("{entity_id = ?", $id);
-                $this->connection->update($table, ["additional_info" => $value], [$where]);
+                $where = $this->connection->quoteInto("entity_id = ?", $id);
+                $this->connection->update($table, ['additional_info' => $value], [$where]);
                 
                 $this->connection->commit();
                 $updatedRows++;
@@ -109,9 +108,9 @@ class MigrateSales implements MigrateSalesInterface
      *
      * @return array
      */
-    private function getPaymentAdditionalInfo(string $table, string $paymentId): array
+    private function getPaymentlInfo(string $table, string $paymentId): array
     {
-        $selectClause = "select entity_id,additional_information from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        $selectClause = "select entity_id,additional_information,maksuturva_transaction_id from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
         return $this->connection->fetchAll($selectClause);
     }
 

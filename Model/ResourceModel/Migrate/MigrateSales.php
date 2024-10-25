@@ -108,18 +108,16 @@ class MigrateSales implements MigrateSalesInterface
         print("Updated {$updatedRows} rows.\n");    
     }
 
+    /**
+     * @param string $table
+     * @param string $paymentId
+     *
+     * @return array
+     */
     private function getPaymentAdditionalInfo(string $table, string $paymentId): array
     {
-        $select = $this->connection->select()
-            ->from($table,
-                [
-                    'entity_id',
-                    'additional_information'
-                ])
-            ->where("additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'");
-
-        return $select->fetchAll();
-
+        $selectClause = "select entity_id,additional_information where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        return $this->connection->fetchAll($selectClause);
     }
 
     /**

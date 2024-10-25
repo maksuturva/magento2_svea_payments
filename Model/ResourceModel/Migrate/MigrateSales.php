@@ -32,9 +32,75 @@ class MigrateSales implements MigrateSalesInterface
      */
     public function execute(?int $fromDate = null): void
     {
+        print("Migrating sales data...\n");
         $this->connection = $this->resourceConnection->getConnection();
+        print("Connection established...\n");
+        print("Migrating handling fees...\n");
         $this->migrateHandlingFees($fromDate);
+        print("Migrating payment ids...\n");
         $this->migratePaymentIds($fromDate);
+        print("Migrating payments...\n");
+        $this->migratePayments($fromDate);
+        print("Sales data migration completed.\n");
+    }
+
+    /**
+     * @param int|null $fromDate
+     * from:
+     *      3 | {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"} |
+     *      4 | {"sub_payment_method":"FI01","collated_method":"","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"} |
+     * to:
+     *      5 | {"svea_method_code":"FI01","svea_method_group":"svea_collated_payment_payment_method_subgroup_3","svea_preselected_payment_method":"FI01","method_title":"Svea Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS07126c265770bc3a49ca3489b1891c6803c3efff000000000000001949466323!"}
+     *       6 | {"svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS00228f83d9ea2923a0787415da9d66df816b7438000000000000001766945630!"}                                  
+     * @return void
+     * @throws Exception
+     */
+    private function migratePayments(?int $fromDate): void
+    {
+        $column = "additional_information";
+        $table = $this->connection->getTableName("sales_order_payment");
+
+        $infos = $this->getPaymentAdditionalInfos($table, $fromDate);
+        
+        try {
+            $this->connection->beginTransaction();
+            foreach ($infos as $id => $value) {
+                print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
+                /**
+                 * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
+                 * 
+                 * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
+                 * 
+                 * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
+                 */
+                $value = json_decode($value, true);
+                $value['svea_method_code'] = $value['sub_payment_method'];
+                $value['svea_method_group'] = $value['collated_method'];
+                $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
+                $value = json_encode($value);
+                
+                print("New additional_info: {$value}\n");
+                $where = $this->connection->quoteInto("{entity_id = ?", $id);
+                $this->connection->update($table, ["additional_info" => $value], [$where]);
+            }
+            $this->connection->commit();
+        } catch (Exception $exception) {
+            $this->connection->rollBack();
+            throw new Exception($exception);
+        }       
+    }
+
+    private function getPaymentAdditionalInfos(string $table, ?int $fromDate): array
+    {
+        $select = $this->connection->select()
+            ->from($table,
+                [
+                    'entity_id',
+                    'additional_information'
+                ])
+            ->where("additional_information IS NOT NULL AND created_at >= '{$fromDate}'");
+
+        return $this->connection->fetchPairs($select);
     }
 
     /**

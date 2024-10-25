@@ -92,7 +92,7 @@ class MigrateSales implements MigrateSalesInterface
                     $this->connection->update($table, ["additional_info" => $value], [$where]);
                 }
                 $this->connection->commit();
-                updatedRows++;
+                $updatedRows++;
             } catch (Exception $exception) {
                 $this->connection->rollBack();
                 throw new Exception($exception);

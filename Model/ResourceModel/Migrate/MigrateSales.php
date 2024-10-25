@@ -108,7 +108,7 @@ class MigrateSales implements MigrateSalesInterface
      *
      * @return array
      */
-    private function getPaymentlInfo(string $table, string $paymentId): array
+    private function getPaymentInfo(string $table, string $paymentId): array
     {
         $selectClause = "select entity_id,additional_information,maksuturva_transaction_id from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
         return $this->connection->fetchAll($selectClause);

@@ -72,25 +72,27 @@ class MigrateSales implements MigrateSalesInterface
             $additional_info = $this->getPaymentAdditionalInfo($table, $id);
             try {
                 $this->connection->beginTransaction();
-                foreach ($additional_info as $id => $value) {
-                    print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
-                    /**
-                     * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
-                     * 
-                     * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
-                     * 
-                     * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
-                     */
-                    $value = json_decode($value, true);
-                    $value['svea_method_code'] = $value['sub_payment_method'];
-                    $value['svea_method_group'] = $value['collated_method'];
-                    $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
-                    $value = json_encode($value);
-                    
-                    print("New additional_info: {$value}\n");
-                    $where = $this->connection->quoteInto("{entity_id = ?", $id);
-                    $this->connection->update($table, ["additional_info" => $value], [$where]);
-                }
+                $id = $additional_info['entity_id'];
+                $value = $additional_info['additional_information'];
+                
+                print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
+                /**
+                 * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
+                 * 
+                 * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
+                 * 
+                 * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
+                 */
+                $value = json_decode($value, true);
+                $value['svea_method_code'] = $value['sub_payment_method'];
+                $value['svea_method_group'] = $value['collated_method'];
+                $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
+                $value = json_encode($value);
+                
+                print("New additional_info: {$value}\n");
+                $where = $this->connection->quoteInto("{entity_id = ?", $id);
+                $this->connection->update($table, ["additional_info" => $value], [$where]);
+                
                 $this->connection->commit();
                 $updatedRows++;
             } catch (Exception $exception) {
@@ -112,7 +114,8 @@ class MigrateSales implements MigrateSalesInterface
                 ])
             ->where("additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'");
 
-        return $this->connection->fetchPairs($select);
+        return $select->fetchone();
+
     }
 
     /**

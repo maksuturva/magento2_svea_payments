@@ -70,10 +70,14 @@ class MigrateSales implements MigrateSalesInterface
 
         foreach ($migratedIds as $id) {
             $additional_info = $this->getPaymentAdditionalInfo($table, $id);
+            print("Additional info array size for id: {$id} = " . count($additional_info) . "\n");
+            if (empty($additional_info)) {
+                continue;
+            }
             try {
                 $this->connection->beginTransaction();
-                $id = $additional_info['entity_id'];
-                $value = $additional_info['additional_information'];
+                $id = $additional_info[0]['entity_id'];
+                $value = $additional_info[0]['additional_information'];
                 
                 print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
                 /**
@@ -114,7 +118,7 @@ class MigrateSales implements MigrateSalesInterface
                 ])
             ->where("additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'");
 
-        return $select->fetchone();
+        return $select->fetchAll();
 
     }
 

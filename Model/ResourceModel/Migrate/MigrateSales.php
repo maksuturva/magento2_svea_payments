@@ -54,20 +54,13 @@ class MigrateSales implements MigrateSalesInterface
      *        5 | {"svea_transaction_id":"W3QvG4Fk3Q1u0farK9mz"}   
      *        6 | {"svea_transaction_id":"3LZlhy96zzG9YSZvpX1k"} 
     */
-    
+
     /**
      * Use migrated payment ids list to update payment additional info
      * 
      * @param array $migratedIds
-     * from:
-     *      3 | {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"} |
-     *      4 | {"sub_payment_method":"FI01","collated_method":"","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"} |
-     * to:
-     *      5 | {"svea_method_code":"FI01","svea_method_group":"svea_collated_payment_payment_method_subgroup_3","svea_preselected_payment_method":"FI01","method_title":"Svea Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS07126c265770bc3a49ca3489b1891c6803c3efff000000000000001949466323!"}
-     *       6 | {"svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS00228f83d9ea2923a0787415da9d66df816b7438000000000000001766945630!"}                                  
      * 
-     * 
-     *  @return void
+     * @return void
      * @throws Exception
      */
     private function migratePayments(array $migratedIds): void
@@ -94,7 +87,7 @@ class MigrateSales implements MigrateSalesInterface
                 
                 print("New additional_info: {$value}\n");
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
-                $this->connection->update($table, ['additional_info' => $value], [$where]);
+                $this->connection->update($table, ['additional_information' => $value], [$where]);
                 
                 $this->connection->commit();
                 $updatedRows++;
@@ -108,6 +101,8 @@ class MigrateSales implements MigrateSalesInterface
     }
 
     /**
+     * Get payment (additional) info by payment id
+     * 
      * @param string $table
      * @param string $paymentId
      *

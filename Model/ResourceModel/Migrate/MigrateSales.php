@@ -38,9 +38,9 @@ class MigrateSales implements MigrateSalesInterface
         print("Migrating handling fees...\n");
         $this->migrateHandlingFees($fromDate);
         print("Migrating payment ids...\n");
-        $this->migratePaymentIds($fromDate);
+        $migratedIds = $this->migratePaymentIds($fromDate);
         print("Migrating payments...\n");
-        $this->migratePayments($fromDate);
+        $this->migratePayments($migratedIds);
         print("Sales data migration completed.\n");
     }
 
@@ -52,45 +52,57 @@ class MigrateSales implements MigrateSalesInterface
      * to:
      *      5 | {"svea_method_code":"FI01","svea_method_group":"svea_collated_payment_payment_method_subgroup_3","svea_preselected_payment_method":"FI01","method_title":"Svea Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS07126c265770bc3a49ca3489b1891c6803c3efff000000000000001949466323!"}
      *       6 | {"svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS00228f83d9ea2923a0787415da9d66df816b7438000000000000001766945630!"}                                  
-     * @return void
+     *
+     * from:
+     *        3 | {"maksuturva_transaction_id":"365d590cf9a3a0a3"} 
+     *        4 | {"maksuturva_transaction_id":"09587bc0c7ec0e0e"} 
+     * to:
+     *        5 | {"svea_transaction_id":"W3QvG4Fk3Q1u0farK9mz"}   
+     *        6 | {"svea_transaction_id":"3LZlhy96zzG9YSZvpX1k"}   
+     * 
+     *  @return void
      * @throws Exception
      */
-    private function migratePayments(?int $fromDate): void
-    {
-        $column = "additional_information";
+    private function migratePayments(array $migratedIds): void
+    {   
+        $updatedRows = 0;
         $table = $this->connection->getTableName("sales_order_payment");
 
-        $infos = $this->getPaymentAdditionalInfos($table, $fromDate);
-        
-        try {
-            $this->connection->beginTransaction();
-            foreach ($infos as $id => $value) {
-                print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
-                /**
-                 * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
-                 * 
-                 * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
-                 * 
-                 * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
-                 */
-                $value = json_decode($value, true);
-                $value['svea_method_code'] = $value['sub_payment_method'];
-                $value['svea_method_group'] = $value['collated_method'];
-                $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
-                $value = json_encode($value);
-                
-                print("New additional_info: {$value}\n");
-                $where = $this->connection->quoteInto("{entity_id = ?", $id);
-                $this->connection->update($table, ["additional_info" => $value], [$where]);
-            }
-            $this->connection->commit();
-        } catch (Exception $exception) {
-            $this->connection->rollBack();
-            throw new Exception($exception);
-        }       
+        foreach ($migratedIds as $id) {
+            $additional_info = $this->getPaymentAdditionalInfo($table, $id);
+            try {
+                $this->connection->beginTransaction();
+                foreach ($additional_info as $id => $value) {
+                    print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
+                    /**
+                     * $value is a json string with format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments"}
+                     * 
+                     * Convert it to format {"sub_payment_method":"FI01","collated_method":"pay_now_bank","maksuturva_preselected_payment_method":"FI01","method_title":"Svea Payments", "svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments"}
+                     * 
+                     * so that svea_method_code is from sub_payment_method and svea_method_group is from collated_method and svea_preselected_payment_method is from maksuturva_preselected_payment_method
+                     */
+                    $value = json_decode($value, true);
+                    $value['svea_method_code'] = $value['sub_payment_method'];
+                    $value['svea_method_group'] = $value['collated_method'];
+                    $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
+                    $value = json_encode($value);
+                    
+                    print("New additional_info: {$value}\n");
+                    $where = $this->connection->quoteInto("{entity_id = ?", $id);
+                    $this->connection->update($table, ["additional_info" => $value], [$where]);
+                }
+                $this->connection->commit();
+                updatedRows++;
+            } catch (Exception $exception) {
+                $this->connection->rollBack();
+                throw new Exception($exception);
+            }       
+        }
+
+        print("Updated {$updatedRows} rows.\n");    
     }
 
-    private function getPaymentAdditionalInfos(string $table, ?int $fromDate): array
+    private function getPaymentAdditionalInfo(string $table, string $paymentId): array
     {
         $select = $this->connection->select()
             ->from($table,
@@ -98,7 +110,7 @@ class MigrateSales implements MigrateSalesInterface
                     'entity_id',
                     'additional_information'
                 ])
-            ->where("additional_information IS NOT NULL AND created_at >= '{$fromDate}'");
+            ->where("additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'");
 
         return $this->connection->fetchPairs($select);
     }
@@ -243,11 +255,12 @@ class MigrateSales implements MigrateSalesInterface
     /**
      * @param int|null $fromDate
      *
-     * @return void
+     * @return array    Migrated payment ids
      * @throws Exception
      */
-    private function migratePaymentIds(?int $fromDate): void
+    private function migratePaymentIds(?int $fromDate): array
     {
+        $migratedIds = []; // List of migrated ids
         $table = $this->connection->getTableName('sales_order_payment');
         if ($this->columnsExists($table, 'maksuturva_pmt_id', 'svea_payment_id')) {
             $valuesByIds = $this->getPaymentIdValuePairs($table, $fromDate);
@@ -256,8 +269,10 @@ class MigrateSales implements MigrateSalesInterface
                 foreach ($valuesByIds as $id => $value) {
                     $where = $this->connection->quoteInto("entity_id = ? AND svea_payment_id IS NULL", $id);
                     $this->connection->update($table, ['svea_payment_id' => $value], [$where]);
+                    $migratedIds[] = $id; // Add migrated id to the list
                 }
                 $this->connection->commit();
+                return $migratedIds; // Return migrated ids
             } catch (Exception $exception) {
                 $this->connection->rollBack();
                 throw new Exception($exception);

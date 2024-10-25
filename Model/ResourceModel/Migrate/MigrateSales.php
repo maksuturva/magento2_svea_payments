@@ -44,6 +44,17 @@ class MigrateSales implements MigrateSalesInterface
         print("Sales data migration completed.\n");
     }
 
+    /** TODO: 
+     * order
+     * 
+     *       * from:
+     *        3 | {"maksuturva_transaction_id":"365d590cf9a3a0a3"} 
+     *        4 | {"maksuturva_transaction_id":"09587bc0c7ec0e0e"} 
+     * to:
+     *        5 | {"svea_transaction_id":"W3QvG4Fk3Q1u0farK9mz"}   
+     *        6 | {"svea_transaction_id":"3LZlhy96zzG9YSZvpX1k"} 
+    */
+    
     /**
      * Use migrated payment ids list to update payment additional info
      * 
@@ -54,13 +65,7 @@ class MigrateSales implements MigrateSalesInterface
      * to:
      *      5 | {"svea_method_code":"FI01","svea_method_group":"svea_collated_payment_payment_method_subgroup_3","svea_preselected_payment_method":"FI01","method_title":"Svea Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS07126c265770bc3a49ca3489b1891c6803c3efff000000000000001949466323!"}
      *       6 | {"svea_method_code":"FI01","svea_method_group":"","svea_preselected_payment_method":"FI01","method_title":"Svea Online Bank Payments","gateway_redirect_url":"https:\/\/test1.maksuturva.fi\/Pay.pmt?ST=BS00228f83d9ea2923a0787415da9d66df816b7438000000000000001766945630!"}                                  
-     *
-     * from:
-     *        3 | {"maksuturva_transaction_id":"365d590cf9a3a0a3"} 
-     *        4 | {"maksuturva_transaction_id":"09587bc0c7ec0e0e"} 
-     * to:
-     *        5 | {"svea_transaction_id":"W3QvG4Fk3Q1u0farK9mz"}   
-     *        6 | {"svea_transaction_id":"3LZlhy96zzG9YSZvpX1k"}   
+     * 
      * 
      *  @return void
      * @throws Exception
@@ -110,7 +115,7 @@ class MigrateSales implements MigrateSalesInterface
      */
     private function getPaymentInfo(string $table, string $paymentId): array
     {
-        $selectClause = "select entity_id,additional_information,maksuturva_transaction_id from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        $selectClause = "select entity_id,additional_information from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
         return $this->connection->fetchAll($selectClause);
     }
 

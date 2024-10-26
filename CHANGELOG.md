@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.0.13] - 2024-10-26
+* Migration scripts updated
+
+### [1.0.12] - 2024-10-22
+* Create transaction for delayed capture invoices by @ville6000 in #18
+
+### [1.0.11]
+* Add setting for generating invoice on order creation by @ville6000 in #17
+
+### [1.0.10]
+* Round handling fee tax to 2 decimals by @ville6000 in #15
+* Do not create invoice when capturing delayed payment by @ville6000 in #16
+
 ### [Unreleased]
 * Handling fee tax rounding
 

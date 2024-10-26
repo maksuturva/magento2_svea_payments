@@ -72,7 +72,6 @@ class MigrateSales implements MigrateSalesInterface
                 $ai = $order_payment[0]['additional_information'];
                 $ad = $order_payment[0]['additional_data'];
                 
-                print("Updating payment additional info for order id: {$id} and old additional_information: {$ai}\n");
                 $ai = json_decode($ai, true);
                 $ai['svea_method_code'] = $ai['sub_payment_method'];
                 $ai['svea_method_group'] = $ai['collated_method'];

@@ -95,9 +95,9 @@ class MigrateSales implements MigrateSalesInterface
         }
 
         if ($updatedRows == 0) {
-            print("No rows updated. Maybe the sales migration is done already.\n");
+            print("❌ No rows updated. Maybe the sales migration is done already.\n");
         } else {
-            print("Updated {$updatedRows} rows.\n");    
+            print("✅ Updated {$updatedRows} rows.\n");    
         }
     }
 

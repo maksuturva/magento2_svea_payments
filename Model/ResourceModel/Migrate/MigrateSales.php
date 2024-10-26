@@ -28,13 +28,91 @@ class MigrateSales implements MigrateSalesInterface
     }
 
     /**
+     * Execute migration
+     * 
      * @inheritDoc
      */
     public function execute(?int $fromDate = null): void
     {
+        print("🚀 Migrating sales data \n");
         $this->connection = $this->resourceConnection->getConnection();
+        print("\t 📁 Migrating handling fees...\n");
         $this->migrateHandlingFees($fromDate);
-        $this->migratePaymentIds($fromDate);
+        print("\t 📁 Migrating payment ids...\n");
+        $migratedIds = $this->migratePaymentIds($fromDate);
+        $cntIds = count($migratedIds);
+        print("\t 📁 Found {$cntIds} payments, migrating...\n");
+        $this->migratePayments($migratedIds);
+        print("👌 Sales data migration completed.\n");
+    }
+
+    /**
+     * Use migrated payment ids list to update payment additional info
+     * 
+     * Debugging: select entity_id,additional_data,svea_payment_id,additional_information from sales_order_payment;
+     * @param array $migratedIds
+     * 
+     * @return void
+     * @throws Exception
+     */
+    private function migratePayments(array $migratedIds): void
+    {   
+        $updatedRows = 0;
+        $table = $this->connection->getTableName("sales_order_payment");
+
+        foreach ($migratedIds as $id) {
+            $order_payment = $this->getPaymentInfo($table, $id);
+
+            if (empty($order_payment)) {
+                continue;
+            }
+            try {
+                $this->connection->beginTransaction();
+                $id = $order_payment[0]['entity_id'];
+                $ai = $order_payment[0]['additional_information'];
+                $ad = $order_payment[0]['additional_data'];
+                
+                $ai = json_decode($ai, true);
+                $ai['svea_method_code'] = $ai['sub_payment_method'];
+                $ai['svea_method_group'] = $ai['collated_method'];
+                $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
+                $airesult = json_encode($ai);
+
+                $ad = json_decode($ad, true);
+                $ad['svea_transaction_id'] = $ad['maksuturva_transaction_id'];
+                $adresult = json_encode($ad);
+
+                $where = $this->connection->quoteInto("entity_id = ?", $id);
+                $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);
+                
+                $this->connection->commit();
+                $updatedRows++;
+            } catch (Exception $exception) {
+                $this->connection->rollBack();
+                print("Error updating payment for id: {$id}, {$exception->getMessage()} \n");
+                throw new Exception($exception);
+            }       
+        }
+
+        if ($updatedRows == 0) {
+            print("❌ No rows updated. Maybe the sales migration is done already.\n");
+        } else {
+            print("✅ Updated {$updatedRows} rows.\n");    
+        }
+    }
+
+    /**
+     * Get payment (additional) info by payment id
+     * 
+     * @param string $table
+     * @param string $paymentId
+     *
+     * @return array
+     */
+    private function getPaymentInfo(string $table, string $paymentId): array
+    {
+        $selectClause = "select entity_id,additional_information,additional_data from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        return $this->connection->fetchAll($selectClause);
     }
 
     /**
@@ -177,11 +255,12 @@ class MigrateSales implements MigrateSalesInterface
     /**
      * @param int|null $fromDate
      *
-     * @return void
+     * @return array    Migrated payment ids
      * @throws Exception
      */
-    private function migratePaymentIds(?int $fromDate): void
+    private function migratePaymentIds(?int $fromDate): array
     {
+        $migratedIds = []; // List of migrated ids
         $table = $this->connection->getTableName('sales_order_payment');
         if ($this->columnsExists($table, 'maksuturva_pmt_id', 'svea_payment_id')) {
             $valuesByIds = $this->getPaymentIdValuePairs($table, $fromDate);
@@ -190,8 +269,10 @@ class MigrateSales implements MigrateSalesInterface
                 foreach ($valuesByIds as $id => $value) {
                     $where = $this->connection->quoteInto("entity_id = ? AND svea_payment_id IS NULL", $id);
                     $this->connection->update($table, ['svea_payment_id' => $value], [$where]);
+                    $migratedIds[] = $value; // Add migrated id to the list
                 }
                 $this->connection->commit();
+                return $migratedIds; // Return migrated ids
             } catch (Exception $exception) {
                 $this->connection->rollBack();
                 throw new Exception($exception);

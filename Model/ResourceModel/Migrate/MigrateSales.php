@@ -63,7 +63,7 @@ class MigrateSales implements MigrateSalesInterface
         foreach ($migratedIds as $id) {
             $order_payment = $this->getPaymentInfo($table, $id);
 
-            if (empty($additional_info)) {
+            if (empty($order_payment)) {
                 continue;
             }
             try {

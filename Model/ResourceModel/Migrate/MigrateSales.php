@@ -28,20 +28,21 @@ class MigrateSales implements MigrateSalesInterface
     }
 
     /**
+     * Execute migration
+     * 
      * @inheritDoc
      */
     public function execute(?int $fromDate = null): void
     {
-        print("Migrating sales data...\n");
+        print("🚀 Migrating sales data \n");
         $this->connection = $this->resourceConnection->getConnection();
-        print("Connection established...\n");
-        print("Migrating handling fees...\n");
+        print("\t 📁 Migrating handling fees...\n");
         $this->migrateHandlingFees($fromDate);
-        print("Migrating payment ids...\n");
+        print("\t 📁 Migrating payment ids...\n");
         $migratedIds = $this->migratePaymentIds($fromDate);
-        print("Migrating payments...\n");
+        print("\t 📁 Migrating payments...\n");
         $this->migratePayments($migratedIds);
-        print("Sales data migration completed.\n");
+        print("👌 Sales data migration completed.\n");
     }
 
     /** TODO: 
@@ -58,6 +59,7 @@ class MigrateSales implements MigrateSalesInterface
     /**
      * Use migrated payment ids list to update payment additional info
      * 
+     * Debugging: select entity_id,additional_data,svea_payment_id,additional_information from sales_order_payment;
      * @param array $migratedIds
      * 
      * @return void
@@ -69,25 +71,32 @@ class MigrateSales implements MigrateSalesInterface
         $table = $this->connection->getTableName("sales_order_payment");
 
         foreach ($migratedIds as $id) {
-            $additional_info = $this->getPaymentInfo($table, $id);
+            $order_payment = $this->getPaymentInfo($table, $id);
+
             if (empty($additional_info)) {
                 continue;
             }
             try {
                 $this->connection->beginTransaction();
-                $id = $additional_info[0]['entity_id'];
-                $value = $additional_info[0]['additional_information'];
+                $id = $order_payment[0]['entity_id'];
+                $ai = $order_payment[0]['additional_information'];
+                $ad = $order_payment[0]['additional_data'];
                 
-                print("Updating payment additional info for order id: {$id} and old additional_info: {$value}\n");
-                $value = json_decode($value, true);
-                $value['svea_method_code'] = $value['sub_payment_method'];
-                $value['svea_method_group'] = $value['collated_method'];
-                $value['svea_preselected_payment_method'] = $value['maksuturva_preselected_payment_method'];
-                $value = json_encode($value);
-                
-                print("New additional_info: {$value}\n");
+                print("Updating payment additional info for order id: {$id} and old additional_information: {$ai}\n");
+                $ai = json_decode($ai, true);
+                $ai['svea_method_code'] = $ai['sub_payment_method'];
+                $ai['svea_method_group'] = $ai['collated_method'];
+                $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
+                $airesult = json_encode($ai);
+
+                print("Updating payment additional data for order id: {$id} and old additional_data: {$ad}\n");
+                $ad = json_decode($ad, true);
+                $ad['svea_transaction_id'] = $ad['maksuturva_transaction_id'];
+                $adresult = json_encode($ad);
+
+                print("New additional_infoinformation: {$airesult} and additional_data: {$adresult}\n");
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
-                $this->connection->update($table, ['additional_information' => $value], [$where]);
+                $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);
                 
                 $this->connection->commit();
                 $updatedRows++;

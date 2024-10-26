@@ -40,7 +40,8 @@ class MigrateSales implements MigrateSalesInterface
         $this->migrateHandlingFees($fromDate);
         print("\t 📁 Migrating payment ids...\n");
         $migratedIds = $this->migratePaymentIds($fromDate);
-        print("\t 📁 Migrating payments...\n");
+        $cntIds = count($migratedIds);
+        print("\t 📁 Found {$cntIds} payments, migrating...\n");
         $this->migratePayments($migratedIds);
         print("👌 Sales data migration completed.\n");
     }

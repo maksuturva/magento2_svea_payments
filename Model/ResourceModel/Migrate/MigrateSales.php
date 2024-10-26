@@ -45,17 +45,6 @@ class MigrateSales implements MigrateSalesInterface
         print("👌 Sales data migration completed.\n");
     }
 
-    /** TODO: 
-     * order
-     * 
-     *       * from:
-     *        3 | {"maksuturva_transaction_id":"365d590cf9a3a0a3"} 
-     *        4 | {"maksuturva_transaction_id":"09587bc0c7ec0e0e"} 
-     * to:
-     *        5 | {"svea_transaction_id":"W3QvG4Fk3Q1u0farK9mz"}   
-     *        6 | {"svea_transaction_id":"3LZlhy96zzG9YSZvpX1k"} 
-    */
-
     /**
      * Use migrated payment ids list to update payment additional info
      * 
@@ -89,12 +78,10 @@ class MigrateSales implements MigrateSalesInterface
                 $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
                 $airesult = json_encode($ai);
 
-                print("Updating payment additional data for order id: {$id} and old additional_data: {$ad}\n");
                 $ad = json_decode($ad, true);
                 $ad['svea_transaction_id'] = $ad['maksuturva_transaction_id'];
                 $adresult = json_encode($ad);
 
-                print("New additional_infoinformation: {$airesult} and additional_data: {$adresult}\n");
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
                 $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);
                 
@@ -102,11 +89,16 @@ class MigrateSales implements MigrateSalesInterface
                 $updatedRows++;
             } catch (Exception $exception) {
                 $this->connection->rollBack();
+                print("Error updating payment for id: {$id}, {$exception->getMessage()} \n");
                 throw new Exception($exception);
             }       
         }
 
-        print("Updated {$updatedRows} rows.\n");    
+        if ($updatedRows == 0) {
+            print("No rows updated. Maybe the sales migration is done already.\n");
+        } else {
+            print("Updated {$updatedRows} rows.\n");    
+        }
     }
 
     /**
@@ -119,7 +111,7 @@ class MigrateSales implements MigrateSalesInterface
      */
     private function getPaymentInfo(string $table, string $paymentId): array
     {
-        $selectClause = "select entity_id,additional_information from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
+        $selectClause = "select entity_id,additional_information,additional_data from {$table} where additional_information IS NOT NULL AND svea_payment_id LIKE '{$paymentId}'";
         return $this->connection->fetchAll($selectClause);
     }
 

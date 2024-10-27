@@ -63,8 +63,11 @@ class Cancellation
         $order->setActionFlag(Order::ACTION_FLAG_CANCEL, true);
         $order->cancel();
         $order->addCommentToStatusHistory(\__('Payment canceled in Svea Payments.'), 'pay_aborted');
+        $order->setStatus(Order::STATE_CANCELED, true, __('You have cancelled your payment in Svea Payments.') );
+
         $this->orderResource->save($order);
         $transactionId = $this->paymentData->getSveaTransactionId($order->getPayment());
+        
         $this->logger->info(
             \__(
                 "Cancel action controller, order %1 cancelled for payment %2",

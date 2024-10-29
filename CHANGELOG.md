@@ -1,8 +1,9 @@
 # Changelog
 
-### [1.0.13] - 2024-10-26
+### [not released]
 * Migration scripts updated
 * Set the order status to cancelled when the customer cancels the payment
+* Fix the amount in the product page part payment calculator to include tax 
 
 ### [1.0.12] - 2024-10-23
 * Create transactions for delayed capture orders when creating an invoice

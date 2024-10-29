@@ -61,7 +61,7 @@ if ($_product->getTypeId() == 'bundle') {
                 "components": {
                     "calculator-holder": {
                         "component": "Svea_SveaPayment/js/view/calculator/pdp/calculator-handle-pdp",
-                        "productPrice": "<?= $block->escapeHtmlAttr($_product->getFinalPrice()); ?>",
+                        "productPrice": "<?= $block->escapeHtmlAttr($_product->getPriceInfo()->getPrice('final_price')->getAmount() ) ?>",
                         "productType": "<?= $block->escapeHtmlAttr($_product->getTypeId()); ?>",
                         "bundlePrice":"<?= $bundlePrice ?>"
                     }

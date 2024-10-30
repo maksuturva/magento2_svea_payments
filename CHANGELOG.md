@@ -1,6 +1,6 @@
 # Changelog
 
-### [not released]
+### [1.0.13] - 2024-10-30
 * Migration scripts updated
 * Set the order status to cancelled when the customer cancels the payment
 * Fix the amount in the product page part payment calculator to include tax 

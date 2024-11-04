@@ -149,11 +149,6 @@
                         These include for example target bank account (IBAN), reference number and money amount. Default: No.
                     </comment>
                 </field>
-                <field id="generate_invoice" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Generate invoice automatically</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>To generate invoice when customer paid</comment>
-                </field>
             </group>
         </section>
         <section id="svea_part_payment_calculator" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.0.14] - 2024-11-04
+* Remove setting for generating invoice on order creation
+
 ### [1.0.13] - 2024-10-30
 * Migration scripts updated
 * Set the order status to cancelled when the customer cancels the payment

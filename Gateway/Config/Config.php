@@ -33,7 +33,6 @@ class Config extends GatewayConfig
     const MANUAL_QUERY_CHECK_SHORT = 'svea_config/svea_payment/manual_query_check_short';
     const MANUAL_QUERY_CHECK_LONG = 'svea_config/svea_payment/manual_query_check_long';
     const RESTORE_SHOPPING_CART = 'svea_config/svea_payment/restore_shopping_cart';
-    const GENERATE_INVOICE = 'svea_config/svea_payment/generate_invoice';
     const PART_PAYMENT_CALCULATOR_ENABLED = 'svea_part_payment_calculator/calculator_config/enabled';
     const PART_PAYMENT_CALCULATOR_PLACEMENT = 'svea_part_payment_calculator/calculator_config/placement';
     const PART_PAYMENT_CALCULATOR_PURCHASE_PRICE_VISIBILITY = 'svea_part_payment_calculator/calculator_config/purchase_price_visibility';
@@ -177,11 +176,6 @@ class Config extends GatewayConfig
     public function getRestoreShoppingCart(): ?string
     {
         return $this->scopeConfig->getValue(self::RESTORE_SHOPPING_CART, ScopeInterface::SCOPE_STORE);
-    }
-
-    public function getGenerateInvoice(): bool
-    {
-        return $this->scopeConfig->isSetFlag(self::GENERATE_INVOICE, ScopeInterface::SCOPE_STORE);
     }
 
     public function isCalculatorEnabled(): bool

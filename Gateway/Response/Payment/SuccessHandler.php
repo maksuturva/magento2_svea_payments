@@ -156,10 +156,10 @@ class SuccessHandler
         $request = $this->requestBuilder->buildFrom($order->getPayment());
         $this->validateRequestAndResponse($order, $request, $params);
 
-        if(!$this->validatePaymentStatus($order)) {
+        if(($status = $this->validatePaymentStatus($order)) === false) {
             throw new PaymentHandlingException(\__('Order payment status failed:'), $order, null,500);
         }
-
+        $order->getPayment()->setAdditionalInformation('svea_method_code', $status[ResponseHandler::RESPONSE_PAYMENT_METHOD]);
         if ($order->getId()) {
             try {
                 $this->processOrder($order, $request, $params);
@@ -183,7 +183,7 @@ class SuccessHandler
      * @param $order
      * @return bool
      */
-    private function validatePaymentStatus($order): bool {
+    private function validatePaymentStatus($order): bool|array {
         $payment = $order->getPayment();
         $paymentStatusQuery = $this->paymentStatusQueryBuilder->build($payment);
         $paymentStatusResponse = $this->apiClient->paymentStatusQuery($paymentStatusQuery);
@@ -194,8 +194,7 @@ class SuccessHandler
             );
             return false;
         }
-
-        return true;
+        return $paymentStatusResponse;
     }
     /**
      * @param string $message

@@ -19,6 +19,12 @@ define([
             ? extension_attributes.svea_method_group
             : null;
 
+        if (methodCode == null) {
+            getTotalsAction([]);
+            fullScreenLoader.stopLoader();
+            return;
+        }
+
         let data = {
             store: quote.getStoreCode(),
             payment_method: paymentMethod.method,

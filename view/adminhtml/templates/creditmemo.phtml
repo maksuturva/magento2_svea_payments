@@ -1,11 +1,15 @@
-<?php $order = $block->getOrder() ?>
+<?php
+    $order = $block->getOrder();
+    $memo = $block->getCreditMemo();
+    $display = ['display' => \Magento\Framework\Currency::NO_SYMBOL];
+?>
 
 <tr>
     <td class="label"><?= /* @escapeNotVerified */ \__('Invoicing Fee') ?><div id="svea_handling_fee"></div></td>
     <td>
         <input type="text"
                name="creditmemo[svea_handling_fee]"
-               value="<?= (float)$order->getSveaHandlingFee() - (float)$order->getSveaRefundedHandlingFee() ?>"
+               value="<?= $order->getBaseCurrency()->format((float)$memo->getSveaHandlingFee(), $display, false) ?>"
                class="input-text admin__control-text not-negative-amount"
                id="svea_handling_fee" />
     </td>

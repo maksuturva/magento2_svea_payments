@@ -36,15 +36,19 @@ class HandlingFeeTax extends AbstractTotal
         $order = $creditmemo->getOrder();
         $fee = $this->handlingFee->getTaxAmount($order);
         $allowedAmount = $fee - $this->handlingFee->getRefundedTaxValue($order);
-        $desiredAmount = round((float)$this->handlingFee->getBaseTaxAmount($creditmemo), 2);
-        if ($desiredAmount > round($allowedAmount) + 0.0001) {
-            $allowedAmount = $order->getBaseCurrency()->format($allowedAmount, null, false);
-            throw new LocalizedException(
-                __('Maximum invoicing fee tax amount allowed to refund is: %1', $allowedAmount)
-            );
+        if ($creditmemo->hasSveaBaseHandlingFeeTax()) {
+            $desiredAmount = round((float)$this->handlingFee->getBaseTaxAmount($creditmemo), 2);
+            if ($desiredAmount > round($allowedAmount, 2) + 0.0001) {
+                $allowedAmount = $order->getBaseCurrency()->format($allowedAmount, null, false);
+                throw new LocalizedException(
+                    __('Maximum invoicing fee tax amount allowed to refund is: %1', $allowedAmount)
+                );
+            }
+        } else {
+            $desiredAmount = $allowedAmount;
         }
-        $this->handlingFee->setTaxAmount($creditmemo, $allowedAmount);
-        $creditmemo->setGrandTotal($creditmemo->getGrandTotal() + $allowedAmount);
+        $this->handlingFee->setTaxAmount($creditmemo, $desiredAmount);
+        $creditmemo->setGrandTotal($creditmemo->getGrandTotal() + $desiredAmount);
         $creditmemo->setBaseGrandTotal($creditmemo->getBaseGrandTotal() + $desiredAmount);
 
         return $this;

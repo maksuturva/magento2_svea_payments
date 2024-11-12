@@ -41,9 +41,13 @@ class MigrateSales implements MigrateSalesInterface
         print("\t 📁 Migrating payment ids...\n");
         $migratedIds = $this->migratePaymentIds($fromDate);
         $cntIds = count($migratedIds);
-        print("\t 📁 Found {$cntIds} payments, migrating...\n");
-        $this->migratePayments($migratedIds);
-        print("👌 Sales data migration completed.\n");
+        if ($cntIds == 0) {
+            print("\t ❌ No payment ids found for migration.\n");
+        } else {     
+            print("\t 📁 Found {$cntIds} payments, migrating...\n");
+            $this->migratePayments($migratedIds);
+            print("👌 Sales data migration completed.\n");
+        }
     }
 
     /**

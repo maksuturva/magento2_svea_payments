@@ -284,6 +284,9 @@ class MigrateSales implements MigrateSalesInterface
                 $this->connection->rollBack();
                 throw new Exception($exception);
             }
+        } else {
+            print("❌ Columns 'maksuturva_pmt_id' or/and 'svea_payment_id' do not exist in the database.\n");
+            return $migratedIds;
         }
     }
 

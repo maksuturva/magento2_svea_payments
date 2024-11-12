@@ -265,6 +265,12 @@ class MigrateSales implements MigrateSalesInterface
         $table = $this->connection->getTableName('sales_order_payment');
         if ($this->columnsExists($table, 'maksuturva_pmt_id', 'svea_payment_id')) {
             $valuesByIds = $this->getPaymentIdValuePairs($table, $fromDate);
+
+            if (empty($valuesByIds)) {
+                print("❌ Zero matching rows with Svea payment ids found in the database.\n");
+                return $migratedIds;
+            }
+
             try {
                 $this->connection->beginTransaction();
                 foreach ($valuesByIds as $id => $value) {

@@ -100,9 +100,9 @@ class MigrateSales implements MigrateSalesInterface
         }
 
         if ($updatedRows == 0) {
-            print("❌ No rows updated. Maybe the sales migration is done already.\n");
+            print("\t❌ No rows updated. Maybe the sales migration is done already.\n");
         } else {
-            print("✅ Updated {$updatedRows} and skipped {$skippedRows} rows in the database.\n");    
+            print("\t✅ Updated {$updatedRows} and skipped {$skippedRows} rows in the database.\n");    
         }
     }
 
@@ -289,7 +289,7 @@ class MigrateSales implements MigrateSalesInterface
                 throw new Exception($exception);
             }
         } else {
-            print("❌ Columns 'maksuturva_pmt_id' or/and 'svea_payment_id' do not exist in the database.\n");
+            print("\t❌ Columns 'maksuturva_pmt_id' or/and 'svea_payment_id' do not exist in the database.\n");
             return $migratedIds;
         }
     }

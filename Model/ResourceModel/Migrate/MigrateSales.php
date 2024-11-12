@@ -58,6 +58,7 @@ class MigrateSales implements MigrateSalesInterface
     private function migratePayments(array $migratedIds): void
     {   
         $updatedRows = 0;
+        $skippedRows = 0;
         $table = $this->connection->getTableName("sales_order_payment");
 
         foreach ($migratedIds as $id) {
@@ -89,15 +90,15 @@ class MigrateSales implements MigrateSalesInterface
                 $updatedRows++;
             } catch (Exception $exception) {
                 $this->connection->rollBack();
-                print("Error updating payment for id: {$id}, {$exception->getMessage()} \n");
-                throw new Exception($exception);
+                $skippedRows++;
+                print("Error updating payment for id: {$id}, reason: {$exception->getMessage()} \n");
             }       
         }
 
         if ($updatedRows == 0) {
             print("❌ No rows updated. Maybe the sales migration is done already.\n");
         } else {
-            print("✅ Updated {$updatedRows} rows.\n");    
+            print("✅ Updated {$updatedRows} and skipped {$skippedRows} rows in the database.\n");    
         }
     }
 

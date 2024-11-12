@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.0.15] -
+* Updated the migration script to also handle more unusual cases.
+
 ### [1.0.14] - 2024-11-04
 * Remove setting for generating invoice on order creation
 

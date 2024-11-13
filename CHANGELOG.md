@@ -1,7 +1,9 @@
 # Changelog
 
-### Not released
+### [1.0.15] -
 * Enable changing amount of handling fee and handling fee tax to refund.
+* Updated the migration script to also handle more unusual cases.
+* Save payment method from payment verification.
 
 ### [1.0.14] - 2024-11-04
 * Remove setting for generating invoice on order creation

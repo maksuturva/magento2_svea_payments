@@ -41,9 +41,13 @@ class MigrateSales implements MigrateSalesInterface
         print("\t 📁 Migrating payment ids...\n");
         $migratedIds = $this->migratePaymentIds($fromDate);
         $cntIds = count($migratedIds);
-        print("\t 📁 Found {$cntIds} payments, migrating...\n");
-        $this->migratePayments($migratedIds);
-        print("👌 Sales data migration completed.\n");
+        if ($cntIds == 0) {
+            print("\t ❌ No payment ids found for migration.\n");
+        } else {     
+            print("\t 📁 Found {$cntIds} payments, migrating...\n");
+            $this->migratePayments($migratedIds);
+            print("👌 Sales data migration completed.\n");
+        }
     }
 
     /**
@@ -58,6 +62,7 @@ class MigrateSales implements MigrateSalesInterface
     private function migratePayments(array $migratedIds): void
     {   
         $updatedRows = 0;
+        $skippedRows = 0;
         $table = $this->connection->getTableName("sales_order_payment");
 
         foreach ($migratedIds as $id) {
@@ -89,15 +94,15 @@ class MigrateSales implements MigrateSalesInterface
                 $updatedRows++;
             } catch (Exception $exception) {
                 $this->connection->rollBack();
-                print("Error updating payment for id: {$id}, {$exception->getMessage()} \n");
-                throw new Exception($exception);
+                $skippedRows++;
+                print("Error updating payment for id: {$id}, reason: {$exception->getMessage()} \n");
             }       
         }
 
         if ($updatedRows == 0) {
-            print("❌ No rows updated. Maybe the sales migration is done already.\n");
+            print("\t❌ No rows updated. Maybe the sales migration is done already.\n");
         } else {
-            print("✅ Updated {$updatedRows} rows.\n");    
+            print("\t✅ Updated {$updatedRows} and skipped {$skippedRows} rows in the database.\n");    
         }
     }
 
@@ -264,6 +269,12 @@ class MigrateSales implements MigrateSalesInterface
         $table = $this->connection->getTableName('sales_order_payment');
         if ($this->columnsExists($table, 'maksuturva_pmt_id', 'svea_payment_id')) {
             $valuesByIds = $this->getPaymentIdValuePairs($table, $fromDate);
+
+            if (empty($valuesByIds)) {
+                print("❌ Zero matching rows with Svea payment ids found in the database.\n");
+                return $migratedIds;
+            }
+
             try {
                 $this->connection->beginTransaction();
                 foreach ($valuesByIds as $id => $value) {
@@ -277,6 +288,9 @@ class MigrateSales implements MigrateSalesInterface
                 $this->connection->rollBack();
                 throw new Exception($exception);
             }
+        } else {
+            print("\t❌ Columns 'maksuturva_pmt_id' or/and 'svea_payment_id' do not exist in the database.\n");
+            return $migratedIds;
         }
     }
 

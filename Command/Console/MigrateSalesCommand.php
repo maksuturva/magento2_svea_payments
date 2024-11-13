@@ -51,7 +51,7 @@ class MigrateSalesCommand extends Command
         }
         try {
             $this->migrateSales->execute($fromDate);
-            $output->writeln('Orders migrated successfully.');
+            $output->writeln('Done.');
         } catch (Exception $e) {
             $output->writeln(sprintf(
                 '<error>%s</error>',

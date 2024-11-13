@@ -1,10 +1,13 @@
-<?php $order = $block->getOrder() ?>
+<?php
+    $order = $block->getOrder();
+    $memo = $block->getCreditMemo();
+ ?>
 
 <tr>
     <td class="label">
         <div class="summary-collapse" tabindex="0"><?= /* @escapeNotVerified */ \__('Invoicing Fee Tax') ?></div>
     </td>
     <td>
-        <span class="price"><?= $order->getBaseCurrency()->format((float)$order->getSveaHandlingFeeTax(), null, false) ?></span>
+        <span class="price"><?= $order->getBaseCurrency()->format((float)$memo->getSveaHandlingFeeTax(), null, false) ?></span>
     </td>
 </tr>

@@ -28,6 +28,7 @@ class HandlingFee extends AbstractTotal
     {
         $amount = $this->handlingFee->getValue($invoice->getOrder());
         $this->handlingFee->setValue($invoice, $amount);
+        $this->handlingFee->setBaseValue($invoice, $amount);
 
         $invoice->setGrandTotal($invoice->getGrandTotal() + $amount);
         $invoice->setBaseGrandTotal($invoice->getBaseGrandTotal() + $amount);

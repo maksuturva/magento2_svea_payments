@@ -1,5 +1,9 @@
 # Changelog
 
+### Unpublished
+* Show message on admin page if Svea Seller ID is not set
+  * Clear cached payment methods if Svea Payments settings change
+
 ### [1.0.15] - 2024-11-14
 * Enable changing amount of handling fee and handling fee tax to refund.
 * Updated the migration script to also handle more unusual cases.

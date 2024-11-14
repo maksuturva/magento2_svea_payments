@@ -24,4 +24,7 @@
     <event name="sales_order_shipment_track_delete_after">
         <observer name="svea_delete_delivery_handler" instance="Svea\SveaPayment\Observer\Shipment\DeleteDeliveryInformation" />
     </event>
+    <event name="admin_system_config_changed_section_svea_config">
+        <observer name="svea_clear_cached_payment_methods" instance="Svea\SveaPayment\Observer\ClearCachedPaymentMethods" />
+    </event>
 </config>

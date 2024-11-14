@@ -14,6 +14,14 @@
         <plugin name="svea_payment_sales_payment_info_plugin" type="Svea\SveaPayment\Plugin\Sales\Model\Order\Payment\InfoPlugin"/>
     </type>
 
+    <type name="Magento\Framework\Notification\MessageList">
+       <arguments>
+           <argument name="messages" xsi:type="array">
+               <item name="sveaConfigurationNotification" xsi:type="string">Svea\SveaPayment\Model\System\Message\SveaConfigurationNotification</item>
+           </argument>
+       </arguments>
+    </type>
+
     <!-- SCRIPT VALIDATORS -->
     <type name="Svea\SveaPayment\Model\PartPaymentCalculator\ScriptValidator\Validator">
         <arguments>

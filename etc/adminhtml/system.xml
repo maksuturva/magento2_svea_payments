@@ -17,7 +17,7 @@
                 <field id="sellerid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Seller ID</label>
-                    <validate>required-entry</validate>
+                    <validate>required-entry validate-length minimum-length-8</validate>
                     <comment><![CDATA[8 or more characters. See <a target="_blank" href="http://docs.sveapayments.fi/testing/personal-test-credentials/">Personal test credentials</a> for further information on how to test Svea Payments integration.]]></comment>
                 </field>
                 <field id="secretkey" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">

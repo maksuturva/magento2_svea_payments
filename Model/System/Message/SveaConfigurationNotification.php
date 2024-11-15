@@ -56,9 +56,9 @@ class SveaConfigurationNotification implements MessageInterface
      */
     public function getText()
     {
-        $paymentsUrl = $this->urlInterface->getUrl('adminhtml/system_config/edit/section/svea_payment');
+        $paymentsUrl = $this->urlInterface->getUrl('adminhtml/system_config/edit/section/svea_config');
 
-        return __('<a href="' . $paymentsUrl . '">Svea Payments</a>: Seller ID is mandatory. It is needed in order to retrieve available payment methods from Svea.');
+        return __('<a href="' . $paymentsUrl . '">Svea Payments Configuration</a>: Seller ID is mandatory. It is needed in order to retrieve available payment methods from Svea.');
     }
 
     /**

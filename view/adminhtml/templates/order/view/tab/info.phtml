@@ -29,7 +29,14 @@
                 </div>
 
                 <div class="order-payment-additional">
-                    <?= $block->getChildHtml('order_payment_additional') ?>
+                    <?php
+                        $additionalInfoBlock = $block->getChildBlock('order_payment_additional');
+                        if ($additionalInfoBlock && strpos($block->getChildHtml('order_payment_additional'), 'not available') !== false) {
+                            echo "Migrated payment method. Additional information is not available.";                            
+                        } else {
+                            echo $block->getChildHtml('order_payment_additional');
+                        }
+                    ?>
                     <?= $block->getChildHtml('payment_additional_info') ?>
                     <div class="order-payment-code">
                         <?= $block->escapeHtml(\__('Method code: %1', $block->getPaymentMethodCode())) ?>

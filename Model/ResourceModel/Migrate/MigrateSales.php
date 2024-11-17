@@ -72,20 +72,36 @@ class MigrateSales implements MigrateSalesInterface
                 continue;
             }
             try {
-                $this->connection->beginTransaction();
                 $id = $order_payment[0]['entity_id'];
                 $ai = $order_payment[0]['additional_information'];
                 $ad = $order_payment[0]['additional_data'];
                 
-                $ai = json_decode($ai, true);
-                $ai['svea_method_code'] = $ai['sub_payment_method'];
-                $ai['svea_method_group'] = $ai['collated_method'];
-                $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
-                $airesult = json_encode($ai);
-
                 $ad = json_decode($ad, true);
+
+                // check if the payment is created with the old module, if not skip
+                if (!array_key_exists('maksuturva_transaction_id', $ad) || empty($ad['maksuturva_transaction_id'])) {
+                    print("\t❌ The payment {$id} was not migrated because it was not made using the old payment module.\n");
+                    continue;
+                }
+
                 $ad['svea_transaction_id'] = $ad['maksuturva_transaction_id'];
                 $adresult = json_encode($ad);
+
+                $ai = json_decode($ai, true);
+                if (!empty($ai['sub_payment_method'])) {
+                    // Sub payment method is the payment method code
+                    $ai['svea_method_code'] = $ai['sub_payment_method'];
+                    $ai['svea_method_group'] = $ai['method_title'] . " " . $ai['collated_method'];
+                    $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
+                } else {
+                    // Payment method without sub payment method
+                    $ai['svea_method_code'] = $ai['maksuturva_preselected_payment_method'];
+                    $ai['svea_method_group'] = $ai['method_title'];
+                    $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
+                }
+
+                $airesult = json_encode($ai);
+                $this->connection->beginTransaction();
 
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
                 $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);

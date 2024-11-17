@@ -100,10 +100,13 @@ class MigrateSales implements MigrateSalesInterface
                     $ai['svea_method_group'] = $ai['method_title'] . " " . $ai['collated_method'];
                     $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
                 } else {
-                    // Payment method without sub payment method
-                    $ai['svea_method_code'] = $ai['maksuturva_preselected_payment_method'];
+                    // Payment method without sub payment method. This can be separate payment method or Svea service payment selection
+                    if (!empty($ai['maksuturva_preselected_payment_method'])) {
+                        $ai['svea_method_code'] = $ai['maksuturva_preselected_payment_method'];
+                        $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
+                    }
+                    // method title should be always set
                     $ai['svea_method_group'] = $ai['method_title'];
-                    $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
                 }
                 $airesult = json_encode($ai);
                 

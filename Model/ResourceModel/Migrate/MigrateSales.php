@@ -69,9 +69,11 @@ class MigrateSales implements MigrateSalesInterface
             $order_payment = $this->getPaymentInfo($table, $id);
 
             if (empty($order_payment)) {
+                $skippedRows++;
                 continue;
             }
             try {
+                // Start transaction at the beginning as we want to catch all errors and to be able to rollback
                 $this->connection->beginTransaction();
 
                 $id = $order_payment[0]['entity_id'];
@@ -83,6 +85,8 @@ class MigrateSales implements MigrateSalesInterface
                 // check if the payment is created with the old module, if not skip
                 if (!array_key_exists('maksuturva_transaction_id', $ad) || empty($ad['maksuturva_transaction_id'])) {
                     print("\t❌ The payment {$id} was not migrated because it was not made using the old payment module.\n");
+                    $this->connection->rollBack();
+                    $skippedRows++;
                     continue;
                 }
 
@@ -101,12 +105,11 @@ class MigrateSales implements MigrateSalesInterface
                     $ai['svea_method_group'] = $ai['method_title'];
                     $ai['svea_preselected_payment_method'] = $ai['maksuturva_preselected_payment_method'];
                 }
-
                 $airesult = json_encode($ai);
                 
+                // update with migrated data
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
                 $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);
-                
                 $this->connection->commit();
                 $updatedRows++;
             } catch (Exception $exception) {

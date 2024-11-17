@@ -72,6 +72,8 @@ class MigrateSales implements MigrateSalesInterface
                 continue;
             }
             try {
+                $this->connection->beginTransaction();
+
                 $id = $order_payment[0]['entity_id'];
                 $ai = $order_payment[0]['additional_information'];
                 $ad = $order_payment[0]['additional_data'];
@@ -101,17 +103,16 @@ class MigrateSales implements MigrateSalesInterface
                 }
 
                 $airesult = json_encode($ai);
-                $this->connection->beginTransaction();
-
+                
                 $where = $this->connection->quoteInto("entity_id = ?", $id);
                 $this->connection->update($table, ['additional_information' => $airesult, 'additional_data' => $adresult], [$where]);
                 
                 $this->connection->commit();
                 $updatedRows++;
             } catch (Exception $exception) {
+                print("Error updating payment for id: {$id}, reason: {$exception->getMessage()} \n");
                 $this->connection->rollBack();
                 $skippedRows++;
-                print("Error updating payment for id: {$id}, reason: {$exception->getMessage()} \n");
             }       
         }
 

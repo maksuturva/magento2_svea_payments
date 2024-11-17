@@ -32,11 +32,11 @@
                     <?= $block->getChildHtml('order_payment_additional') ?>
                     <?= $block->getChildHtml('payment_additional_info') ?>
                     <div class="order-payment-code">
-                        <?= $block->escapeHtml(\__('Method code: %1.', $block->getPaymentMethodCode())) ?>
+                        <?= $block->escapeHtml(\__('Method code: %1', $block->getPaymentMethodCode())) ?>
                     </div>
                     <?php if(!empty($block->getPaymentMethodGroup())): ?>
                     <div class="order-payment-group">
-                        <?= $block->escapeHtml(\__('Method group: %1.', $block->getPaymentMethodGroup())) ?>
+                        <?= $block->escapeHtml(\__('Method group: %1', $block->getPaymentMethodGroup())) ?>
                     </div>
                     <?php endif; ?>
                 </div>

@@ -1,5 +1,9 @@
 # Changelog
 
+### [1.0.16] - 
+* Fixed migration sales script for separate payment methods.
+* Fixed migration sales script for Svea service payment selection method.
+
 ### [1.0.15] - 2024-11-14
 * Enable changing amount of handling fee and handling fee tax to refund.
 * Updated the migration script to also handle more unusual cases.

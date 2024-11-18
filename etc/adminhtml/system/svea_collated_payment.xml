@@ -37,7 +37,7 @@
             <label>Payment Method Subgroup 1</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <comment>Default: Pay later</comment>
+                <comment>Default: Pay now with online banking</comment>
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_1_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -81,7 +81,7 @@
             <label>Payment Method Subgroup 3</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <comment>Default: Pay now with online banking</comment>
+                <comment>Default: Pay Later</comment>
                 <config_path>payment/svea_collated_payment/payment_method_subgroup_3_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

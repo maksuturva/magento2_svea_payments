@@ -128,10 +128,11 @@ class SveaClient implements ClientInterface
      */
     private function doRequest(CurlClient $client, string $url, string $method, array $data): array
     {
+        $version = $this->userAgent->getSveaPaymentModuleVersion();
         if ($this->getApplicationMode() !== State::MODE_PRODUCTION) {
-            $this->logger->debug(\sprintf('API Request (%s %s): %s', $method, $url, \json_encode($data)));
+            $this->logger->debug(\sprintf('v%s API Request (%s %s): %s', $version, $method, $url, \json_encode($data)));
         } else if ($this->getApplicationMode() === State::MODE_PRODUCTION) {
-            $this->logger->info(\sprintf('API Request (%s %s)', $method, $url));
+            $this->logger->info(\sprintf('v%s API Request (%s %s)', $version, $method, $url));
         }
         $this->addUserAgentToRequest($client);
 

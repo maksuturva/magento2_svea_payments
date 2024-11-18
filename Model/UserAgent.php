@@ -58,7 +58,7 @@ class UserAgent
     /**
      * @return string
      */
-    private function getSveaPaymentModuleVersion()
+    public function getSveaPaymentModuleVersion()
     {
         $packages = $this->composerInformation->getInstalledMagentoPackages();
         $sveaPayment = $packages['svea-payments-finland/magento2-svea-payments'] ?? null;

@@ -70,6 +70,14 @@ class MethodDataProvider
     }
 
     /**
+     * Clear the cached values from Svea
+     */
+    public function clearCached()
+    {
+        $this->unsetCached($this->getCacheKey(null, null));
+    }
+
+    /**
      * @param string|null $locale
      * @param float|null $total
      *
@@ -139,5 +147,11 @@ class MethodDataProvider
     {
         $this->methods[$key] = $data;
         $this->cache->save(\serialize($data), $key, self::CACHE_TAGS, self::CACHE_LIFETIME);
+    }
+
+    private function unsetCached(string $key)
+    {
+        unset($this->methods[$key]);
+        $this->cache->remove($key);
     }
 }

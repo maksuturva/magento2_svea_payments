@@ -61,11 +61,17 @@ class UserAgent
     private function getSveaPaymentModuleVersion()
     {
         $packages = $this->composerInformation->getInstalledMagentoPackages();
-        $sveaPayment = $packages['svea/payment'] ?? null;
+        $sveaPayment = $packages['svea-payments-finland/magento2-svea-payments'] ?? null;
         if ($sveaPayment) {
             return $sveaPayment['version'] ?? '';
+        } else {
+            /* we are not installed with composer, lets extract by hand */
+            $content = file_get_contents(dirname(__FILE__) . '/../composer.json');
+            $content = json_decode($content, true);
+            if ($content !== null && $content['name'] == 'svea-payments-finland/magento2-svea-payments') {
+                return $content['version'] ?? '';
+            }
         }
-
         return '';
     }
 

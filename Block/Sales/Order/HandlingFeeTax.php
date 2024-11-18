@@ -43,7 +43,7 @@ class HandlingFeeTax extends \Magento\Framework\View\Element\AbstractBlock
                 'strong' => false,
                 'value' => $amount,
                 'base_value' => $amount,
-                'label' => \__('Invoicing Fee Tax'),
+                'label' => \__('Invoicing Fee VAT'),
             ]);
             $this->getParentBlock()->addTotalBefore($handlingFee, 'grand_total');
         }

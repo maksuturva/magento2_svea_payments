@@ -1,6 +1,7 @@
 # Changelog
 
 ### [1.0.17] -
+* Add missing translation of Invoicing fee tax.
 * Stop removing leading zeroes on order number.
 
 ### [1.0.16] - 2024-11-18

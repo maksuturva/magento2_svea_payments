@@ -8,6 +8,7 @@
 "Shipping and payment costs returned from Svea do not match. %1","Toimituksen ja maksun kulut eivät täsmää. %1"
 "Choose payment method...","Valitse maksutapa…"
 "Invoicing Fee","Laskutuslisä"
+"Invoicing Fee VAT","Laskutuslisän ALV"
 "Your order is not valid or is already paid.","Tilauksesi ei ole voimassa tai on jo maksettu."
 "Payment Method","Maksutapa"
 "Place Order","Tee tilaus"

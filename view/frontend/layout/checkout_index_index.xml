@@ -28,7 +28,7 @@
                                                             <item name="sortOrder" xsi:type="string">21</item>
                                                             <item name="config" xsi:type="array">
                                                                 <item name="template" xsi:type="string">Svea_SveaPayment/checkout/summary/handling-tax</item>
-                                                                <item name="title" xsi:type="string" translate="true">Invoicing Fee Tax</item>
+                                                                <item name="title" xsi:type="string" translate="true">Invoicing Fee VAT</item>
                                                             </item>
                                                         </item>
                                                     </item>

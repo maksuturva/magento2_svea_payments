@@ -1,6 +1,9 @@
 # Changelog
 
 ### [1.0.17] -
+* Update tooltips to match actual defaults.
+* Add missing translation of Invoicing fee tax.
+* Stop removing leading zeroes on order number.
 * Add module version string to requests and log entries.
 
 ### [1.0.16] - 2024-11-18

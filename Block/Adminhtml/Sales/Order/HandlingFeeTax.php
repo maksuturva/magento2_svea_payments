@@ -99,7 +99,7 @@ class HandlingFeeTax extends \Magento\Framework\View\Element\Template
             'strong' => false,
             'value' => $taxAmount,
             'base_value' => $taxAmount,
-            'label' => \__('Invoicing Fee Tax'),
+            'label' => \__('Invoicing Fee VAT'),
         ]);
 
         return $handlingFeeTax;

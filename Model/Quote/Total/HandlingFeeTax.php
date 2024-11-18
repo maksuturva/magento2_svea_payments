@@ -38,7 +38,7 @@ class HandlingFeeTax extends AbstractTotal
      */
     public function getLabel()
     {
-        return \__('Invoicing Fee Tax');
+        return \__('Invoicing Fee VAT');
     }
 
     /**

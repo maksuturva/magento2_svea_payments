@@ -10,6 +10,7 @@
 "Shipping and payment costs returned from Svea do not match. %1", "Frakt- och betalningskostnader som returneras från Svea Payments stämmer inte överens. %1"
 "Choose payment method...", "Välj betalsätt..."
 "Invoicing Fee", "Faktureringsavgift"
+"Invoicing Fee VAT","Faktureringsavgift moms"
 "Your order is not valid or is already paid.", "Din beställning är inte giltig eller är redan betald."
 "Payment Method", "Betalsätt"
 "Place Order", "Beställ"

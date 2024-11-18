@@ -118,7 +118,7 @@ class OrderDataBuilder implements BuilderInterface
 
         $payment = $paymentDO->getPayment();
         $order = $paymentDO->getOrder();
-        $orderIncrement = (int)$order->getOrderIncrementId();
+        $orderIncrement = $order->getOrderIncrementId();
 
         $result = [
             self::ID => $this->getId($payment),

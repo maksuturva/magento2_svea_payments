@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.0.16] - 
+### [1.0.16] - 2024-11-18
 * Fixed migration sales script for separate payment methods.
 * Fixed migration sales script for Svea service payment selection method.
 * Only offline refunds available -text removed from the admin order page.

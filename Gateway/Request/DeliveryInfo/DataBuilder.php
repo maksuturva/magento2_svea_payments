@@ -110,7 +110,7 @@ class DataBuilder implements BuilderInterface
     {
         $value = $subject[$type];
         if ($value == self::INFO_VALUE_BY_METHOD) {
-            $value = __('Delivered by %1', $deliveryMethod);
+            $value = __('Delivery notification');
         }
         if ($value instanceof Track) {
             $value = $value->getTrackNumber();

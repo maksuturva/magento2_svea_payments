@@ -1,6 +1,8 @@
 # Changelog
 
 ### [1.0.17] -
+* Better shipping notification text for custom delivery type
+* Fix shipping notification for customized products
 * Update tooltips to match actual defaults.
 * Add missing translation of Invoicing fee tax.
 * Stop removing leading zeroes on order number.

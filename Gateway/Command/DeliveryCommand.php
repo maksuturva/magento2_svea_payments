@@ -142,7 +142,7 @@ class DeliveryCommand implements CommandInterface
 
             // Check if we are sending all the products in the order
             $allProducts = true;
-            foreach ($order->getAllItems() as $item) {
+            foreach ($order->getAllVisibleItems() as $item) {
                 if ($item->getQtyShipped() != $item->getQtyOrdered()) {
                     $allProducts = false;
                     break;

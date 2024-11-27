@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.0.17] -
+### [1.0.17] - 2024-11-27
 * Better shipping notification text for custom delivery type
 * Fix shipping notification for customized products
 * Update tooltips to match actual defaults.

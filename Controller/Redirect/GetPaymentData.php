@@ -15,6 +15,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Webapi\Exception;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Svea\SveaPayment\Model\Order\Cancellation;
 
 class GetPaymentData extends Action implements
@@ -75,6 +76,9 @@ class GetPaymentData extends Action implements
             if (!$paymentInformation['gateway_redirect_url']) {
                 throw new InputException(\__('Invalid Payment Information.'));
             }
+            $order->setStatus(Order::STATE_PENDING_PAYMENT);
+            $order->setState(Order::STATE_PENDING_PAYMENT);
+            $this->orderRepository->save($order);
             $resultJson->setData([
                 'redirectUrl' => $paymentInformation['gateway_redirect_url'],
             ]);

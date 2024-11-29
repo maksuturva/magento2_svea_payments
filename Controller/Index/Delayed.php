@@ -75,7 +75,7 @@ class Delayed extends Action
         }
 
         if ($order->getId()) {
-            $order->setState(Order::STATE_PENDING_PAYMENT);
+            $order->setState(Order::STATE_PAYMENT_REVIEW);
             $this->orderResource->save($order);
             $this->quoteManagement->setQuoteMode($order, false);
         }

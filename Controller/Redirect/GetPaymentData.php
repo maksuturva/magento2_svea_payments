@@ -76,8 +76,8 @@ class GetPaymentData extends Action implements
             if (!$paymentInformation['gateway_redirect_url']) {
                 throw new InputException(\__('Invalid Payment Information.'));
             }
-            $order->setStatus(Order::STATE_PENDING_PAYMENT);
             $order->setState(Order::STATE_PENDING_PAYMENT);
+            $order->setStatus(Order::STATE_PENDING_PAYMENT);
             $this->orderRepository->save($order);
             $resultJson->setData([
                 'redirectUrl' => $paymentInformation['gateway_redirect_url'],

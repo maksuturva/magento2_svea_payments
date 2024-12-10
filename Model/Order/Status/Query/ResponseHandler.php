@@ -111,7 +111,8 @@ class ResponseHandler
                         }
                     } else {
                         /* resolve case when invoice exists but status in database is still pending payment */
-                        if ($order->getStatus() == $this->config->getNewOrderStatus()) {
+                        if ($order->getState() == Order::STATE_PENDING_PAYMENT ||
+                            $order->getStatus() == $this->config->getNewOrderStatus()) {
                             $this->setOrderAsPaid($order, \__('Payment confirmed by Svea Payments.'));
                         }
                         $result->setCode(Status::CODE_SUCCESS)

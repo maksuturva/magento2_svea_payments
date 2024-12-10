@@ -74,7 +74,7 @@ class ErrorHandler
         }
         if (in_array($order->getState(), [
             Order::STATE_PENDING_PAYMENT,
-            ORDER::STATE_NEW
+            Order::STATE_NEW
         ])) {
             if (isset($requestParams['type']) && $requestParams['type'] === self::ERROR_SELLERCOSTS_VALUES_MISMATCH) {
                 $order->addCommentToStatusHistory(

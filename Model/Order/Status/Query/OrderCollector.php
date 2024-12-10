@@ -3,6 +3,7 @@
 namespace Svea\SveaPayment\Model\Order\Status\Query;
 
 use DateTimeInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Svea\SveaPayment\Gateway\Config\Config;
 use Svea\SveaPayment\Model\Payment\Method;
@@ -49,7 +50,7 @@ class OrderCollector
     {
         $collection = $this->ordersFactory->create();
         $collection->join(['payment' => 'sales_order_payment'], 'main_table.entity_id=parent_id', 'method')
-            ->addFieldToFilter('status', $this->config->getNewOrderStatus())
+            ->addFieldToFilter('status', ['in' => [$this->config->getNewOrderStatus(), Order::STATE_PENDING_PAYMENT]])
             ->addFieldToFilter('payment.method', $this->paymentMethod->getSveaCollectionFilter())
             ->addFieldToFilter('payment.' . Config::SVEA_SELLER_IR, $this->config->getSellerId())
             ->addAttributeToFilter('created_at', ['gteq' => $this->formatDate($createdStart)])
@@ -68,7 +69,7 @@ class OrderCollector
     {
         $collection = $this->ordersFactory->create();
         $collection->join(['payment' => 'sales_order_payment'], 'main_table.entity_id=parent_id', 'method')
-            ->addFieldToFilter('status', $this->config->getNewOrderStatus())
+            ->addFieldToFilter('status', ['in' => [$this->config->getNewOrderStatus(), Order::STATE_PENDING_PAYMENT]])
             ->addFieldToFilter('payment.method', $this->paymentMethod->getMaksuturvaCollectionFilter())
             ->addAttributeToFilter('created_at', ['gteq' => $this->formatDate($createdStart)])
             ->addAttributeToFilter('created_at', ['lt' => $this->formatDate($createdEnd)]);

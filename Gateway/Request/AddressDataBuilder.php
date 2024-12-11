@@ -50,21 +50,22 @@ class AddressDataBuilder implements BuilderInterface
     public function build(array $buildSubject): array
     {
         $paymentDO = $this->subjectReader ->readPayment($buildSubject);
-
         $order = $paymentDO->getOrder();
-        $result = [];
-
-        $shippingAddress = $order->getShippingAddress();
-        if ($shippingAddress) {
-            $result = [
-                self::DELIVERY_NAME => $shippingAddress->getFirstname() . " " . $shippingAddress->getLastname(),
-                self::DELIVERY_ADDRESS => $shippingAddress->getStreetLine1(),
-                self::DELIVERY_POSTAL_CODE => $shippingAddress->getPostcode(),
-                self::DELIVERY_CITY => $shippingAddress->getCity(),
-                self::DELIVERY_COUNTRY => $shippingAddress->getCountryId(),
-            ];
+        $address = $order->getShippingAddress();
+        if (!$address) {
+            $address = $order->getBillingAddress();
+        }
+        if (!$address) {
+            throw new \Exception("Shipping or billing address was not provided, cannot process order.");
         }
 
+        $result = [
+            self::DELIVERY_NAME => $address->getFirstname() . " " . $address->getLastname(),
+            self::DELIVERY_ADDRESS => $address->getStreetLine1(),
+            self::DELIVERY_POSTAL_CODE => $address->getPostcode(),
+            self::DELIVERY_CITY => $address->getCity(),
+            self::DELIVERY_COUNTRY => $address->getCountryId(),
+        ];
         return $result;
     }
 }

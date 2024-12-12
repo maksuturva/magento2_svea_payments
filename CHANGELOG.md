@@ -1,7 +1,7 @@
 # Changelog
 
-### [1.0.18] -
-* Fixed digital only products were purchaseable because of missing shipping address.
+### [1.0.18] - 2024-12-12
+* Fixed digital only products were not purchaseable because of missing shipping address.
 
 ### [1.0.17] - 2024-11-27
 * Better shipping notification text for custom delivery type

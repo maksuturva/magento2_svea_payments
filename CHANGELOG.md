@@ -1,7 +1,10 @@
 # Changelog
 
-### [1.0.18] -
+### [1.0.19] -
 * Set Payment Pending on order when redirecting to payment page. Magento will automatically cancel abandoned orders after set timeout, default 8 hours.
+
+### [1.0.18] - 2024-12-12
+* Fixed digital only products were not purchaseable because of missing shipping address.
 
 ### [1.0.17] - 2024-11-27
 * Better shipping notification text for custom delivery type

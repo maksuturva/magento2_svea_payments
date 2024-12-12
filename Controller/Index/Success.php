@@ -97,7 +97,7 @@ class Success extends Action
         if ($e instanceof OrderNotInvoiceableException) {
             $message = \sprintf(
                 'Order cannot be updated or invoiced anymore. Current status %s and state %s',
-                $e->getOrder()->getState(),
+                $e->getOrder()->getStatus(),
                 $e->getOrder()->getState()
             );
             $this->logger->info($message);

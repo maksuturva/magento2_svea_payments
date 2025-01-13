@@ -1,9 +1,8 @@
 define([
-    'jquery',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/full-screen-loader',
     'Magento_Checkout/js/action/get-totals',
-], function ($, quote, fullScreenLoader, getTotalsAction) {
+], function (quote, fullScreenLoader, getTotalsAction) {
     'use strict';
 
     return function (paymentMethod) {
@@ -32,12 +31,14 @@ define([
             method_group: methodGroup
         };
 
-        $.ajax('/svea_payment/checkout/applyPaymentMethod', {
-            data: data,
-            complete: function () {
+        fetch('/svea_payment/checkout/applyPaymentMethod?' + new URLSearchParams(data).toString())
+            .catch((error) => {
+                console.log(error);
+                return true;
+            })
+            .then(() => {
                 getTotalsAction([]);
                 fullScreenLoader.stopLoader();
-            }
-        });
+            });
     }
 });

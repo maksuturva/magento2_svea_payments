@@ -13,8 +13,7 @@ define([
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/error-processor',
     'Magento_Checkout/js/model/full-screen-loader',
-    'Magento_Checkout/js/action/place-order',
-    'Svea_SveaPayment/js/action/fetch-payment-methods'
+    'Magento_Checkout/js/action/place-order'
 ], function (
     $,
     ko,
@@ -29,7 +28,6 @@ define([
     errorProcessor,
     fullScreenLoader,
     placeOrderAction,
-    fetchPaymentMethods
 ) {
     'use strict';
 
@@ -69,17 +67,8 @@ define([
         prepareQuoteTotalHook: function () {
             quote.totals.subscribe(function (totals) {
                 let total = this.getQuoteGrandTotal();
-                if (this.isOpen() && this.lastTotal != total) {
-                    this.fetchMethods();
-                }
                 this.lastTotal = total;
             }, this);
-        },
-
-        fetchMethods: function () {
-            fetchPaymentMethods(function (data) {
-                this.subMethods(data);
-            }.bind(this));
         },
 
         prepareMethods: function () {

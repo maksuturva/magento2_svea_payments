@@ -1,9 +1,8 @@
 define([
-   'jquery',
    'ko',
    'uiComponent',
    'Magento_Checkout/js/model/quote'
-], function ($, ko, Component, quote) {
+], function (ko, Component, quote) {
     'use strict';
 
     return Component.extend({
@@ -132,22 +131,22 @@ define([
         observeCalcBtnAction: function () {
             let self = this;
 
-            const calcButtonSelector = '#svea-calc-btn';
-            const calcMessageSelector = '#svea-calc-msg-info';
+            const calcButtonSelector = 'svea-calc-btn';
+            const calcMessageSelector = 'svea-calc-msg-info';
 
-            $(document).on('click', calcButtonSelector, function () {
+            document.getElementById(calcButtonSelector).onclick = function () {
                 if (self.state.isPriceAboveThreshold()) {
                     // Show notification message
-                    $('body').find(calcMessageSelector).removeClass('show-notification');
+                    document.getElementById(calcMessageSelector).classList.remove('show-notification');
                 } else {
                     // Hide notification message
-                    $('body').find(calcMessageSelector).addClass('show-notification');
+                    document.getElementById(calcMessageSelector).classList.add('show-notification');
                     // Auto-Remove info notification message after N milliseconds (timeout)
                     setTimeout(function () {
-                        $('body').find(calcMessageSelector).removeClass('show-notification');
+                        document.getElementById(calcMessageSelector).classList.remove('show-notification');
                     }, 3200);
                 }
-            });
+            };
 
         },
 
@@ -159,17 +158,20 @@ define([
          */
         replacePriceAmount: function (data) {
             if (data !== undefined) {
-                $('body').find('.svea-pp-widget-part-payment').attr('data-price', data.grand_total);
+                const elements = document.getElementsByClassName('svea-pp-widget-part-payment');
+                Array.from(elements).forEach(function (element) {
+                    element.setAttribute('data-price', data.grand_total);
+                });
                 this.updateCalc();
             }
         },
 
         updateCalc: function () {
-            const widgetContainer = $('body').find('.svea-pp-widget-container');
+            const widgetContainer = document.getElementsByClassName('svea-pp-widget-container');
             if (widgetContainer.length >= 1) {
-                widgetContainer.each((num,obj) => {
-                    if (num >= 1) {
-                        widgetContainer[num].remove();
+                Array.from(widgetContainer).forEach(function (element, index) {
+                    if (index >= 1) {
+                        element.remove();
                     }
                 });
                 // if SveaPartPayment exist add possibility to use update or re-initialize widget

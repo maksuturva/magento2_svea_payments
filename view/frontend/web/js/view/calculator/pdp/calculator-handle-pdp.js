@@ -10,8 +10,8 @@ define([
         defaults: {
             options: {
                 path: 'rest/V1/partPaymentCalculator/',
-                formHolder: '#product_addtocart_form',
-                swatchHolders: '.swatch-input'
+                formHolder: 'product_addtocart_form',
+                swatchHolders: 'swatch-input'
             },
             state: {
                 isDisabled: ko.observable(true),
@@ -52,28 +52,28 @@ define([
             this.checkAvailabilityOfProduct();
 
             // On qty changes calling methods
-            $(this.options.formHolder).on('change', function () {
+            document.getElementById(this.options.formHolder).onchange = function () {
 
                 // Reset trigger event in case option for a product was unselected
                 this.state.triggerEvent('');
 
-                if ($(this.options.formHolder).validation('isValid')) {
+                if (document.getElementById(this.options.formHolder).validation('isValid')) {
                     this.replacePriceAmount();
                     this.checkAvailabilityOfProduct();
                 }
-            }.bind(this));
+            }.bind(this);
         },
 
         productFormSubscriberOther: function () {
             // On option and qty changes calling methods
-            $(this.options.formHolder).on('change', function () {
-                const inputs = $(this.options.formHolder).find(this.options.swatchHolders);
-                let inputsSelected = inputs.map((index, input) => { return input.value }).get();
+            document.getElementById(this.options.formHolder).onchange = function () {
+                const inputs = Array.from(document.getElementById(this.options.formHolder).getElementsByClassName(this.options.swatchHolders));
+                let inputsSelected = inputs.map(input => { return input.value });
 
                 // Reset trigger event in case option for a product was unselected
                 this.state.triggerEvent('');
 
-                if (!inputsSelected.includes('') && $(this.options.formHolder).validation('isValid')) {
+                if (!inputsSelected.includes('') && document.getElementById(this.options.formHolder).validation('isValid')) {
                     let currProductPrice = this.state.totalPriceOfProduct();
                     let prevProductPrice = this.state.previousPriceOfProduct();
 
@@ -93,7 +93,7 @@ define([
 
                     this.checkAvailabilityOfProduct();
                 }
-            }.bind(this));
+            }.bind(this);
         },
 
         // Check if product is available to use/show SVEA widget
@@ -146,36 +146,41 @@ define([
         observeCalcBtnAction: function () {
             let self = this;
 
-            const calcButtonSelector = '#svea-calc-btn';
+            const calcButtonSelector = 'svea-calc-btn';
             const calcMessageSelector = '#svea-calc-msg-info';
-            const prodAddToCartSelector = '#product_addtocart_form';
+            const prodAddToCartSelector = 'product_addtocart_form';
 
-            $(document).on('click', calcButtonSelector, function () {
-                let isFormValid = $(prodAddToCartSelector).validation('isValid');
+            document.getElementById(calcButtonSelector).onclick = function () {
+                let isFormValid = document.getElementById(prodAddToCartSelector).validation('isValid');
 
                 if (isFormValid) {
                     if (self.state.isPriceAboveThreshold()) {
                         // Show notification message
-                        $('body').find(calcMessageSelector).removeClass('show-notification');
+                        document.getElementById(calcMessageSelector).classList.remove('show-notification');
                     } else {
                         // Hide notification message
-                        $('body').find(calcMessageSelector).addClass('show-notification');
+                        document.getElementById(calcMessageSelector).classList.add('show-notification');
                         // Auto-Remove info notification message after N milliseconds (timeout)
                         setTimeout(function () {
-                            $('body').find(calcMessageSelector).removeClass('show-notification');
+                            document.getElementById(calcMessageSelector).classList.remove('show-notification');
                         }, 3200);
                     }
                 }
-
-            });
+            };
         },
 
         showPartPaymentButton: function () {
-            $('.calculator-holder').show();
+            const elements = document.getElementsByClassName('calculator-holder');
+            Array.from(elements).forEach(function (element) {
+                element.style.display = 'inline-block';
+            });
         },
 
         hidePartPaymentButton: function () {
-            $('.calculator-holder').hide();
+            const elements = document.getElementsByClassName('calculator-holder');
+            Array.from(elements).forEach(function (element) {
+                element.style.display = 'none';
+            });
         },
 
         /**
@@ -184,7 +189,10 @@ define([
         replacePriceAmount: function () {
             const dataHandler = this.state.totalPriceOfProduct() > 0 ? this.state.totalPriceOfProduct() : this.productPrice;
             if (dataHandler !== undefined) {
-                $('body').find('.svea-pp-widget-part-payment').attr('data-price', dataHandler);
+                const elements = document.getElementsByClassName('svea-pp-widget-part-payment');
+                Array.from(elements).forEach(function (element) {
+                    element.setAttribute('data-price', dataHandler);
+                });
                 this.updateCalc();
             }
         },

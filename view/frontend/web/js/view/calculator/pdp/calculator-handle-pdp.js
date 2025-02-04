@@ -47,6 +47,10 @@ define([
             }.bind(this));
         },
 
+        productConfigured: function () {
+            return $('#'+this.options.formHolder).validation('isValid');
+        },
+
         productFormSubscriberSimple: function () {
             // On the first page load check the availability of the Simple Product
             this.checkAvailabilityOfProduct();
@@ -57,7 +61,7 @@ define([
                 // Reset trigger event in case option for a product was unselected
                 this.state.triggerEvent('');
 
-                if (document.getElementById(this.options.formHolder).validation('isValid')) {
+                if (this.productConfigured()) {
                     this.replacePriceAmount();
                     this.checkAvailabilityOfProduct();
                 }
@@ -73,7 +77,7 @@ define([
                 // Reset trigger event in case option for a product was unselected
                 this.state.triggerEvent('');
 
-                if (!inputsSelected.includes('') && document.getElementById(this.options.formHolder).validation('isValid')) {
+                if (!inputsSelected.includes('') && this.productConfigured()) {
                     let currProductPrice = this.state.totalPriceOfProduct();
                     let prevProductPrice = this.state.previousPriceOfProduct();
 
@@ -100,8 +104,6 @@ define([
         checkAvailabilityOfProduct: async function () {
             const dataHandler = this.state.totalPriceOfProduct() > 0 ? this.state.totalPriceOfProduct() : this.productPrice;
             const URL = `${window.BASE_URL}${this.options.path}${dataHandler}/catalog_product_view`;
-            const calcButtonSelector = '#svea-calc-btn';
-            const calcMessageSelector = '#svea-calc-msg-info';
 
             try {
                 await fetch(URL).then(response => {
@@ -147,11 +149,10 @@ define([
             let self = this;
 
             const calcButtonSelector = 'svea-calc-btn';
-            const calcMessageSelector = '#svea-calc-msg-info';
-            const prodAddToCartSelector = 'product_addtocart_form';
+            const calcMessageSelector = 'svea-calc-msg-info';
 
             document.getElementById(calcButtonSelector).onclick = function () {
-                let isFormValid = document.getElementById(prodAddToCartSelector).validation('isValid');
+                let isFormValid = self.productConfigured();
 
                 if (isFormValid) {
                     if (self.state.isPriceAboveThreshold()) {

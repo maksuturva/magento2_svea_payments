@@ -5,6 +5,7 @@ namespace Svea\SveaPayment\Controller\Index;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Logger\Monolog as Logger;
+use Magento\Sales\Model\Order;
 use Svea\SveaPayment\Exception\OrderNotInvoiceableException;
 use Svea\SveaPayment\Exception\PaymentHandlingException;
 use Svea\SveaPayment\Gateway\Response\Payment\CallbackState;
@@ -51,26 +52,32 @@ class Success extends Action
         }
 
         try {
-            $this->successHandler->handle($params, $isCallback);
+            $this->successHandler->handleSuccess($params, $isCallback);
         } catch (OrderNotInvoiceableException $e) {
             if ($isCallback) {
                 return $this->handleCallbackException($e);
             } else {
-                $this->messageManager->addErrorMessage(\__('Your order is not valid or is already paid.'));
+                if ($e->getOrder()->getState() == Order::STATE_PROCESSING) {
+                    $this->messageManager->addSuccessMessage(\__('Your order is already paid.'));
+                } else {
+                    $this->messageManager->addErrorMessage(\__('Your order is not valid or is already paid.'));
+                }
                 return $this->_redirect('checkout/cart');
             }
         } catch (PaymentHandlingException $e) {
             if ($isCallback) {
                 return $this->handleCallbackException($e);
             } else {
-                return $this->_redirect('svea_payment/index/error', [$e->getErrorParameters()]);
+                $this->messageManager->addErrorMessage($e->getMessage());
+                return $this->_redirect('checkout/cart');
             }
         } catch (\Exception $e) {
             if ($isCallback) {
                 return $this->handleCallbackException($e);
             } else {
                 $this->logger->error($e->getMessage());
-                return $this->_redirect('svea_payment/index/error',[$e->getMessage()]);
+                $this->messageManager->addErrorMessage($e->getMessage());
+                return $this->_redirect('checkout/cart');
             }
         }
 

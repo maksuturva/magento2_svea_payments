@@ -5,14 +5,10 @@ namespace Svea\SveaPayment\Controller\Index;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Logger\Monolog as Logger;
+use Magento\Sales\Model\Order;
 use Svea\SveaPayment\Exception\OrderAlreadyPaidException;
 use Svea\SveaPayment\Exception\PaymentHandlingException;
-use Svea\SveaPayment\Model\Order\Cancellation;
-use Svea\SveaPayment\Model\OrderManagement;
-use Svea\SveaPayment\Model\Payment\AdditionalData;
-use Svea\SveaPayment\Model\Quote\QuoteCancellation;
-use Svea\SveaPayment\Model\QuoteManagement;
-use Svea\SveaPayment\Model\Source\RestoreShoppingCart;
+use Svea\SveaPayment\Gateway\Response\Payment\SuccessHandler;
 
 class Cancel extends Action
 {
@@ -22,55 +18,23 @@ class Cancel extends Action
     private Logger $logger;
 
     /**
-     * @var OrderManagement
+     * @var SuccessHandler
      */
-    private OrderManagement $orderManagement;
-
-    /**
-     * @var Cancellation
-     */
-    private Cancellation $cancellation;
-
-    /**
-     * @var AdditionalData
-     */
-    private AdditionalData $paymentData;
-
-    /**
-     * @var QuoteManagement
-     */
-    private QuoteManagement $quoteManagement;
-
-    /**
-     * @var QuoteCancellation
-     */
-    private QuoteCancellation $quoteCancellation;
+    private SuccessHandler $successHandler;
 
     /**
      * @param Context $context
      * @param Logger $logger
-     * @param OrderManagement $orderManagement
-     * @param Cancellation $cancellation
-     * @param AdditionalData $paymentData
-     * @param QuoteManagement $quoteManagement
-     * @param QuoteCancellation $quoteCancellation
+     * @param SuccessHandler $successHandler,
      */
     public function __construct(
         Context $context,
         Logger $logger,
-        OrderManagement $orderManagement,
-        Cancellation $cancellation,
-        AdditionalData $paymentData,
-        QuoteManagement $quoteManagement,
-        QuoteCancellation $quoteCancellation
+        SuccessHandler $successHandler,
     ) {
         parent::__construct($context);
         $this->logger = $logger;
-        $this->orderManagement = $orderManagement;
-        $this->cancellation = $cancellation;
-        $this->paymentData = $paymentData;
-        $this->quoteManagement = $quoteManagement;
-        $this->quoteCancellation = $quoteCancellation;
+        $this->successHandler = $successHandler;
     }
 
     /**
@@ -90,18 +54,10 @@ class Cancel extends Action
 
         try {
             $this->logger->info(\sprintf('Cancel action controller request for payment %s', $pmtId));
-            $order = $this->orderManagement->getLastOrder();
-            $transactionId = $this->paymentData->getSveaTransactionId($order->getPayment());
-
-            $this->quoteManagement->resetSessionHandlingFee();
-
-            if ($transactionId !== $pmtId) {
-                return $this->_redirect('checkout/cart');
-            } else {
-                $this->cancellation->cancelOrder($order);
-                $this->quoteCancellation->cancelQuote(RestoreShoppingCart::CANCEL);
-                $this->messageManager->addSuccessMessage(\__('You have cancelled your payment in Svea Payments.'));
+            if ($this->successHandler->handleCancel($pmtId) == Order::STATE_PROCESSING) {
+                return $this->_redirect('checkout/onepage/success', ['_secure' => true]);
             }
+            $this->messageManager->addSuccessMessage(\__('You have cancelled your payment in Svea Payments.'));
         } catch (OrderAlreadyPaidException $exception) {
             $this->messageManager->addErrorMessage(\__('Unable to cancel order that has already been paid.'));
         } catch (\Exception $exception) {

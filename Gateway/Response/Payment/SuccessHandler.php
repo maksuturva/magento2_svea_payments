@@ -130,9 +130,12 @@ class SuccessHandler
         $this->validateRequestAndResponse($order, $request, $params);
 
         if(($status = $this->validatePaymentStatus($order)) === false) {
-            $order->cancel();
+            if ($this->config->cancelOrderOnFailure()) {
+                $order->cancel();
+            }
             $this->quoteCancellation->cancelQuote(RestoreShoppingCart::ERROR);
             $order->addCommentToStatusHistory(__('Payment was not validated from Svea Payments'));
+            $this->orderResource->save($order);
             throw new PaymentHandlingException(\__('Order payment status failed:'), $order, null,500);
         }
         $order->getPayment()->setAdditionalInformation('svea_method_code', $status[ResponseHandler::RESPONSE_PAYMENT_METHOD]);
@@ -198,7 +201,9 @@ class SuccessHandler
                         return $order->getState();
                     }
                 }
-                $order->cancel();
+                if ($this->config->cancelOrderOnFailure()) {
+                    $order->cancel();
+                }
                 $this->quoteCancellation->cancelQuote(RestoreShoppingCart::ERROR);
                 $order->addCommentToStatusHistory(__('Error on Svea Payments return'));
             }
@@ -235,7 +240,9 @@ class SuccessHandler
                 return $order->getState();
             }
         }
-        $this->cancellation->cancelOrder($order);
+        if ($this->config->cancelOrderOnFailure()) {
+            $this->cancellation->cancelOrder($order);
+        }
         $this->quoteManagement->resetSessionHandlingFee();
         $this->quoteCancellation->cancelQuote(RestoreShoppingCart::CANCEL);
         return $order->getState();

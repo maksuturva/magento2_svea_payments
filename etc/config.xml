@@ -6,6 +6,7 @@
             <svea_payment>
                 <order_status>pending</order_status>
                 <paid_order_status>processing</paid_order_status>
+                <cancel_order_on_failure>1</cancel_order_on_failure>
                 <commurl>https://test1.maksuturva.fi/</commurl>
                 <secretkey backend_model="Magento\Config\Model\Config\Backend\Encrypted">11223344556677889900</secretkey>
                 <keyversion>001</keyversion>

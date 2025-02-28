@@ -24,6 +24,7 @@ class Config extends GatewayConfig
     const DELAYED_CAPTURE_METHODS = 'svea_config/svea_payment/delayed_capture';
     const NEW_ORDER_STATUS = 'svea_config/svea_payment/order_status';
     const PAID_ORDER_STATUS = 'svea_config/svea_payment/paid_order_status';
+    const CANCEL_ORDER_ON_FAILURE = 'svea_config/svea_payment/cancel_order_on_failure';
     const CAN_CANCEL_SETTLED = 'svea_config/svea_payment/can_cancel_settled';
     const DELIVERY_MODE = 'svea_config/svea_payment/delivery_mode';
     const DELIVERY_PAYMENT_METHODS = 'svea_config/svea_payment/delivery_payment_methods';
@@ -114,6 +115,11 @@ class Config extends GatewayConfig
     public function getPaidOrderStatus(): ?string
     {
         return $this->scopeConfig->getValue(self::PAID_ORDER_STATUS, ScopeInterface::SCOPE_STORE);
+    }
+
+    public function cancelOrderOnFailure(): bool
+    {
+        return $this->scopeConfig->getValue(self::CANCEL_ORDER_ON_FAILURE, ScopeInterface::SCOPE_STORE);
     }
 
     public function canCancelSettled(): bool

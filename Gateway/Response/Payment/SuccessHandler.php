@@ -2,65 +2,43 @@
 namespace Svea\SveaPayment\Gateway\Response\Payment;
 
 use Magento\Framework\Logger\Monolog as Logger;
-use Magento\Sales\Api\Data\OrderInterface as Order;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Svea\SveaPayment\Exception\OrderNotInvoiceableException;
 use Svea\SveaPayment\Exception\PaymentHandlingException;
 use Svea\SveaPayment\Gateway\Config\Config;
+use Svea\SveaPayment\Gateway\Http\ApiClient;
 use Svea\SveaPayment\Gateway\Request\PaymentInitializeRequestBuilder;
 use Svea\SveaPayment\Gateway\Request\PaymentStatusQueryBuilder;
-use Svea\SveaPayment\Model\Order\Status\Query\ResponseHandler;
+use Svea\SveaPayment\Model\Order\Cancellation;
 use Svea\SveaPayment\Model\Order\Invoicing;
+use Svea\SveaPayment\Model\Order\Status\Query\ResponseHandler;
 use Svea\SveaPayment\Model\OrderManagement;
 use Svea\SveaPayment\Model\Payment\Method;
+use Svea\SveaPayment\Model\Quote\QuoteCancellation;
+use Svea\SveaPayment\Model\Source\RestoreShoppingCart;
 use Svea\SveaPayment\Model\QuoteManagement;
-use Svea\SveaPayment\Gateway\Http\ApiClient;
 
 class SuccessHandler
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private Logger $logger;
+    private Config $config;
+    private Method $methods;
+    private OrderManagement $orderManagement;
+    private Invoicing $invoicing;
+    private PaymentInitializeRequestBuilder $requestBuilder;
+    private OrderSender $orderSender;
+    private QuoteManagement $quoteManagement;
+    private PaymentStatusQueryBuilder $paymentStatusQueryBuilder;
+    private ApiClient $apiClient;
+    private OrderResource $orderResource;
+    private QuoteCancellation $quoteCancellation;
+    private Cancellation $cancellation;
 
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var Method
-     */
-    private $methods;
-
-    /**
-     * @var OrderManagement
-     */
-    private $orderManagement;
-
-    /**
-     * @var Invoicing
-     */
-    private $invoicing;
-
-    /**
-     * @var PaymentInitializeRequestBuilder
-     */
-    private $requestBuilder;
-
-    /**
-     * @var OrderSender
-     */
-    private $orderSender;
-    /**
-     * @var QuoteManagement
-     */
-    private $quoteManagement;
-
-    /**
-     * @var string[]
-     */
-    private $mandatoryFields = [
+    private bool $isCallback = false;
+    private array $mandatoryFields = [
         "pmt_action",
         "pmt_version",
         "pmt_id",
@@ -71,30 +49,13 @@ class SuccessHandler
         "pmt_paymentmethod",
         "pmt_escrow",
     ];
-
-    /**
-     * @var bool
-     */
-    private $isCallback = false;
-
-    /**
-     * @var PaymentStatusQueryBuilder
-     */
-    private $paymentStatusQueryBuilder;
-
-    /**
-     * @var ApiClient
-     */
-    private $apiClient;
-
-    /**
-     * @var array
-     */
-    private $successList = [
+    private array $successList = [
         ResponseHandler::STATUS_QUERY_PAID,
         ResponseHandler::STATUS_QUERY_PAID_DELIVERY,
         ResponseHandler::STATUS_QUERY_COMPENSATED
     ];
+
+    const ERROR_SELLERCOSTS_VALUES_MISMATCH = 'sellercosts_values_mismatch_error';
 
     /**
      * @param Logger $logger
@@ -107,6 +68,9 @@ class SuccessHandler
      * @param QuoteManagement $quoteManagement
      * @param PaymentStatusQueryBuilder $paymentStatusQueryBuilder
      * @param ApiClient $apiClient
+     * @param OrderResource $orderResource
+     * @param QuoteCancellation $quoteCancellation
+     * @param Cancellation $cancellation
      */
     public function __construct(
         Logger                          $logger,
@@ -118,7 +82,10 @@ class SuccessHandler
         OrderSender                     $orderSender,
         QuoteManagement                 $quoteManagement,
         PaymentStatusQueryBuilder       $paymentStatusQueryBuilder,
-        ApiClient                       $apiClient
+        ApiClient                       $apiClient,
+        OrderResource                   $orderResource,
+        QuoteCancellation               $quoteCancellation,
+        Cancellation                    $cancellation,
     ) {
         $this->logger = $logger;
         $this->config = $config;
@@ -130,9 +97,15 @@ class SuccessHandler
         $this->quoteManagement = $quoteManagement;
         $this->paymentStatusQueryBuilder = $paymentStatusQueryBuilder;
         $this->apiClient = $apiClient;
+        $this->orderResource = $orderResource;
+        $this->quoteCancellation = $quoteCancellation;
+        $this->cancellation = $cancellation;
     }
 
     /**
+     * Handle assumed success response from Svea Payments where the normal outcome is order set to processing.
+     * If the payment is not successful the method will throw exception with appropriate message and cancel the order.
+     *
      * @param array $params
      * @param bool $isCallback
      *
@@ -141,7 +114,7 @@ class SuccessHandler
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function handle(array $params, bool $isCallback): void
+    public function handleSuccess(array $params, bool $isCallback): void
     {
         $this->isCallback = $isCallback;
         $this->validateMandatoryFields($params);
@@ -157,26 +130,139 @@ class SuccessHandler
         $this->validateRequestAndResponse($order, $request, $params);
 
         if(($status = $this->validatePaymentStatus($order)) === false) {
+            if ($this->config->cancelOrderOnFailure()) {
+                $order->cancel();
+            }
+            $this->quoteCancellation->cancelQuote(RestoreShoppingCart::ERROR);
+            $order->addCommentToStatusHistory(__('Payment was not validated from Svea Payments'));
+            $this->orderResource->save($order);
             throw new PaymentHandlingException(\__('Order payment status failed:'), $order, null,500);
         }
         $order->getPayment()->setAdditionalInformation('svea_method_code', $status[ResponseHandler::RESPONSE_PAYMENT_METHOD]);
-        if ($order->getId()) {
-            try {
-                $this->processOrder($order, $request, $params);
-            } catch (\Exception $e) {
-                $this->logger->error(
-                    $this->formatLogMessage('Order status message failed: ' . $e->getMessage(), $order)
+
+        try {
+            $this->processOrder($order, $request, $params);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                $this->formatLogMessage('Order status message failed: ' . $e->getMessage(), $order)
+            );
+            throw new PaymentHandlingException(
+                \__('Order status update failed (%1)'),
+                $order,
+                null,
+                500,
+                [],
+                $e
+            );
+        }
+
+    }
+
+    /**
+     * Handle assumed error response from Svea Payments where the normal outcome is order set to canceled.
+     * If the order is in a state where it could be processed we call validation to confirm status with Svea.
+     *
+     * @param string $pmtId
+     * @param array $requestParams
+     *
+     * @throws AlreadyExistsException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function handleError(string $pmtId, array $requestParams): string
+    {
+        $this->isCallback = false;
+
+        $order = $this->orderManagement->getOrderByPaymentId($pmtId);
+
+        $this->quoteManagement->resetSessionHandlingFee();
+        if (in_array($order->getState(), [
+            Order::STATE_PENDING_PAYMENT,
+            Order::STATE_NEW
+        ])) {
+            if (isset($requestParams['type']) && $requestParams['type'] === self::ERROR_SELLERCOSTS_VALUES_MISMATCH) {
+                $order->addCommentToStatusHistory(
+                    __(
+                        'Mismatch in seller costs returned from Svea Payments. New sellercosts: %1',
+                        $this->getNewSellerCost($requestParams)
+                    )
                 );
-                throw new PaymentHandlingException(
-                    \__('Order status update failed (%1)'),
-                    $order,
-                    null,
-                    500,
-                    [],
-                    $e
-                );
+            } else {
+                if ($order->canInvoice()) {
+                    $validatedStatus = $this->validatePaymentStatus($order);
+                    if($validatedStatus !== false) {
+                        $order->getPayment()->setAdditionalInformation('svea_method_code', $validatedStatus[ResponseHandler::RESPONSE_PAYMENT_METHOD]);
+                        $request = $this->requestBuilder->buildFrom($order->getPayment());
+                        $response = [
+                            'pmt_paymentmethod' => $validatedStatus['pmtq_paymentmethod'],
+                            'pmt_sellercosts' => $validatedStatus['pmtq_sellercosts']
+                        ];
+                        $this->processOrder($order, $request, $response);
+                        return $order->getState();
+                    }
+                }
+                if ($this->config->cancelOrderOnFailure()) {
+                    $order->cancel();
+                }
+                $this->quoteCancellation->cancelQuote(RestoreShoppingCart::ERROR);
+                $order->addCommentToStatusHistory(__('Error on Svea Payments return'));
+            }
+            $this->orderResource->save($order);
+            return $order->getState();
+        }
+    }
+
+    /**
+     * Handle assumed cancel response from Svea Payments where the normal outcome is order set to canceled.
+     * If the order is in a state where it could be processed we call validation to confirm status with Svea.
+     *
+     * @param string $pmtId
+     *
+     * @throws AlreadyExistsException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function handleCancel(string $pmtId): string
+    {
+        $this->isCallback = false;
+
+        $order = $this->orderManagement->getOrderByPaymentId($pmtId);
+        if ($order->canInvoice()) {
+            $validatedStatus = $this->validatePaymentStatus($order);
+            if($validatedStatus !== false) {
+                $order->getPayment()->setAdditionalInformation('svea_method_code', $validatedStatus[ResponseHandler::RESPONSE_PAYMENT_METHOD]);
+                $request = $this->requestBuilder->buildFrom($order->getPayment());
+                $response = [
+                    'pmt_paymentmethod' => $validatedStatus['pmtq_paymentmethod'],
+                    'pmt_sellercosts' => $validatedStatus['pmtq_sellercosts']
+                ];
+                $this->processOrder($order, $request, $response);
+                return $order->getState();
             }
         }
+        if ($this->config->cancelOrderOnFailure()) {
+            $this->cancellation->cancelOrder($order);
+        }
+        $this->quoteManagement->resetSessionHandlingFee();
+        $this->quoteCancellation->cancelQuote(RestoreShoppingCart::CANCEL);
+        return $order->getState();
+    }
+
+    /**
+     * @param array $requestParams
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function getNewSellerCost(array $requestParams): string
+    {
+        if (!isset($requestParams['new_sellercosts']) || !isset($requestParams['old_sellercosts'])) {
+            throw new \Exception('One of seller costs was not specified');
+        }
+        $newCost = $requestParams['new_sellercosts'];
+        $oldCost = $requestParams['old_sellercosts'];
+
+        return __('%1 EUR, was %2 EUR', $newCost, $oldCost);
     }
 
     /**
@@ -198,11 +284,11 @@ class SuccessHandler
     }
     /**
      * @param string $message
-     * @param Order|null $order
+     * @param OrderInterface|null $order
      *
      * @return string
      */
-    private function formatLogMessage(string $message, ?Order $order = null): string
+    private function formatLogMessage(string $message, ?OrderInterface $order = null): string
     {
         if ($order) {
             $prefix = \sprintf('[Order "#%s" Payment', $order->getIncrementId());
@@ -238,13 +324,13 @@ class SuccessHandler
     }
 
     /**
-     * @param Order $order
+     * @param OrderInterface $order
      * @param array $params
      *
      * @throws PaymentHandlingException
      * @throws \Exception
      */
-    private function validateOrder(Order $order, array $params): void
+    private function validateOrder(OrderInterface $order, array $params): void
     {
         if (!$this->orderManagement->validateReferenceNumbers($order, $params)) {
             $this->logger->error($this->formatLogMessage('Order reference number did not match received value'));
@@ -253,13 +339,13 @@ class SuccessHandler
     }
 
     /**
-     * @param Order $order
+     * @param OrderInterface $order
      * @param array $request
      * @param array $response
      *
      * @throws PaymentHandlingException
      */
-    private function validateRequestAndResponse(Order $order, array $request, array $response): void
+    private function validateRequestAndResponse(OrderInterface $order, array $request, array $response): void
     {
         $ignored = ['pmt_escrow', 'pmt_paymentmethod', 'pmt_reference', 'pmt_sellercosts'];
         foreach ($response as $key => $value) {
@@ -304,7 +390,7 @@ class SuccessHandler
     }
 
     /**
-     * @param Order $order
+     * @param OrderInterface $order
      * @param array $request
      * @param array $response
      *
@@ -312,7 +398,7 @@ class SuccessHandler
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function processOrder(Order $order, array $request, array $response): void
+    private function processOrder(OrderInterface $order, array $request, array $response): void
     {
         $isDelayedCapture = $this->methods->isDelayedCapture($response['pmt_paymentmethod']);
         $statusText = $isDelayedCapture ? 'authorized' : 'captured';
@@ -349,14 +435,13 @@ class SuccessHandler
 
         $processStatus = $this->config->getPaidOrderStatus();
         if (empty($processStatus)) {
-            $processStatus = \Magento\Sales\Model\Order::STATE_PROCESSING;
+            $processStatus = Order::STATE_PROCESSING;
         }
 
-        $processState = \Magento\Sales\Model\Order::STATE_PROCESSING;
+        $processState = Order::STATE_PROCESSING;
         $order->setState($processState);
         $order->addStatusToHistory($processStatus, $msg);
-        /** deprecated ? */
-        $order->save();
+        $this->orderResource->save($order);
 
         $this->logger->info($this->formatLogMessage('Updated order'));
 

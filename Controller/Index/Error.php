@@ -4,16 +4,17 @@ namespace Svea\SveaPayment\Controller\Index;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Sales\Model\Order;
 use Svea\SveaPayment\Exception\PaymentHandlingException;
-use Svea\SveaPayment\Gateway\Response\Payment\ErrorHandler;
+use Svea\SveaPayment\Gateway\Response\Payment\SuccessHandler;
 use Svea\SveaPayment\Model\QuoteManagement;
 
 class Error extends Action
 {
     /**
-     * @var ErrorHandler
+     * @var SuccessHandler
      */
-    private $errorHandler;
+    private $successHandler;
 
     /**
      * @var QuoteManagement
@@ -22,11 +23,11 @@ class Error extends Action
 
     public function __construct(
         Context      $context,
-        ErrorHandler $errorHandler,
+        SuccessHandler $successHandler,
         QuoteManagement $quoteManagement
     ) {
         parent::__construct($context);
-        $this->errorHandler = $errorHandler;
+        $this->successHandler = $successHandler;
         $this->quoteManagement = $quoteManagement;
     }
 
@@ -37,19 +38,20 @@ class Error extends Action
     {
         try {
             $requestParams = $this->getRequest()->getParams();
-            $this->quoteManagement->resetSessionHandlingFee();
-            if (isset($requestParams['pmt_id'])) {
-                $this->messageManager->addErrorMessage(\__('Svea Payments returned an error on your payment.'));
-            } else {
+            if (!isset($requestParams['pmt_id'])) {
                 if (\array_key_exists('type', $requestParams)) {
                     $this->processErrorMessages($requestParams);
                 }
                 throw new \Exception(\implode(',', $requestParams));
             }
-            $this->errorHandler->execute($this->getRequest()->getParam('pmt_id'), $requestParams);
+            if ($this->successHandler->handleError($this->getRequest()->getParam('pmt_id'), $requestParams) == Order::STATE_PROCESSING) {
+                return $this->_redirect('checkout/onepage/success', ['_secure' => true]);
+            }
+            $this->messageManager->addErrorMessage(\__('Svea Payments returned an error on your payment.'));
         } catch (\Exception $exception) {
             $this->messageManager->addErrorMessage(\__('Something went wrong:' . $exception->getMessage()));
         }
+
         $this->_redirect('checkout/cart');
     }
 

@@ -122,7 +122,7 @@
                         These methods must be verified together with Svea Payments.
                     </comment>
                 </field>
-                <field id="order_status" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="order_status" translate="label" type="select" sortOrder="120" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>New Order Status</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
                     <comment>Default: Pending.</comment>
@@ -139,7 +139,15 @@
                     <source_model>Svea\SveaPayment\Model\Source\RestoreShoppingCart</source_model>
                     <comment>Restore Shopping Cart in case of cancel or error return from Svea. Default: On Both.</comment>
                 </field>
-                <field id="can_cancel_settled" translate="label" type="select" sortOrder="150" showInDefault="1"
+                <field id="cancel_order_on_failure" translate="label" type="select" sortOrder="150" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Cancel orders on cancelled payment or error</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Cancel orders on unsuccessful payment, Magento always creates a new order per payment attempt.
+                        Leaving Payment Pending orders will affect inventory counts and
+                        <b>should only be used if products have unlimited supply</b>. Default: Yes.]]></comment>
+                </field>
+                <field id="can_cancel_settled" translate="label" type="select" sortOrder="160" showInDefault="1"
                        showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enable refunds after settlement</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

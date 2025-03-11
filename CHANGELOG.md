@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.0.19] -
+### [1.1.0] -
 * Set Payment Pending on order when redirecting to payment page. Magento will automatically cancel abandoned orders after set timeout, default 8 hours.
 
 ### [1.0.18] - 2024-12-12

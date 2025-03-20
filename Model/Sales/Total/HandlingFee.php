@@ -17,11 +17,11 @@ class HandlingFee
     /**
      * @param DataObject $model
      *
-     * @return float|null
+     * @return float
      */
-    public function getValue(DataObject $model)
+    public function getValue(DataObject $model): float
     {
-        return $model->getData(self::CODE);
+        return $model->getData(self::CODE) ?? 0;
     }
 
     /**
@@ -38,16 +38,16 @@ class HandlingFee
     /**
      * @param DataObject $model
      *
-     * @return float|null
+     * @return float
      */
-    public function getRefundedValue(DataObject $model)
+    public function getRefundedValue(DataObject $model): float
     {
-        return $model->getData(self::REFUNDED_CODE);
+        return $model->getData(self::REFUNDED_CODE) ?? 0;
     }
 
-    public function getRefundedTaxValue(DataObject $model)
+    public function getRefundedTaxValue(DataObject $model): float
     {
-        return $model->getData(self::REFUNDED_TAX_CODE);
+        return $model->getData(self::REFUNDED_TAX_CODE) ?? 0;
     }
 
     /**

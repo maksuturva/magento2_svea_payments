@@ -15,8 +15,8 @@ interface HandlingFeeApplierInterface
      */
     public function updateHandlingFee(
         Quote  $quote,
-        string $paymentMethod = null,
-        string $methodCode = null,
-        string $methodGroup = null
+        ?string $paymentMethod = null,
+        ?string $methodCode = null,
+        ?string $methodGroup = null
     );
 }

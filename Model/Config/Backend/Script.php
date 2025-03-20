@@ -34,8 +34,8 @@ class Script extends Value
         ScopeConfigInterface $config,
         TypeListInterface    $cacheTypeList,
         Validator            $scriptValidator,
-        AbstractResource     $resource = null,
-        AbstractDb           $resourceCollection = null,
+        ?AbstractResource     $resource = null,
+        ?AbstractDb           $resourceCollection = null,
         array                $data = []
     ) {
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);

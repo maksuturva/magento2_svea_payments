@@ -32,7 +32,7 @@ class PaymentHandlingException extends LocalizedException
         ?string $type = null,
         $code = 0,
         ?array $errorParams = null,
-        \Exception $cause = null
+        ?\Exception $cause = null
     ) {
         parent::__construct($phrase, $cause, $code);
         $this->order = $order;

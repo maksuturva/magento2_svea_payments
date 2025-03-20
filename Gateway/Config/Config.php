@@ -59,7 +59,7 @@ class Config extends GatewayConfig
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-                             $methodCode = null,
+                             ?string $methodCode = null,
                              $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
         parent::__construct(

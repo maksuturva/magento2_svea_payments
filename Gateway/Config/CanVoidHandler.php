@@ -32,7 +32,7 @@ class CanVoidHandler implements ValueHandlerInterface
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function handle(array $subject, $storeId = null)
+    public function handle(array $subject, ?int $storeId = null)
     {
         $paymentDO = $this->subjectReader->readPayment($subject);
 

@@ -13,8 +13,8 @@ class Generic extends Base
     public function __construct(
         DriverInterface $filesystem,
         $loggerType,
-        $filePath = null,
-        $fileName = null
+        ?string $filePath = null,
+        ?string $fileName = null
     ) {
         $this->loggerType = $loggerType;
         parent::__construct($filesystem, $filePath, $fileName);

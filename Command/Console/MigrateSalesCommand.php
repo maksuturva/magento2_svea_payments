@@ -27,7 +27,7 @@ class MigrateSalesCommand extends Command
      */
     public function __construct(
         MigrateSalesInterface $migrateSales,
-        string                $name = null
+        ?string                $name = null
     ) {
         $this->migrateSales = $migrateSales;
         parent::__construct($name);

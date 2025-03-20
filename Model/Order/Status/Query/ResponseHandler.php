@@ -182,7 +182,7 @@ class ResponseHandler
      *
      * @throws \Exception
      */
-    private function updateOrderStatus(Order $order, $status, $comment, $state = null, bool $visibleOnFront = true): void
+    private function updateOrderStatus(Order $order, $status, $comment, ?string $state = null, bool $visibleOnFront = true): void
     {
         if (!$state) {
             $state = $status;

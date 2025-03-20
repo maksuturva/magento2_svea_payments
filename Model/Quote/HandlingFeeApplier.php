@@ -26,9 +26,9 @@ class HandlingFeeApplier implements HandlingFeeApplierInterface
      */
     public function updateHandlingFee(
         Quote  $quote,
-        string $paymentMethod = null,
-        string $methodCode = null,
-        string $methodGroup = null
+        ?string $paymentMethod = null,
+        ?string $methodCode = null,
+        ?string $methodGroup = null
     ) {
         $quote->getPayment()->setMethod($paymentMethod);
         $quote->getPayment()->setAdditionalInformation('svea_method_code', $methodCode);

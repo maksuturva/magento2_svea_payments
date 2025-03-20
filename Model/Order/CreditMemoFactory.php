@@ -14,7 +14,7 @@ class CreditMemoFactory extends \Magento\Sales\Model\Order\CreditmemoFactory
         \Magento\Sales\Model\Convert\OrderFactory    $convertOrderFactory,
         \Magento\Tax\Model\Config                    $taxConfig,
         HandlingFee                                  $handlingFee,
-        \Magento\Framework\Serialize\Serializer\Json $serializer = null
+        ?\Magento\Framework\Serialize\Serializer\Json $serializer = null
     ) {
         parent::__construct($convertOrderFactory, $taxConfig, $serializer);
         $this->handlingFee = $handlingFee;

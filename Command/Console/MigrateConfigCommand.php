@@ -25,7 +25,7 @@ class MigrateConfigCommand extends Command
      */
     public function __construct(
         MigrateConfigInterface $migrateConfig,
-        string                 $name = null
+        ?string                 $name = null
     ) {
         $this->migrateConfig = $migrateConfig;
         parent::__construct($name);

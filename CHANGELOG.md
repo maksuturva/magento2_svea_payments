@@ -2,6 +2,7 @@
 
 ### [1.1.1] - 2025-03-24
 * The module now works with PHP 8.4
+* Better handling of null fields on old orders.
 
 ### [1.1.0] - 2025-03-17
 * Set Payment Pending on order when redirecting to payment page. Magento will automatically cancel abandoned orders after set timeout, default 8 hours.

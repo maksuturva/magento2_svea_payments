@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.1.1] - 2025-03-24
+### [1.1.1] - 2025-03-27
 * The module now works with PHP 8.4
 * Better handling of null fields on old orders.
 

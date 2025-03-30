@@ -8,7 +8,7 @@ This payment module is a replacement for the [previous version](https://github.c
 # System requirements
 * Magento 2.4.4 or newer (tested up to 2.4.8-beta2)
 * Composer 2.0 or newer
-* PHP 8.2 or newer (tested up to 8.4.4)
+* PHP 8.1 or newer (tested up to 8.4.4)
 
   There is no guarantee that the module is fully functional in any other environment which does not fulfill the requirements.
 

@@ -57,7 +57,7 @@ class SveaCommand implements CommandInterface
         ValidatorInterface       $validator,
         Logger                   $logger,
         ArrayResultFactory       $resultFactory,
-        $handler = null
+        ?HandlerInterface        $handler = null
     ) {
         $this->requestBuilder = $requestBuilder;
         $this->transferFactory = $transferFactory;

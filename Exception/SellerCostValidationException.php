@@ -32,10 +32,10 @@ class SellerCostValidationException extends \Exception
     public function __construct(
         $message = "",
         $code = 0,
-        Throwable $previous = null,
-        string $orderId = null,
-        string $requestPmtSellercosts = null,
-        string $formPmtSellercosts = null
+        ?Throwable $previous = null,
+        ?string $orderId = null,
+        ?string $requestPmtSellercosts = null,
+        ?string $formPmtSellercosts = null
     ) {
         parent::__construct($message, $code, $previous);
         $this->orderId = $orderId;

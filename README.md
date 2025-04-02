@@ -6,9 +6,9 @@ Tags: svea, payment gateway, finland
 This payment module is a replacement for the [previous version](https://github.com/maksuturva/magento2_payment_module).
 
 # System requirements
-* Magento 2.4.4 or newer (tested up to 2.4.6)
+* Magento 2.4.4 or newer (tested up to 2.4.8-beta2)
 * Composer 2.0 or newer
-* PHP 8.1 or newer
+* PHP 8.1 or newer (tested up to 8.4.4)
 
   There is no guarantee that the module is fully functional in any other environment which does not fulfill the requirements.
 

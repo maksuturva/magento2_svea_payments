@@ -75,10 +75,6 @@ class RowDataValidator
             return false;
         }
 
-        if (in_array($items[$itemId + 1], $children, false) === false) {
-            return false;
-        }
-
         $child = $children[0];
         $row[RowBuilderInterface::NAME] = $child->getName();
         $childSku = $child->getSku();

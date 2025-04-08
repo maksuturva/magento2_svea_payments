@@ -68,13 +68,13 @@ class PaymentCancelDataBuilder implements BuilderInterface
             'pmtc_resptype' => 'XML',
             'pmtc_keygeneration' => $this->config->getKeyVersion(),
         ];
-        /** If not full refund, add cancel amount */
+        /** If not full refund, add cancel amount and row specifications */
         if ($cancelType !== 'FULL_REFUND') {
             $data['pmtc_cancelamount'] = $this->amountHandler->formatFloat($refundAmount);
             $creditmemo = $payment->getCreditmemo();
-            $N = $this->addDiscountRow($data, $creditmemo);
-            $this->addShippingRow($data, $creditmemo, $N);
-            $N = $this->addItemRows($data, $creditmemo, $N);
+            $offset = $this->addDiscountRow($data, $creditmemo);
+            $this->addShippingRow($data, $creditmemo, $offset);
+            $this->addItemRows($data, $creditmemo);
         }
         /** Add IBAN number to REFUND_AFTER_SETTLEMENT cases */
         if ($cancelType === RefundCommand::CANCEL_TYPE_REFUND_AFTER_SETTLEMENT) {
@@ -85,12 +85,13 @@ class PaymentCancelDataBuilder implements BuilderInterface
     }
 
     /**
-     * Discount must be accounted for in the number of rows as it was sent in the original order.
-     * But we will not refund the original row, but rather add a new row with the adjustment, discount is always negative.
+     * Discount refund is not 100% of the originial row so we add an additional row,
+     * discount amount is negative so we negate it when sending it in.
+     * Return the offset for more additional rows.
      */
     private function addDiscountRow(array &$data, Creditmemo $creditmemo): int
     {
-        if ($creditmemo->getOrder()->getDiscountAmount() < 0) {
+        if ($creditmemo->getBaseDiscountAmount() < 0) {
             $data['pmtc_additional_row_name1'] = 'Discount';
             $data['pmtc_additional_row_desc1'] = 'Discount reduction';
             $data['pmtc_additional_row_quantity1'] = 1;
@@ -102,11 +103,34 @@ class PaymentCancelDataBuilder implements BuilderInterface
     }
 
     /**
-     * Refund the items with quantity greater than 0 from the credit memo, order needs to be the same as orignal order.
-     * Configurable products are accounted for in that we skip the simple subitems
+     * If shipping is refunded, we add a additional row for it, we negate the refund amount to send it to.
+     * Offset is to adjust the additional row number if we added row 1 for discount already.
      */
-    private function addItemRows(array &$data, Creditmemo $creditmemo, int $N): int
+    private function addShippingRow(array &$data, Creditmemo $creditmemo, int $offset): void
     {
+        if ($creditmemo->getBaseShippingAmount() > 0) {
+            $shippingNet = $creditmemo->getBaseShippingAmount();
+            $vat = (\round(($creditmemo->getBaseShippingTaxAmount() / $shippingNet) * 100 * 2) / 2);
+            $data["pmtc_additional_row_name{$offset}"] = 'Shipping';
+            $data["pmtc_additional_row_desc{$offset}"] = 'Shipping refund';
+            $data["pmtc_additional_row_quantity{$offset}"] = 1;
+            $data["pmtc_additional_row_price_gross{$offset}"] = $this->amountHandler->formatFloat(-$creditmemo->getBaseShippingInclTax());
+            $data["pmtc_additional_row_vat{$offset}"] = $this->amountHandler->formatFloat($vat);
+        }
+    }
+
+    /**
+     * Refund the items with quantity greater than 0 from the credit memo, rows are numbered from 1 and same sort as original order.
+     * If original order had discount we must offset the row number additionally by 1.
+     * Configurable products are accounted for in that we skip the related child items.
+     */
+    private function addItemRows(array &$data, Creditmemo $creditmemo): void
+    {
+        $N = 1;
+        if ($creditmemo->getOrder()->getDiscountAmount() < 0) {
+            $N = 2;
+        }
+
         /** @var Item $item */
         foreach ($creditmemo->getItems() as $item) {
             $orderItem = $item->getOrderItem();
@@ -118,24 +142,6 @@ class PaymentCancelDataBuilder implements BuilderInterface
                 $data["pmtc_refund_quantity_of_original_row{$N}"] = $this->amountHandler->formatFloat($item->getQty());
             }
             $N += 1;
-        }
-
-        return $N;
-    }
-
-    /**
-     * If shipping is refunded, add a additional row for it
-     */
-    private function addShippingRow(array &$data, Creditmemo $creditmemo, int $N): void
-    {
-        if ($creditmemo->getBaseShippingAmount() > 0) {
-            $shippingNet = $creditmemo->getBaseShippingAmount();
-            $vat = (\round(($creditmemo->getBaseShippingTaxAmount() / $shippingNet) * 100 * 2) / 2);
-            $data["pmtc_additional_row_name{$N}"] = 'Shipping';
-            $data["pmtc_additional_row_desc{$N}"] = 'Shipping refund';
-            $data["pmtc_additional_row_quantity{$N}"] = 1;
-            $data["pmtc_additional_row_price_gross{$N}"] = $this->amountHandler->formatFloat(-$creditmemo->getBaseShippingInclTax());
-            $data["pmtc_additional_row_vat{$N}"] = $this->amountHandler->formatFloat($vat);
         }
     }
 

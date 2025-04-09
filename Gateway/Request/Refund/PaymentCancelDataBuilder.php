@@ -73,7 +73,8 @@ class PaymentCancelDataBuilder implements BuilderInterface
             $data['pmtc_cancelamount'] = $this->amountHandler->formatFloat($refundAmount);
             $creditmemo = $payment->getCreditmemo();
             $offset = $this->addDiscountRow($data, $creditmemo);
-            $this->addShippingRow($data, $creditmemo, $offset);
+            $offset = $this->addShippingRow($data, $creditmemo, $offset);
+            $this->addAdjustmentRow($data, $creditmemo, $offset);
             $this->addItemRows($data, $creditmemo);
         }
         /** Add IBAN number to REFUND_AFTER_SETTLEMENT cases */
@@ -106,7 +107,7 @@ class PaymentCancelDataBuilder implements BuilderInterface
      * If shipping is refunded, we add a additional row for it, we negate the refund amount to send it to.
      * Offset is to adjust the additional row number if we added row 1 for discount already.
      */
-    private function addShippingRow(array &$data, Creditmemo $creditmemo, int $offset): void
+    private function addShippingRow(array &$data, Creditmemo $creditmemo, int $offset): int
     {
         if ($creditmemo->getBaseShippingAmount() > 0) {
             $shippingNet = $creditmemo->getBaseShippingAmount();
@@ -116,6 +117,23 @@ class PaymentCancelDataBuilder implements BuilderInterface
             $data["pmtc_additional_row_quantity{$offset}"] = 1;
             $data["pmtc_additional_row_price_gross{$offset}"] = $this->amountHandler->formatFloat(-$creditmemo->getBaseShippingInclTax());
             $data["pmtc_additional_row_vat{$offset}"] = $this->amountHandler->formatFloat($vat);
+            return $offset + 1;
+        }
+        return $offset;
+    }
+
+    /**
+     * If there is an adjustment amount, we add a additional row for it.
+     * Offset is to adjust the additional row number if we added rows for discount or shipping already.
+     */
+    private function addAdjustmentRow(array &$data, Creditmemo $creditmemo, int $offset): void
+    {
+        if ($creditmemo->getAdjustmentPositive() > 0 || $creditmemo->getAdjustmentNegative() > 0) {
+            $data["pmtc_additional_row_name{$offset}"] = 'Adjustment';
+            $data["pmtc_additional_row_desc{$offset}"] = 'Adjustment refund';
+            $data["pmtc_additional_row_quantity{$offset}"] = 1;
+            $data["pmtc_additional_row_price_gross{$offset}"] = $this->amountHandler->formatFloat(-$creditmemo->getAdjustment());
+            $data["pmtc_additional_row_vat{$offset}"] = $this->amountHandler->formatFloat(0);
         }
     }
 

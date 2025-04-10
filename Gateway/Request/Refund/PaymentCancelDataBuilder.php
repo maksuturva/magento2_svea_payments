@@ -74,7 +74,8 @@ class PaymentCancelDataBuilder implements BuilderInterface
             $creditmemo = $payment->getCreditmemo();
             $offset = $this->addDiscountRow($data, $creditmemo);
             $offset = $this->addShippingRow($data, $creditmemo, $offset);
-            $this->addAdjustmentRow($data, $creditmemo, $offset);
+            $offset = $this->addAdjustmentRow($data, $creditmemo, $offset);
+            $this->addHandlingFeeRow($data, $creditmemo, $offset);
             $this->addItemRows($data, $creditmemo);
         }
         /** Add IBAN number to REFUND_AFTER_SETTLEMENT cases */
@@ -123,10 +124,10 @@ class PaymentCancelDataBuilder implements BuilderInterface
     }
 
     /**
-     * If there is an adjustment amount, we add a additional row for it.
+     * If there is an adjustment amount, we add an additional row for it.
      * Offset is to adjust the additional row number if we added rows for discount or shipping already.
      */
-    private function addAdjustmentRow(array &$data, Creditmemo $creditmemo, int $offset): void
+    private function addAdjustmentRow(array &$data, Creditmemo $creditmemo, int $offset): int
     {
         if ($creditmemo->getAdjustmentPositive() > 0 || $creditmemo->getAdjustmentNegative() > 0) {
             $data["pmtc_additional_row_name{$offset}"] = 'Adjustment';
@@ -134,8 +135,28 @@ class PaymentCancelDataBuilder implements BuilderInterface
             $data["pmtc_additional_row_quantity{$offset}"] = 1;
             $data["pmtc_additional_row_price_gross{$offset}"] = $this->amountHandler->formatFloat(-$creditmemo->getAdjustment());
             $data["pmtc_additional_row_vat{$offset}"] = $this->amountHandler->formatFloat(0);
+            return $offset + 1;
+        }
+        return $offset;
+    }
+
+    /**
+     * If there is an handling fee refund, we add an additional row for it.
+     * Offset is to adjust the additional row number if we added rows for discount or shipping already.
+     */
+    private function addHandlingFeeRow(array &$data, Creditmemo $creditmemo, int $offset): void
+    {
+        if ($creditmemo->getSveaBaseHandlingFee() > 0) {
+            $feeIncVat = $creditmemo->getSveaBaseHandlingFee() + $creditmemo->getSveaBaseHandlingFeeTax();
+            $vat = (\round(($creditmemo->getSveaBaseHandlingFeeTax() / $creditmemo->getSveaBaseHandlingFee()) * 100 * 2) / 2);
+            $data["pmtc_additional_row_name{$offset}"] = 'Handling fee';
+            $data["pmtc_additional_row_desc{$offset}"] = 'Handling fee refund';
+            $data["pmtc_additional_row_quantity{$offset}"] = 1;
+            $data["pmtc_additional_row_price_gross{$offset}"] = $this->amountHandler->formatFloat(-$feeIncVat);
+            $data["pmtc_additional_row_vat{$offset}"] = $this->amountHandler->formatFloat($vat);
         }
     }
+
 
     /**
      * Refund the items with quantity greater than 0 from the credit memo, rows are numbered from 1 and same sort as original order.

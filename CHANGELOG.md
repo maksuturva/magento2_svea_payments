@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.2.0] - 2025-04-29
+* Complete overhaul of Credit Memo handling for partial refunds.
+  * When returning an item it is now reflected in Svea Extranet
+  * Item VAT is correctly accounted for in information to customer
+  * Refunding shipping and handling costs appear as additional rows in Extranet
+
+
 ### [1.1.2] - 2025-04-02
 * Revert miniumum required PHP version to 8.1.
 * Improve compatibility with Magento Cloud Pro, or other hosting that uses database clustering.

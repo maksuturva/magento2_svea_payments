@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.2.1] - 2025-04-29
+* Fixed labeling in payment icon forms
+
 ### [1.2.0] - 2025-04-29
 * Complete overhaul of Credit Memo handling for partial refunds.
   * When returning an item it is now reflected in Svea Extranet

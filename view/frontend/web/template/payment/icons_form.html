@@ -21,9 +21,12 @@
 
         <form data-bind="attr: {id: 'svea_' + getCode() +'-form'}, data-role: 'svea_' + getCode() + '-form'" class="form form-purchase-order" >
             <div class="svea-payment-methods" data-bind="attr: {id: 'payment_form_'+ getCode()}">
+                <fieldset>
+                <legend class="sub-method-title sr-only" data-bind="text: getTitle()"><hr></legend>
                 <!-- ko foreach: { data: subMethods, as: 'subMethod' } -->
                 <div class="payment-method">
-                    <input class="payment-method-radio"
+                    <label class="payment-method-label" data-bind="attr: { for: subMethod.identifier, title: subMethod.displayname }">
+                        <input class="payment-method-radio"
                         type="radio"
                         data-bind="
                             attr: { id: subMethod.identifier, name: subMethod.identifier },
@@ -33,11 +36,11 @@
                         "
                         tabindex="0"
                         data-validate="{required:true}">
-                    <label class="payment-method-label" data-bind="attr: { for: subMethod.identifier }">
                         <img data-bind="attr: { src: subMethod.imageurl, alt: subMethod.displayname } "/>
                     </label>
                 </div>
                 <!--/ko-->
+                </fieldset>
             </div>
         </form>
 

@@ -24,9 +24,15 @@
 
                 <div class="svea-payment-methods" data-bind="foreach: {data: allMethods, as: 'smethod'} ">
                     <div class="sub-method-title" data-bind="text: smethod.title"><hr></div>
+                    <fieldset>
+                    <legend class="sub-method-title" data-bind="text: smethod.title"><hr></legend>
                         <!-- ko foreach: smethod.methods -->
                         <div class="payment-method">
-                            <input class="payment-method-radio"
+                            <label class="payment-method-label"
+                                   data-bind="attr: { for: identifier, title: displayname },
+                                              css: {'radio-active': (code == $parents[1].selectedMethod()) }
+                                            ">
+                                <input class="payment-method-radio"
                                    type="radio"
                                    data-bind="
                                     attr: { id: identifier, name: identifier },
@@ -35,14 +41,11 @@
                                     event:{ click: $parents[1].selectMethod.bind($parents[1], $parent) }"
                                    tabindex="0"
                                    data-validate="{required:true}">
-                            <label class="payment-method-label"
-                                   data-bind="attr: { for: identifier },
-                                              css: {'radio-active': (code == $parents[1].selectedMethod()) }
-                                            ">
                                 <img data-bind="attr: { src: imageurl, alt: displayname } "/>
                             </label>
                         </div>
                         <!-- /ko -->
+                    </fieldset>
                 </div>
             </div>
         </form>

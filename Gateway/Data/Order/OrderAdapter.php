@@ -130,14 +130,4 @@ class OrderAdapter implements OrderAdapterInterface
     {
         return $this->order->getData('base_gift_cards_amount');
     }
-
-    public function getBaseSubtotalInclTax(): ?float
-    {
-        return $this->order->getBaseSubtotalInclTax();
-    }
-
-    public function getHandlingFee(): ?float
-    {
-        return $this->order->getData('svea_handling_fee');
-    }
 }

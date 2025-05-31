@@ -75,7 +75,6 @@ class RowDataBuilder implements BuilderInterface
             self::SELLER_COSTS => $this->amountHandler->formatFloat($sellerCosts),
         ];
 
-        throw new \Exception('debugging');
         return $result;
     }
 }

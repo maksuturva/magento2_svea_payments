@@ -102,6 +102,9 @@ class DiscountRowBuilder implements RowBuilderInterface
     {
         $rows = [];
         foreach ($items as $item) {
+            if ($item->getBaseDiscountAmount() == 0) {
+                continue; // No discount on this item
+            }
             $discount_vat = $item->getTaxPercent();
             /* This took a while to figure out, we can solve many diffs by using the DiscountTaxCompensationAmount,
              * Tested it that it means the amount subtracted from the product net price to get the VAT to match

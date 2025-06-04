@@ -52,31 +52,24 @@ class DiscountRowBuilder implements RowBuilderInterface
          */
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $orderAdapter = $paymentDO->getOrder();
+        $rows = [];
 
         $baseDiscountAmount = $orderAdapter->getBaseDiscountAmount();
         if ($baseDiscountAmount && $baseDiscountAmount != 0) {
-            $discounts = $this->buildRows($orderAdapter->getItems());
-
-            $description = 'Discount';
-            if (!empty($orderAdapter->getDiscountDescription())) {
-                $description = 'Discount: ' . $orderAdapter->getDiscountDescription();
-            }
             /* In magento there is an option for "Apply Customer Tax" "Before Discount"(0) / "After Discount"(1).
              * If it is set to before discount then the discounts are VAT 0% as they do not change the VAT of the order.
              * This also affcts our running total discount amount.
              */
             $apply_after_discount = $this->scopeConfig->getValue('tax/calculation/apply_after_discount');
+            $discounts = $this->buildRows($orderAdapter->getItems(), $apply_after_discount == '0');
 
-            $rows = [];
+            $description = 'Discount';
+            if (!empty($orderAdapter->getDiscountDescription())) {
+                $description = 'Discount: ' . $orderAdapter->getDiscountDescription();
+            }
+
             foreach ($discounts as $vat => $discount_data) {
-                if ($apply_after_discount == '0') {
-                    $vat = '0,0';
-                    $runningTotal = $discount_data['net'];
-                } else {
-                    //$vat = $vat;
-                    $runningTotal = $discount_data['gross'];
-                }
-                $totalAmount += $runningTotal;
+                $totalAmount += $discount_data['gross'];
                 $rows[] = [
                     self::NAME => 'Discount',
                     self::DESC => $description,
@@ -93,37 +86,48 @@ class DiscountRowBuilder implements RowBuilderInterface
         return [
             self::TOTAL_AMOUNT => $totalAmount,
             self::SELLER_COSTS => $sellerCosts,
-            self::ROW => $rows ?: [],
+            self::ROW => $rows,
         ];
     }
 
     /** Build up discount row per VAT class that appears in the order */
-    private function buildRows($items): array
+    private function buildRows($items, $beforeTax): array
     {
         $rows = [];
         foreach ($items as $item) {
             if ($item->getBaseDiscountAmount() == 0) {
                 continue; // No discount on this item
             }
-            $discount_vat = $item->getTaxPercent();
             /* This took a while to figure out, we can solve many diffs by using the DiscountTaxCompensationAmount,
-             * Tested it that it means the amount subtracted from the product net price to get the VAT to match
+             * tested it that it means the amount subtracted from the product net price to get the VAT to match.
              */
             $discount_net = -($item->getBaseDiscountAmount() - $item->getDiscountTaxCompensationAmount());
-            $discount_gross = round($discount_net * (1 + ($discount_vat / 100.0)), 2);
+            if ($beforeTax) {
+                $discount_vat = 0.00;
+                $discount_gross = $discount_net;
+            } else {
+                $discount_vat = $item->getTaxPercent();
+                $discount_gross = round($discount_net * (1 + ($discount_vat / 100.0)), 2);
+            }
 
             $key = $this->amountHandler->formatFloat($discount_vat);
-            if (isset($rows[$key])) {
-                $rows[$key]['net'] += $discount_net;
-                $rows[$key]['gross'] += $discount_gross;
-            } else {
-                $rows[$key] = [
-                    'net' => $discount_net,
-                    'gross' => $discount_gross,
-                ];
-            }
+            $this->addOrMergeRow($rows, $key, $discount_net, $discount_gross);
         }
         return $rows;
+    }
+
+
+    private function addOrMergeRow(array &$rows, string $vat, float $net, float $gross): void
+    {
+        if (isset($rows[$vat])) {
+            $rows[$vat]['net'] += $net;
+            $rows[$vat]['gross'] += $gross;
+        } else {
+            $rows[$vat] = [
+                'net' => $net,
+                'gross' => $gross,
+            ];
+        }
     }
 
 }

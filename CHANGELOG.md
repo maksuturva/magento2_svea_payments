@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.2.2] - 2025-06-05
+* Fixed discount row calculator
+
 ### [1.2.1] - 2025-04-29
 * Fixed labeling in payment icon forms
 
@@ -8,7 +11,6 @@
   * When returning an item it is now reflected in Svea Extranet
   * Item VAT is correctly accounted for in information to customer
   * Refunding shipping and handling costs appear as additional rows in Extranet
-
 
 ### [1.1.2] - 2025-04-02
 * Revert miniumum required PHP version to 8.1.

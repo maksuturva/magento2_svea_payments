@@ -1,7 +1,12 @@
 # Changelog
 
-### [1.2.2] - 2025-06-05
-* Fixed discount row calculator
+### [1.3.0] - 2025-06-18
+* Corrected discount rows sent to Svea to include tax.
+* Corrected discount handling to follow Magento tax settings, the calculations are now including tax correct values for discounts for the following settings. 
+  * Catalog Prices:           Including/Excluding Tax
+  * Apply Customer Tax:       Before/After Discount
+  * Apply Discount On Prices: Including/Excluding tax
+* Note that Magento warns on some combinations (Catalog Excluding Tax, Tax After Discount, Discount Including Tax) as they **do not** produce valid discount calculations, check that results match what you expect.
 
 ### [1.2.1] - 2025-04-29
 * Fixed labeling in payment icon forms

@@ -106,6 +106,11 @@ class OrderAdapter implements OrderAdapterInterface
         return $this->order->getBaseDiscountAmount();
     }
 
+    public function getBaseShippingInclTaxAmount(): ?float
+    {
+        return $this->order->getBaseShippingInclTax();
+    }
+
     public function getBaseShippingAmount(): ?float
     {
         return $this->order->getBaseShippingAmount();

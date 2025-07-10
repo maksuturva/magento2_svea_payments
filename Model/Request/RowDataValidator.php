@@ -50,7 +50,7 @@ class RowDataValidator
             return $this->bundleRows($item, $totalAmount, $itemData, $row);
         }
 
-        $totalAmount += $itemData['base_price_incl_tax'] * $item->getQtyToInvoice();
+        $totalAmount += $itemData['base_row_total_incl_tax'];
 
         return [
             RowBuilderInterface::TOTAL_AMOUNT => $totalAmount,

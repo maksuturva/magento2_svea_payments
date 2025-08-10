@@ -112,7 +112,7 @@ class ShippingRowBuilder implements RowBuilderInterface
             self::TYPE => 2,
         ];
 
-        $sellerCosts += $shippingCost + $shippingTax;
+        $sellerCosts += $orderAdapter->getBaseShippingInclTaxAmount();
 
         return [
             self::TOTAL_AMOUNT => $totalAmount,

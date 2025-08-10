@@ -20,10 +20,7 @@
 
         <form data-bind="attr: {id: 'svea_' + getCode() +'-form'}, data-role: 'svea_' + getCode() + '-form'" class="form form-purchase-order" >
             <div class="svea-payment-methods" data-bind="attr: {id: 'payment_form_'+ getCode()}">
-
-
                 <div class="svea-payment-methods" data-bind="foreach: {data: allMethods, as: 'smethod'} ">
-                    <div class="sub-method-title" data-bind="text: smethod.title"><hr></div>
                     <fieldset>
                     <legend class="sub-method-title" data-bind="text: smethod.title"><hr></legend>
                         <!-- ko foreach: smethod.methods -->

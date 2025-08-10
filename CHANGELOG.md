@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.3.1] - 2025-08-10
+* Fixed duplicate collated payment method titles on the checkout page.
+
 ### [1.3.0] - 2025-06-18
 * Corrected discount rows sent to Svea to include tax.
 * Corrected discount handling to follow Magento tax settings, the calculations are now including tax correct values for discounts for the following settings. 

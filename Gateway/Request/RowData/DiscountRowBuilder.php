@@ -75,7 +75,7 @@ class DiscountRowBuilder implements RowBuilderInterface
                     self::DESC => $description,
                     self::QUANTITY => 1,
                     self::DELIVERY_DATE => date('d.m.Y'),
-                    self::PRICE_NET => $this->amountHandler->formatFloat($discount_data['net']),
+                    self::PRICE_GROSS => $this->amountHandler->formatFloat($discount_data['gross']),
                     self::VAT => $vat,
                     self::DISCOUNT_PERCENTAGE => '0,00',
                     self::TYPE => 6,

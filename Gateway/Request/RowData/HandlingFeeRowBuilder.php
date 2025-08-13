@@ -59,7 +59,7 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
                 self::DESC => \__('Invoicing Fee'),
                 self::QUANTITY => 1,
                 self::DELIVERY_DATE => \date('d.m.Y'),
-                self::PRICE_NET => $this->amountHandler->formatFloat($amount),
+                self::PRICE_GROSS => $this->amountHandler->formatFloat($amount + $taxAmount),
                 self::VAT => $this->amountHandler->formatFloat($taxPercent),
                 self::DISCOUNT_PERCENTAGE => $this->amountHandler->formatFloat(0),
                 self::TYPE => 3,

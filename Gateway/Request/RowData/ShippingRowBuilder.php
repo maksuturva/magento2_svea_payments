@@ -106,7 +106,7 @@ class ShippingRowBuilder implements RowBuilderInterface
             self::DESC => $shippingDescription,
             self::QUANTITY => 1,
             self::DELIVERY_DATE => $this->timezone->date()->format('d.m.Y'),
-            self::PRICE_NET => $this->amountHandler->formatFloat($shippingCost),
+            self::PRICE_GROSS => $this->amountHandler->formatFloat($shippingCost + $shippingTax),
             self::VAT => $this->amountHandler->formatFloat($shippingTaxRate),
             self::DISCOUNT_PERCENTAGE => '0,00',
             self::TYPE => 2,

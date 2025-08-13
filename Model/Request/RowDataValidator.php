@@ -112,7 +112,7 @@ class RowDataValidator
 
         // If price is fully dynamic
         if ($item->getProduct()->getPriceType() == 0) {
-            $row[RowBuilderInterface::PRICE_NET] = str_replace('.', ',', sprintf("%.2f", '0'));
+            $row[RowBuilderInterface::PRICE_GROSS] = str_replace('.', ',', sprintf("%.2f", '0'));
         } else {
             $totalAmount += $itemData["price_incl_tax"] * $item->getQtyOrdered();
         }

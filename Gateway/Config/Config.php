@@ -5,6 +5,7 @@ namespace Svea\SveaPayment\Gateway\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Gateway\Config\Config as GatewayConfig;
 use Magento\Store\Model\ScopeInterface;
+use Svea\SveaPayment\Model\Source\CommunicationEndpoint;
 use function explode;
 use function rtrim;
 use function sprintf;
@@ -21,6 +22,7 @@ class Config extends GatewayConfig
     const KEY_VERSION = 'svea_config/svea_payment/keyversion';
     const CRON_ACTIVE = 'svea_config/svea_payment/cron_active';
     const COMMUNICATION_URL = 'svea_config/svea_payment/commurl';
+    const COMMUNICATION_URL_CUSTOM = 'svea_config/svea_payment/commurl_custom';
     const DELAYED_CAPTURE_METHODS = 'svea_config/svea_payment/delayed_capture';
     const NEW_ORDER_STATUS = 'svea_config/svea_payment/order_status';
     const PAID_ORDER_STATUS = 'svea_config/svea_payment/paid_order_status';
@@ -93,6 +95,11 @@ class Config extends GatewayConfig
     public function getCommunicationUrl(?string $service = null): string
     {
         return $this->getUrl($this->scopeConfig->getValue(self::COMMUNICATION_URL, ScopeInterface::SCOPE_STORE) ?? '', $service);
+    }
+
+    public function getCommunicationUrlCustom(?string $service = null): string
+    {
+        return $this->getUrl($this->scopeConfig->getValue(self::COMMUNICATION_URL_CUSTOM, ScopeInterface::SCOPE_STORE) ?? '', $service);
     }
 
     private function getUrl(string $baseUrl, ?string $service = null)

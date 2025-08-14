@@ -35,9 +35,21 @@
                     <label>Svea Payments Endpoint</label>
                     <source_model>Svea\SveaPayment\Model\Source\CommunicationEndpoint</source_model>
                     <tooltip><![CDATA[
-                        Production: https://www.maksuturva.fi/<br/>
-                        Test: https://test1.maksuturva.fi/<br/>
+                        &bull; Production: https://www.maksuturva.fi/<br/>
+                        &bull; Test: https://test1.maksuturva.fi/<br/>
+                        &bull; Custom: Endpoint specified in "Custom Svea Payments Endpoint".
                          ]]></tooltip>
+                    <comment><![CDATA[
+                        &bull; Production: https://www.maksuturva.fi/<br/>
+                        &bull; Test: https://test1.maksuturva.fi/<br/>
+                        &bull; Custom: Endpoint specified in "Custom Svea Payments Endpoint".
+                    ]]></comment>
+                </field>
+                <field id="commurl_custom" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom Svea Payments Endpoint</label>
+                    <depends>
+                        <field id="commurl">https://custom_defined_in_commurl_custom.maksuturva.fi/</field>
+                    </depends>
                 </field>
                 <field id="cron_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Scheduled payment status check</label>

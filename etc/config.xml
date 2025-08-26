@@ -8,7 +8,6 @@
                 <paid_order_status>processing</paid_order_status>
                 <cancel_order_on_failure>1</cancel_order_on_failure>
                 <commurl>https://test1.maksuturva.fi/</commurl>
-                <commurl_custom>https://custom_defined_in_commurl_custom.maksuturva.fi/</commurl_custom>
                 <secretkey backend_model="Magento\Config\Model\Config\Backend\Encrypted">11223344556677889900</secretkey>
                 <keyversion>001</keyversion>
                 <restore_shopping_cart>both</restore_shopping_cart>

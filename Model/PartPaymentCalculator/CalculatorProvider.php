@@ -10,7 +10,6 @@ use Svea\SveaPayment\Api\PartPaymentCalculator\CalculatorProviderInterface;
 use Svea\SveaPayment\Api\PartPaymentCalculator\ModifierInterface;
 use Svea\SveaPayment\Gateway\Config\Config;
 use Svea\SveaPayment\Model\Source\CalculatorPlacement;
-use Svea\SveaPayment\Model\Source\CommunicationEndpoint;
 use function explode;
 use function in_array;
 
@@ -224,14 +223,8 @@ class CalculatorProvider implements CalculatorProviderInterface
     private function doGetProviderPaymentPlans(): string
     {
         try {
-            $endpoint = $this->config->getCommunicationUrl();
-
-            if (str_starts_with($endpoint, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
-                $endpoint = $this->config->getCommunicationUrlCustom();
-            }
-
             $client = new \GuzzleHttp\Client([
-                'base_uri' => $endpoint,
+                'base_uri' => $this->config->getCommunicationUrl(),
             ]);
 
             $response = $client->request('GET', $this->config::PAYMENT_PLANS_URN, [

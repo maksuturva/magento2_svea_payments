@@ -7,6 +7,7 @@ use Magento\Payment\Gateway\Http\TransferBuilder;
 use Magento\Payment\Gateway\Http\TransferFactoryInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Svea\SveaPayment\Gateway\Config\Config;
+use Svea\SveaPayment\Model\Source\CommunicationEndpoint;
 
 class TransferFactory implements TransferFactoryInterface
 {
@@ -68,7 +69,13 @@ class TransferFactory implements TransferFactoryInterface
 
     private function getUrl() : string
     {
-        return $this->config->getCommunicationUrl($this->service);
+        $url = $this->config->getCommunicationUrl($this->service);
+
+        if (str_starts_with($url, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
+            $url = $this->config->getCommunicationUrlCustom($this->service);
+        }
+
+        return $url;
     }
 
     private function getUsername(): string

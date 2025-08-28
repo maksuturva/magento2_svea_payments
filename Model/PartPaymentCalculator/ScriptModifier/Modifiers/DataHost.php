@@ -36,19 +36,13 @@ class DataHost implements ModifierInterface
      */
     public function modify(string $script): string
     {
-        $endpoint = $this->config->getCommunicationUrl();
-        if ($endpoint === CommunicationEndpoint::TEST_ENVIRONMENT_URL) {
+        $endpoint = $this->config->getCommunicationUrlReal();
+        if ($endpoint === CommunicationEndpoint::TEST_ENVIRONMENT_URL 
+            || str_starts_with($endpoint, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
             return $this->modifier->setAttribute(
                 $script,
                 self::DATA_HOST_ATTRIBUTE,
                 $endpoint
-            );
-        } else if (str_starts_with($endpoint, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
-            $endpointcustom = $this->config->getCommunicationUrlCustom();
-            return $this->modifier->setAttribute(
-                $script,
-                self::DATA_HOST_ATTRIBUTE,
-                $endpointcustom
             );
         }
 

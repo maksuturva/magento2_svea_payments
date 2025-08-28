@@ -224,11 +224,7 @@ class CalculatorProvider implements CalculatorProviderInterface
     private function doGetProviderPaymentPlans(): string
     {
         try {
-            $endpoint = $this->config->getCommunicationUrl();
-
-            if (str_starts_with($endpoint, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
-                $endpoint = $this->config->getCommunicationUrlCustom();
-            }
+            $endpoint = $this->config->getCommunicationUrlReal();
 
             $client = new \GuzzleHttp\Client([
                 'base_uri' => $endpoint,

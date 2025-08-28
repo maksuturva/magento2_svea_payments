@@ -97,12 +97,7 @@ class SveaClient implements ClientInterface
     public function serviceRequest(string $method, string $service, array $data): array
     {
         $client = $this->createClient();
-        $url = $this->config->getCommunicationUrl($service);
-
-        if (str_starts_with($url, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
-            $url = $this->config->getCommunicationUrlCustom($service);
-        }
-
+        $url = $this->config->getCommunicationUrlReal($service);
         return $this->doRequest($client, $url, $method, $data);
     }
 

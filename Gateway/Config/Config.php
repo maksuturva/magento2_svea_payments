@@ -102,6 +102,20 @@ class Config extends GatewayConfig
         return $this->getUrl($this->scopeConfig->getValue(self::COMMUNICATION_URL_CUSTOM, ScopeInterface::SCOPE_STORE) ?? '', $service);
     }
 
+    /**
+     *  Gets the real communication url. If COMMUNICATION_URL_CUSTOM is set, gets that. Otherwise gets COMMUNICATION_URL. 
+     */
+    public function getCommunicationUrlReal(?string $service = null): string
+    {
+        $url = self::getCommunicationUrl($service);
+
+        if (str_starts_with($url, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
+            $url = self::getCommunicationUrlCustom($service);
+        }
+
+        return $url;
+    }
+
     private function getUrl(string $baseUrl, ?string $service = null)
     {
         $baseUrl = rtrim($baseUrl, '/');

@@ -69,13 +69,7 @@ class TransferFactory implements TransferFactoryInterface
 
     private function getUrl() : string
     {
-        $url = $this->config->getCommunicationUrl($this->service);
-
-        if (str_starts_with($url, CommunicationEndpoint::CUSTOM_ENVIRONMENT_URL)) {
-            $url = $this->config->getCommunicationUrlCustom($this->service);
-        }
-
-        return $url;
+        return $this->config->getCommunicationUrlReal($this->service);
     }
 
     private function getUsername(): string

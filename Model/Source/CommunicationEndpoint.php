@@ -8,6 +8,7 @@ class CommunicationEndpoint implements OptionSourceInterface
 {
     public const TEST_ENVIRONMENT_URL = 'https://test1.maksuturva.fi/';
     public const PRODUCTION_ENVIRONMENT_URL = 'https://www.maksuturva.fi/';
+    public const CUSTOM_ENVIRONMENT_URL = 'https://custom_defined_in_commurl_custom.maksuturva.fi/';
     /**
      * @inheritDoc
      */
@@ -21,6 +22,10 @@ class CommunicationEndpoint implements OptionSourceInterface
             [
                 'value' => self::PRODUCTION_ENVIRONMENT_URL,
                 'label' => 'Production'
+            ],
+            [
+                'value' => self::CUSTOM_ENVIRONMENT_URL,
+                'label' => 'Custom'
             ],
         ];
     }

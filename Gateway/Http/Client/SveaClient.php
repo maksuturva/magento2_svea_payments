@@ -10,6 +10,7 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 use Svea\SveaPayment\Gateway\Config\Config;
 use Svea\SveaPayment\Model\Response\XmlDataResolver;
 use Svea\SveaPayment\Model\UserAgent;
+use Svea\SveaPayment\Model\Source\CommunicationEndpoint;
 
 class SveaClient implements ClientInterface
 {
@@ -96,8 +97,7 @@ class SveaClient implements ClientInterface
     public function serviceRequest(string $method, string $service, array $data): array
     {
         $client = $this->createClient();
-        $url = $this->config->getCommunicationUrl($service);
-
+        $url = $this->config->getCommunicationUrlReal($service);
         return $this->doRequest($client, $url, $method, $data);
     }
 

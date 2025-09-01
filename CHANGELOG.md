@@ -1,7 +1,8 @@
 # Changelog
 
-### [1.3.1] - 2025-08-10
+### [1.3.1] - 2025-08-28
 * Fixed duplicate collated payment method titles on the checkout page.
+* Added option to use custom API endpoint url for communication.
 
 ### [1.3.0] - 2025-06-18
 * Corrected discount rows sent to Svea to include tax.

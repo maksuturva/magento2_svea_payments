@@ -45,11 +45,11 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
     public function build(array $buildSubject, float $totalAmount, float $sellerCosts): array
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
-        $payment = $paymentDO->getPayment();
+        $dataObject = $paymentDO->getPayment()->getOrder();
 
-        $amount = $this->handlingFee->getValue($payment->getOrder());
-        $taxAmount = $this->handlingFee->getTaxAmount($payment->getOrder());
-        $taxPercent = $taxAmount > 0 ? $this->handlingFee->getTaxAmountPercentage($payment->getOrder()) : 0;
+        $amount = $this->handlingFee->getValue($dataObject);
+        $taxAmount = $this->handlingFee->getTaxAmount($dataObject);
+        $taxPercent = $taxAmount > 0 ? $this->handlingFee->getTaxAmountPercentage($dataObject) : 0;
 
         $row = [];
 

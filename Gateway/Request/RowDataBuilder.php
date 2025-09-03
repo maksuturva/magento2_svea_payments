@@ -2,8 +2,11 @@
 
 namespace Svea\SveaPayment\Gateway\Request;
 
+use Magento\Framework\Logger\Monolog as Logger;
+use Svea\SveaPayment\Gateway\SubjectReaderInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Svea\SveaPayment\Gateway\Data\AmountHandler;
+
 use function count;
 
 class RowDataBuilder implements BuilderInterface
@@ -27,6 +30,11 @@ class RowDataBuilder implements BuilderInterface
      * The total gross sum of row types 2 and 3
      */
     const SELLER_COSTS = 'pmt_sellercosts';
+    
+    /**
+     * @var SubjectReaderInterface
+     */
+    private $subjectReader;
 
     /**
      * @var AmountHandler
@@ -34,15 +42,24 @@ class RowDataBuilder implements BuilderInterface
     private $amountHandler;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var RowBuilderInterface
      */
     private $rowBuilders;
 
     public function __construct(
+        SubjectReaderInterface $subjectReader,
         AmountHandler $amountHandler,
+        Logger $logger,
         array $rowBuilders = []
     ) {
+        $this->subjectReader = $subjectReader;
         $this->amountHandler = $amountHandler;
+        $this->logger = $logger;
         $this->rowBuilders = $rowBuilders;
     }
 
@@ -68,10 +85,21 @@ class RowDataBuilder implements BuilderInterface
             }
         }
 
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
+        $order = $paymentDO->getOrder();
+        $orderTotal = $order->getGrandTotalAmount() - $sellerCosts;
+
+        if (abs($totalAmount - $orderTotal) > 0.005) {
+             $this->logger->debug('Svea Payments: Collected total amount does not match Magento order total, using Magento value.', [
+                'collected_total' => $totalAmount,
+                'order_total' => $orderTotal,
+            ]);
+        }
+
         $result = [
             self::ROWS => count($productRows),
             self::ROWS_DATA => $productRows,
-            self::AMOUNT => $this->amountHandler->formatFloat($totalAmount),
+            self::AMOUNT => $this->amountHandler->formatFloat($orderTotal),
             self::SELLER_COSTS => $this->amountHandler->formatFloat($sellerCosts),
         ];
 

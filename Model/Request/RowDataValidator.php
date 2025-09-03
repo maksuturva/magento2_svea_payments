@@ -50,7 +50,7 @@ class RowDataValidator
             return $this->bundleRows($item, $totalAmount, $itemData, $row);
         }
 
-        $totalAmount += $itemData['base_price_incl_tax'] * $item->getQtyToInvoice();
+        $totalAmount += $itemData['base_row_total_incl_tax'];
 
         return [
             RowBuilderInterface::TOTAL_AMOUNT => $totalAmount,
@@ -91,7 +91,7 @@ class RowDataValidator
             $row[RowBuilderInterface::DESC] = $childSku;
         }
 
-        $totalAmount += $itemData["base_price_incl_tax"] * $item->getQtyToInvoice();
+        $totalAmount += $itemData["base_row_total_incl_tax"];
 
         return [
             RowBuilderInterface::TOTAL_AMOUNT => $totalAmount,
@@ -114,7 +114,7 @@ class RowDataValidator
         if ($item->getProduct()->getPriceType() == 0) {
             $row[RowBuilderInterface::PRICE_GROSS] = str_replace('.', ',', sprintf("%.2f", '0'));
         } else {
-            $totalAmount += $itemData["price_incl_tax"] * $item->getQtyOrdered();
+            $totalAmount += $itemData["base_row_total_incl_tax"];
         }
 
         $row['pmt_row_type'] = 4;
@@ -140,7 +140,7 @@ class RowDataValidator
 
         $row[RowBuilderInterface::NAME] = $unitQty . " X " . $parentQty . " X " . $item->getName();
         $row[RowBuilderInterface::QUANTITY] = str_replace('.', ',', sprintf("%.2f", $item->getQtyOrdered()));
-        $totalAmount += $itemData["base_price_incl_tax"] * $item->getQtyOrdered();
+        $totalAmount += $itemData["base_row_total_incl_tax"];
         $row['pmt_row_type'] = 4;
 
         return [

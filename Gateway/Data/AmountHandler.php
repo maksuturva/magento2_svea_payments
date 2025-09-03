@@ -23,6 +23,9 @@ class AmountHandler
      */
     public function formatFloat($amount): string
     {
-        return \str_replace('.', ',', \sprintf('%.2f', $amount));
+        if (is_null($amount)) {
+            return "0.00";
+        }
+        return number_format($amount, 2, ',', '');
     }
 }

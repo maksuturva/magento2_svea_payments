@@ -55,7 +55,7 @@ class GiftCardRowBuilder implements RowBuilderInterface
     }
 
     /**
-     * Discount type row pmt_row_price_net is always negative
+     * Discount type row pmt_row_price_gross is always negative
      *
      * @param float $amount
      *
@@ -68,7 +68,7 @@ class GiftCardRowBuilder implements RowBuilderInterface
             self::DESC => __('Gift Card'),
             self::QUANTITY => 1,
             self::DELIVERY_DATE => date('d.m.Y'),
-            self::PRICE_NET => $this->amountHandler->formatFloat(-$amount),
+            self::PRICE_GROSS => $this->amountHandler->formatFloat(-$amount),
             self::VAT => $this->amountHandler->formatFloat(0),
             self::DISCOUNT_PERCENTAGE => $this->amountHandler->formatFloat(0),
             self::TYPE => 6,

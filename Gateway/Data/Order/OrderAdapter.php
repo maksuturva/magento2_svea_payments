@@ -106,14 +106,14 @@ class OrderAdapter implements OrderAdapterInterface
         return $this->order->getBaseDiscountAmount();
     }
 
-    public function getBaseShippingAmount(): ?float
-    {
-        return $this->order->getBaseShippingAmount();
-    }
-
     public function getDiscountDescription(): ?string
     {
         return $this->order->getDiscountDescription();
+    }
+
+    public function getBaseShippingAmountInclTax(): ?float
+    {
+        return $this->order->getBaseShippingInclTax();
     }
 
     public function getShippingDescription(): ?string
@@ -121,9 +121,18 @@ class OrderAdapter implements OrderAdapterInterface
         return $this->order->getShippingDescription();
     }
 
-    public function getBaseShippingTaxAmount()
+    public function getShippingTaxRate(): string  
     {
-        return $this->order->getBaseShippingTaxAmount();
+        $extensionAttributes = $this->order->getExtensionAttributes();
+        $itemAppliedTaxes = $extensionAttributes->getItemAppliedTaxes() ?? [];
+        foreach ($itemAppliedTaxes as $appliedTaxForItem) {
+            if ($appliedTaxForItem->getType() === "shipping") {
+                foreach ($appliedTaxForItem->getAppliedTaxes() ?? [] as $taxLineItem) {
+                    return $taxLineItem->getDataByKey('percent');
+                }
+            }
+        }
+        return "0.0";
     }
 
     public function getBaseGiftCardAmount(): ?float

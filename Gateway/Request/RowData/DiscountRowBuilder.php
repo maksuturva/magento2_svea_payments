@@ -4,7 +4,6 @@ namespace Svea\SveaPayment\Gateway\Request\RowData;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Svea\SveaPayment\Gateway\Data\AmountHandler;
-use Svea\SveaPayment\Gateway\Data\Order\OrderAdapterFactory;
 use Svea\SveaPayment\Gateway\Request\RowBuilderInterface;
 use Svea\SveaPayment\Gateway\SubjectReaderInterface;
 
@@ -18,11 +17,6 @@ class DiscountRowBuilder implements RowBuilderInterface
     private $subjectReader;
 
     /**
-     * @var OrderAdapterFactory
-     */
-    private $orderAdapterFactory;
-
-    /**
      * @var AmountHandler
      */
     private $amountHandler;
@@ -31,12 +25,10 @@ class DiscountRowBuilder implements RowBuilderInterface
 
     public function __construct(
         SubjectReaderInterface $subjectReader,
-        OrderAdapterFactory $orderAdapterFactory,
         AmountHandler $amountHandler,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->subjectReader  = $subjectReader;
-        $this->orderAdapterFactory = $orderAdapterFactory;
         $this->amountHandler = $amountHandler;
         $this->scopeConfig = $scopeConfig;
     }
@@ -61,7 +53,7 @@ class DiscountRowBuilder implements RowBuilderInterface
              * This also affcts our running total discount amount.
              */
             $apply_after_discount = $this->scopeConfig->getValue('tax/calculation/apply_after_discount');
-            $discounts = $this->buildRows($orderAdapter->getItems(), $apply_after_discount == '0');
+            $discounts = $this->buildRows($orderAdapter->getItems(), $apply_after_discount == '1');
 
             $description = 'Discount';
             if (!empty($orderAdapter->getDiscountDescription())) {
@@ -69,13 +61,14 @@ class DiscountRowBuilder implements RowBuilderInterface
             }
 
             foreach ($discounts as $vat => $discount_data) {
-                $totalAmount += $discount_data['gross'];
+                $rounded_gross = round($discount_data['gross']-0.0009, 2, PHP_ROUND_HALF_UP);
+                $totalAmount += $rounded_gross;
                 $rows[] = [
                     self::NAME => 'Discount',
                     self::DESC => $description,
                     self::QUANTITY => 1,
                     self::DELIVERY_DATE => date('d.m.Y'),
-                    self::PRICE_NET => $this->amountHandler->formatFloat($discount_data['net']),
+                    self::PRICE_GROSS => $this->amountHandler->formatFloat($rounded_gross),
                     self::VAT => $vat,
                     self::DISCOUNT_PERCENTAGE => '0,00',
                     self::TYPE => 6,
@@ -91,41 +84,42 @@ class DiscountRowBuilder implements RowBuilderInterface
     }
 
     /** Build up discount row per VAT class that appears in the order */
-    private function buildRows($items, $beforeTax): array
+    private function buildRows($items, $taxesAfterDiscount): array
     {
         $rows = [];
         foreach ($items as $item) {
             if ($item->getBaseDiscountAmount() == 0) {
                 continue; // No discount on this item
             }
-            /* This took a while to figure out, we can solve many diffs by using the DiscountTaxCompensationAmount,
-             * tested it that it means the amount subtracted from the product net price to get the VAT to match.
-             */
-            $discount_net = -($item->getBaseDiscountAmount() - $item->getDiscountTaxCompensationAmount());
-            if ($beforeTax) {
-                $discount_vat = 0.00;
-                $discount_gross = $discount_net;
+            $discount = -$item->getBaseDiscountAmount();
+            $discount_vat_percent = $item->getTaxPercent();
+            if ($taxesAfterDiscount) {
+                if ($item->getDiscountTaxCompensationAmount() > 0) {
+                    $discount_gross = $discount;
+                } else {
+                    $total_net = $item->getBaseRowTotal();
+                    $discounted_total = ($total_net + $discount + $item->getBaseTaxAmount()); ;
+                    $discount_gross = $discounted_total - $item->getBaseRowTotalInclTax();
+                }
             } else {
-                $discount_vat = $item->getTaxPercent();
-                $discount_gross = round($discount_net * (1 + ($discount_vat / 100.0)), 2);
+                $discount_gross = $discount;
+                $discount_vat_percent = 0.00;
             }
 
-            $key = $this->amountHandler->formatFloat($discount_vat);
-            $this->addOrMergeRow($rows, $key, $discount_net, $discount_gross);
+            $key = $this->amountHandler->formatFloat($discount_vat_percent);
+            $this->addOrMergeRow($rows, $key, $discount_gross);
         }
         return $rows;
     }
 
 
-    private function addOrMergeRow(array &$rows, string $vat, float $net, float $gross): void
+    private function addOrMergeRow(array &$rows, string $vat, float $gross): void
     {
         if (isset($rows[$vat])) {
-            $rows[$vat]['net'] += $net;
             $rows[$vat]['gross'] += $gross;
         } else {
             $rows[$vat] = [
-                'net' => $net,
-                'gross' => $gross,
+                'gross' => $gross
             ];
         }
     }

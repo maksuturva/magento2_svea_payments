@@ -53,7 +53,7 @@ class DiscountRowBuilder implements RowBuilderInterface
              * This also affcts our running total discount amount.
              */
             $apply_after_discount = $this->scopeConfig->getValue('tax/calculation/apply_after_discount');
-            $discounts = $this->buildRows($orderAdapter->getItems(), $apply_after_discount == '0');
+            $discounts = $this->buildRows($orderAdapter->getItems(), $apply_after_discount == '1');
 
             $description = 'Discount';
             if (!empty($orderAdapter->getDiscountDescription())) {
@@ -84,41 +84,42 @@ class DiscountRowBuilder implements RowBuilderInterface
     }
 
     /** Build up discount row per VAT class that appears in the order */
-    private function buildRows($items, $beforeTax): array
+    private function buildRows($items, $taxesAfterDiscount): array
     {
         $rows = [];
         foreach ($items as $item) {
             if ($item->getBaseDiscountAmount() == 0) {
                 continue; // No discount on this item
             }
-            $discount_net = -$item->getBaseDiscountAmount();
+            $discount = -$item->getBaseDiscountAmount();
             $discount_vat_percent = $item->getTaxPercent();
-            if ($beforeTax) {
-                $discount_gross = $discount_net;
-                $discount_vat_percent = 0.00;
+            if ($taxesAfterDiscount) {
+                if ($item->getDiscountTaxCompensationAmount() > 0) {
+                    $discount_gross = $discount;
+                } else {
+                    $total_net = $item->getBaseRowTotal();
+                    $discounted_total = ($total_net + $discount + $item->getBaseTaxAmount()); ;
+                    $discount_gross = $discounted_total - $item->getBaseRowTotalInclTax();
+                }
             } else {
-                $total_net = $item->getBaseRowTotal();
-                $vat_decimal = (1 + ($discount_vat_percent / 100.0));
-                $discounted_total = ($total_net + $discount_net) * $vat_decimal;
-                $discount_gross = $discounted_total - $item->getBaseRowTotalInclTax();
+                $discount_gross = $discount;
+                $discount_vat_percent = 0.00;
             }
 
             $key = $this->amountHandler->formatFloat($discount_vat_percent);
-            $this->addOrMergeRow($rows, $key, $discount_net, $discount_gross);
+            $this->addOrMergeRow($rows, $key, $discount_gross);
         }
         return $rows;
     }
 
 
-    private function addOrMergeRow(array &$rows, string $vat, float $net, float $gross): void
+    private function addOrMergeRow(array &$rows, string $vat, float $gross): void
     {
         if (isset($rows[$vat])) {
-            $rows[$vat]['net'] += $net;
             $rows[$vat]['gross'] += $gross;
         } else {
             $rows[$vat] = [
-                'net' => $net,
-                'gross' => $gross,
+                'gross' => $gross
             ];
         }
     }

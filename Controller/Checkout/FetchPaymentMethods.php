@@ -57,8 +57,13 @@ class FetchPaymentMethods extends Action
     {
         $this->storeManager->setCurrentStore($this->getRequest()->getParam('store'));
         $quote = $this->checkoutSession->getQuote();
-        $method = $quote->getPayment()->getMethodInstance();
-        $methods = $this->methodCollector->getAvailableQuoteMethods($method, $quote);
+
+        if ($quote->getPayment()->getPaymentMethod() === null) {
+            $methods = [];
+        } else {
+            $method = $quote->getPayment()->getMethodInstance();
+            $methods = $this->methodCollector->getAvailableQuoteMethods($method, $quote);
+        }
 
         return $this->jsonFactory->create()->setData($methods);
     }

@@ -3,7 +3,7 @@
   "description": "Payment Module for Adobe Commerce (Magento) | Svea Payments Finland",
   "license": "Apache-2.0",
   "type": "magento2-module",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "require": {
     "php": ">=8.1"
   },

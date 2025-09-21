@@ -1,5 +1,7 @@
 # Changelog
 
+* Svea interface changed to use gross values instead of net prices.
+
 ### [1.3.1] - 2025-08-28
 * Fixed duplicate collated payment method titles on the checkout page.
 * Added option to use custom API endpoint url for communication.

@@ -365,7 +365,14 @@ class SuccessHandler
             }
         }
 
-        if ($request['pmt_sellercosts'] > $response['pmt_sellercosts']) {
+        $requestSanitized = str_replace(',', '.', str_replace(' ', '', $request['pmt_sellercosts']));
+        $responseSanitized = str_replace(',', '.', str_replace(' ', '', $response['pmt_sellercosts']));
+
+        // Convert the sanitized strings to floats
+        $requestSellercosts = (float) $requestSanitized;
+        $responseSellercosts = (float) $responseSanitized;
+
+        if ($requestSellercosts > $responseSellercosts) {
             $this->logger->error($this->formatLogMessage(
                 \sprintf(
                     'Sellercost mismatch: request "%s" != response "%s"',
@@ -403,9 +410,16 @@ class SuccessHandler
         $isDelayedCapture = $this->methods->isDelayedCapture($response['pmt_paymentmethod']);
         $statusText = $isDelayedCapture ? 'authorized' : 'captured';
 
+        $requestSanitized = str_replace(',', '.', str_replace(' ', '', $request['pmt_sellercosts']));
+        $responseSanitized = str_replace(',', '.', str_replace(' ', '', $response['pmt_sellercosts']));
+
+        // Convert the sanitized strings to floats
+        $requestSellercosts = (float) $requestSanitized;
+        $responseSellercosts = (float) $responseSanitized;
+
         // extrapaymentmethodfee has potentially caused sellercosts changes -> include notice to message
-        if ($request['pmt_sellercosts'] != $response['pmt_sellercosts']) {
-            $sellercostsChange = $response['pmt_sellercosts'] - $request['pmt_sellercosts'];
+        if ($requestSellercosts != $responseSellercosts) {
+            $sellercostsChange = $responseSellercosts - $requestSellercosts;
             if ($sellercostsChange > 0) {
                 $msg = \__(
                     "Payment %1 by Svea Payments. NOTE: Change in the sellercosts + %2 EUR.",

@@ -45,11 +45,11 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
     public function build(array $buildSubject, float $totalAmount, float $sellerCosts): array
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
-        $payment = $paymentDO->getPayment();
+        $dataObject = $paymentDO->getPayment()->getOrder();
 
-        $amount = $this->handlingFee->getValue($payment->getOrder());
-        $taxAmount = $this->handlingFee->getTaxAmount($payment->getOrder());
-        $taxPercent = $taxAmount > 0 ? $this->handlingFee->getTaxAmountPercentage($payment->getOrder()) : 0;
+        $amount = $this->handlingFee->getValue($dataObject);
+        $taxAmount = $this->handlingFee->getTaxAmount($dataObject);
+        $taxPercent = $taxAmount > 0 ? $this->handlingFee->getTaxAmountPercentage($dataObject) : 0;
 
         $row = [];
 
@@ -59,7 +59,7 @@ class HandlingFeeRowBuilder implements RowBuilderInterface
                 self::DESC => \__('Invoicing Fee'),
                 self::QUANTITY => 1,
                 self::DELIVERY_DATE => \date('d.m.Y'),
-                self::PRICE_NET => $this->amountHandler->formatFloat($amount),
+                self::PRICE_GROSS => $this->amountHandler->formatFloat($amount + $taxAmount),
                 self::VAT => $this->amountHandler->formatFloat($taxPercent),
                 self::DISCOUNT_PERCENTAGE => $this->amountHandler->formatFloat(0),
                 self::TYPE => 3,

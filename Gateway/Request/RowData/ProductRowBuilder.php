@@ -62,7 +62,7 @@ class ProductRowBuilder implements RowBuilderInterface
                 self::QUANTITY => $this->amountHandler->formatFloat($item->getQtyToInvoice()),
                 self::ARTICLE_NUMBER => $sku,
                 self::DELIVERY_DATE => date('d.m.Y'),
-                self::PRICE_NET => $this->amountHandler->formatFloat($item->getBasePrice()),
+                self::PRICE_GROSS => $this->amountHandler->formatFloat($item->getBasePriceInclTax()),
                 self::VAT => $this->amountHandler->formatFloat($item->getTaxPercent()),
                 self::DISCOUNT_PERCENTAGE => '0,00',
                 self::TYPE => 1,

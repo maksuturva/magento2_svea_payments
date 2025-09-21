@@ -365,7 +365,14 @@ class SuccessHandler
             }
         }
 
-        if ($request['pmt_sellercosts'] > $response['pmt_sellercosts']) {
+        $requestSanitized = str_replace(',', '.', str_replace(' ', '', $request['pmt_sellercosts']));
+        $responseSanitized = str_replace(',', '.', str_replace(' ', '', $response['pmt_sellercosts']));
+
+        // Convert the sanitized strings to floats
+        $requestSellercosts = (float) $requestSanitized;
+        $responseSellercosts = (float) $responseSanitized;
+
+        if ($requestSellercosts > $responseSellercosts) {
             $this->logger->error($this->formatLogMessage(
                 \sprintf(
                     'Sellercost mismatch: request "%s" != response "%s"',

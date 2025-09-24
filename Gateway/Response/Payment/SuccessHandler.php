@@ -322,6 +322,13 @@ class SuccessHandler
             );
         }
     }
+    /**
+     * Convert string with space as thousands separator and comma as decimal (1 234,56) to float
+     */
+    private function toFloat(string $value): float
+    {
+        return floatval(str_replace(',', '.', str_replace(' ', '', $value)));
+    }
 
     /**
      * @param OrderInterface $order
@@ -365,12 +372,8 @@ class SuccessHandler
             }
         }
 
-        $requestSanitized = str_replace(',', '.', str_replace(' ', '', $request['pmt_sellercosts']));
-        $responseSanitized = str_replace(',', '.', str_replace(' ', '', $response['pmt_sellercosts']));
-
-        // Convert the sanitized strings to floats
-        $requestSellercosts = (float) $requestSanitized;
-        $responseSellercosts = (float) $responseSanitized;
+        $requestSellercosts =  $this->toFloat($request['pmt_sellercosts']);
+        $responseSellercosts = $this->toFloat($response['pmt_sellercosts']);
 
         if ($requestSellercosts > $responseSellercosts) {
             $this->logger->error($this->formatLogMessage(
@@ -410,12 +413,8 @@ class SuccessHandler
         $isDelayedCapture = $this->methods->isDelayedCapture($response['pmt_paymentmethod']);
         $statusText = $isDelayedCapture ? 'authorized' : 'captured';
 
-        $requestSanitized = str_replace(',', '.', str_replace(' ', '', $request['pmt_sellercosts']));
-        $responseSanitized = str_replace(',', '.', str_replace(' ', '', $response['pmt_sellercosts']));
-
-        // Convert the sanitized strings to floats
-        $requestSellercosts = (float) $requestSanitized;
-        $responseSellercosts = (float) $responseSanitized;
+        $requestSellercosts = $this->toFloat($request['pmt_sellercosts']);
+        $responseSellercosts = $this->toFloat($response['pmt_sellercosts']);
 
         // extrapaymentmethodfee has potentially caused sellercosts changes -> include notice to message
         if ($requestSellercosts != $responseSellercosts) {

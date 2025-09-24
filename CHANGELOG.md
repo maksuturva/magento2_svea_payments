@@ -1,8 +1,9 @@
 # Changelog
 
-### [1.3.2] - 2025-09-21
+### [1.4.0] - 2025-09-24
 * Fixed jQuery error on the checkout page when using Redirect to Svea Payments method. 
-* Svea Payment API changed to use gross values instead of net prices.
+* Svea Payment API changed to use gross values instead of net prices, this will reduce occurances of rounding rows on Svea Extranet.
+* Reworked totals and discount calculations to give correct row sums and total, what you pay in Svea is the same as what is shown in Magento.
 
 ### [1.3.1] - 2025-08-28
 * Fixed duplicate collated payment method titles on the checkout page.

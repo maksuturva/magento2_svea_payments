@@ -27,4 +27,7 @@
     <event name="admin_system_config_changed_section_svea_config">
         <observer name="svea_clear_cached_payment_methods" instance="Svea\SveaPayment\Observer\ClearCachedPaymentMethods" />
     </event>
+    <event name="sales_order_save_after">
+        <observer name="svea_deliver_virtual_product" instance="Svea\SveaPayment\Observer\Shipment\DeliverVirtualProduct" />
+    </event>
 </config>

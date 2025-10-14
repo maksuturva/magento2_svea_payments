@@ -19,6 +19,7 @@
             <calculator_config>
                 <enabled>0</enabled>
                 <placement>checkout_cart_index,checkout_index_index,catalog_product_view</placement>
+                <layout>full</layout>
                 <purchase_price_visibility>1</purchase_price_visibility>
             </calculator_config>
         </svea_part_payment_calculator>

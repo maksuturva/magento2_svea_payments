@@ -38,6 +38,7 @@ class Config extends GatewayConfig
     const RESTORE_SHOPPING_CART = 'svea_config/svea_payment/restore_shopping_cart';
     const PART_PAYMENT_CALCULATOR_ENABLED = 'svea_part_payment_calculator/calculator_config/enabled';
     const PART_PAYMENT_CALCULATOR_PLACEMENT = 'svea_part_payment_calculator/calculator_config/placement';
+    const PART_PAYMENT_CALCULATOR_LAYOUT = 'svea_part_payment_calculator/calculator_config/layout';
     const PART_PAYMENT_CALCULATOR_PURCHASE_PRICE_VISIBILITY = 'svea_part_payment_calculator/calculator_config/purchase_price_visibility';
     const PART_PAYMENT_CALCULATOR_THRESHOLD_MINIMUM = 'svea_part_payment_calculator/calculator_config/threshold_minimum';
     const PART_PAYMENT_CALCULATOR_SCRIPT = 'svea_part_payment_calculator/calculator_config/script';
@@ -219,6 +220,11 @@ class Config extends GatewayConfig
     {
         // Always allow dynamic price changes.
         return true;
+    }
+
+    public function getCalculatorLayout(): string
+    {
+        return $this->scopeConfig->getValue(self::PART_PAYMENT_CALCULATOR_LAYOUT, ScopeInterface::SCOPE_WEBSITE);
     }
 
     public function isCalculatorPurchasePriceInfoVisible(): bool

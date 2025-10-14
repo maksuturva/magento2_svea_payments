@@ -1,0 +1,11 @@
+<!-- ko if: state.isShowed() && state.isPriceAboveThreshold() -->
+    <div data-bind="scope: 'calculator-holder'" class="calculator-holder">
+
+        <div id="calculator-checkout-container"></div>
+
+        <div id="svea-calc-msg-info" class="calculator-message-info">
+            <span data-bind="i18n: 'Part payment is not available at this purchase price'"></span>
+        </div>
+
+    </div>
+<!-- /ko -->

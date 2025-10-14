@@ -756,6 +756,7 @@
     <type name="Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\ModifierPool">
         <arguments>
             <argument name="modifiers" xsi:type="array">
+                <item name="data-layout" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataLayout</item>
                 <item name="data-price" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataPrice</item>
                 <item name="data-showprice" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataShowPrice</item>
                 <item name="data-seller-id" xsi:type="object">Svea\SveaPayment\Model\PartPaymentCalculator\ScriptModifier\Modifiers\DataSellerId</item>

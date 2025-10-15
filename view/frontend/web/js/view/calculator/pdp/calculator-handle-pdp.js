@@ -171,6 +171,7 @@ define([
         },
 
         showPartPaymentButton: function () {
+            this.replacePriceAmount();
             $('.calculator-holder').show();
         },
 

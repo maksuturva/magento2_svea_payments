@@ -171,17 +171,27 @@ class PaymentCancelDataBuilder implements BuilderInterface
         }
 
         /** @var Item $item */
-        foreach ($creditmemo->getItems() as $item) {
-            $orderItem = $item->getOrderItem();
+        foreach ($creditmemo->getOrder()->getItems() as $orderItem) {
             /* Skip the simple subitems of configurable products */
             if ($orderItem->getProductType() === 'simple' && $orderItem->getParentItem() !== null) {
                 continue;
             }
-            if ($item->getQty() > 0) {
+            $item = $this->getItemInCreditmemo($creditmemo, $orderItem);
+            if ($item && $item->getQty() > 0) {
                 $data["pmtc_refund_quantity_of_original_row{$N}"] = $this->amountHandler->formatFloat($item->getQty());
             }
             $N += 1;
         }
+    }
+
+    private function getItemInCreditmemo(Creditmemo $creditmemo, $orderItem): Creditmemo\Item|bool
+    {
+        foreach ($creditmemo->getAllItems() as $item) {
+            if ($item->getOrderItemId() == $orderItem->getItemId()) {
+                return $item;
+            }
+        }
+        return false;
     }
 
     /**

@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.4.1] - 2025-10-22
+* Fix handling of multiple Credit Memos on one order. The correct product will now be reported to Svea.
+
 ### [1.4.0] - 2025-09-24
 * Fixed jQuery error on the checkout page when using Redirect to Svea Payments method. 
 * Svea Payment API changed to use gross values instead of net prices, this will reduce occurances of rounding rows on Svea Extranet.

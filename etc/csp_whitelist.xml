@@ -5,16 +5,19 @@
         <policy id="script-src">
             <values>
                 <value id="maksuturva" type="host">*.maksuturva.fi</value>
+                <value id="docker" type="host">http://host.docker.internal:7001</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
                 <value id="maksuturva" type="host">*.maksuturva.fi</value>
+                <value id="docker" type="host">http://host.docker.internal:7001</value>
             </values>
         </policy>
         <policy id="img-src">
             <values>
                 <value id="maksuturva" type="host">*.maksuturva.fi</value>
+                <value id="docker" type="host">http://host.docker.internal:7001</value>
             </values>
         </policy>
     </policies>

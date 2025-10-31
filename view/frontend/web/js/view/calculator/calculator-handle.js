@@ -28,6 +28,7 @@ define([
             this._super();
             this.observeCalcBtnAction();
             this.subscribeAmountHandler();
+            this.displayCalculator(false);
         },
 
         subscribeAmountHandler: function () {
@@ -152,6 +153,24 @@ define([
         },
 
         /**
+         * Display SVEA widget
+         *
+         * @param {string} display the value of the display css style ("none" or "block")
+         */
+        displayCalculator: function (display) {
+            const calcSelector = '#svea-pp-calculator-container';
+            //document.querySelector(calcSelector).style["display"] = display;
+
+            if (display) {
+                document.querySelector(calcSelector).classList.remove("displayNone");
+                document.querySelector(calcSelector).classList.add("displayBlock");
+            } else {
+                document.querySelector(calcSelector).classList.remove("displayBlock");
+                document.querySelector(calcSelector).classList.add("displayNone");
+            }
+        },
+
+        /**
          * Replacement/Update price in SVEA widget
          * data contain - totals data
          *
@@ -161,6 +180,7 @@ define([
             if (data !== undefined) {
                 $('body').find('.svea-pp-widget-part-payment').attr('data-price', data.grand_total);
                 this.updateCalc();
+                this.displayCalculator(true);
             }
         },
 

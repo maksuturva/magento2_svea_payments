@@ -12,16 +12,18 @@ $viewModel = $block->getViewModel();
 <?php if ($viewModel->isEnabledForLocation()) :?>
 
     <div data-bind="scope: 'calculator-holder'" class="calculator-holder">
-
-        <div id="svea-pp-calculator-container">
+        
+        <div id="svea-pp-calculator-container" class="displayNone">
         <!-- ko template:getTemplate() --><!-- /ko -->
             <div class="svea-script-holder">
                 <?= $viewModel->getCalculatorScript($block) . '</script>' ?>   
             </div>
 
+            <!-- Is this needed? It should be contained in partPayment.js already
             <div id="svea-calc-msg-info" class="calculator-message-info">
                 <span><?= $escaper->escapeHtml(__('Part payment is not available at this purchase price')) ?></span>
             </div>
+            -->
         </div>
 
     </div>

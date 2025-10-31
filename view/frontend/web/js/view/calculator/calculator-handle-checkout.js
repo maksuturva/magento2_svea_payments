@@ -53,17 +53,17 @@ define([
         },
 
         repositionPartPaymentCalculatorInDOM: function () {
-            //const calcSelectorSelector = '[aria-label="Part payment calculator"]';
-            const calcSelectorSelector = '#svea-pp-calculator-container';
-            const checkoutPosSelector = '#calculator-checkout-container';
+            const calcSelector = '#svea-pp-calculator-container';
+            const checkoutPosSelector = '.opc-block-summary';
 
-            this.waitForElm(calcSelectorSelector).then((elm) => {
+
+            this.waitForElm(calcSelector).then((elm) => {
                 this.waitForElm(checkoutPosSelector).then((elm2) => {
-                    if (this.state.isShowed()) {
+                    //if (this.state.isShowed()) {
                         // Reposition calculator to the div defined in calculator-layout.html
-                        var calculatorElement = document.querySelector(calcSelectorSelector);
+                        var calculatorElement = document.querySelector(calcSelector);
                         document.querySelector(checkoutPosSelector).appendChild(calculatorElement);
-                    }
+                    //}
                 });
             });
         },
@@ -191,6 +191,24 @@ define([
         },
 
         /**
+         * Display SVEA widget
+         *
+         * @param {string} display the value of the display css style ("none" or "block")
+         */
+        displayCalculator: function (display) {
+            const calcSelector = '#svea-pp-calculator-container';
+            //document.querySelector(calcSelector).style["display"] = display;
+
+            if (display) {
+                document.querySelector(calcSelector).classList.remove("displayNone");
+                document.querySelector(calcSelector).classList.add("displayBlock");
+            } else {
+                document.querySelector(calcSelector).classList.remove("displayBlock");
+                document.querySelector(calcSelector).classList.add("displayNone");
+            }
+        },
+
+        /**
          * Replacement/Update price in SVEA widget
          * data contain - totals data
          *
@@ -200,6 +218,7 @@ define([
             if (data !== undefined) {
                 $('body').find('.svea-pp-widget-part-payment').attr('data-price', data.grand_total);
                 this.updateCalc();
+                this.displayCalculator(this.state.isShowed());
             }
         },
 

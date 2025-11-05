@@ -55,15 +55,19 @@ class DeliverVirtualProduct implements ObserverInterface
             return false;
         }
      
-        // Order should be complete, Svea payment method, no shipments and virtual products only
         $order = $observer->getEvent()->getOrder();
-        if($order->getState() != 'complete') {
+        $payment = $order->getPayment();
+        if (!$this->method->isSvea($payment->getMethodInstance())) {
             return false;
         }
-        if (!$this->method->isSvea($order->getPayment()->getMethodInstance())) {
+        
+        if(!($order->getState() == 'complete' ||
+            ($order->getState() == 'processing' && $this->method->isDelayedCapture($payment->getAdditionalInformation('svea_method_code')))
+        )) {
             return false;
         }
-        if ($order->hasShipments()) {
+
+        if ($order->hasShipments() || $order->getData('svea_delivery_notified') > 0) {
             return false;
         }
 
@@ -76,6 +80,10 @@ class DeliverVirtualProduct implements ObserverInterface
     private function handle(Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
-        $this->deliveryManagement->completeVirtualOrder($order);
+        $confirmation = $this->deliveryManagement->completeVirtualOrder($order);
+        if ($confirmation->get()['pkg_resulttext'] == 'OK') {
+            $order->setData('svea_delivery_notified', 1);
+            $order->save();
+        }
     }
 }

@@ -13,6 +13,7 @@
         <column xsi:type="decimal" name="svea_refunded_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Refunded Handling Fee"/>
         <column xsi:type="decimal" name="svea_refunded_handling_fee_tax" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Refunded Handling Fee Tax"/>
         <column xsi:type="timestamp" name="svea_last_status_query" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Svea Last Status Query"/>
+        <column xsi:type="smallint" name="svea_delivery_notified" nullable="false" default="0" comment="Svea Delivery Notified"/>
     </table>
     <table name="quote">
         <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>

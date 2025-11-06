@@ -174,7 +174,6 @@ define([
             const calcMessageSelector = '#svea-calc-msg-info';
 
             $(document).on('click', calcButtonSelector, function () {
-                console.log("### calculator-handle.js - observeCalcBtnAction - click")
                 if (self.state.isPriceAboveThreshold()) {
                     // Show notification message
                     $('body').find(calcMessageSelector).removeClass('show-notification');

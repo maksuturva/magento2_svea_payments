@@ -12,6 +12,16 @@
             <validate>required-entry</validate>
             <comment>Where to display the calculator.</comment>
         </field>
+        <field id="layout" type="select" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Layout</label>
+            <source_model>Svea\SveaPayment\Model\Source\CalculatorLayout</source_model>
+            <comment>
+                <![CDATA[Show the <b>full</b> part payment calculator or a <b>mini</b> calculator or <b>button</b>.
+                The mini calculator shows condensed payment plan information.
+                The button just shows text to open the calculator.
+                Clicking on either mini or button opens the full calculator.]]>
+            </comment>
+        </field>
         <field id="purchase_price_visibility" type="select" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Show Purchase Price In Widget</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -34,13 +34,14 @@
                                                     </item>
                                                 </item>
                                                 <item name="svea_btn_trigger" xsi:type="array">
-                                                    <item name="component"  xsi:type="string">Svea_SveaPayment/js/view/checkout/calculator-btn-handler</item>
+                                                    <item name="component"  xsi:type="string">Svea_SveaPayment/js/view/checkout/calculator-layout-handler</item>
                                                     <item name="sortOrder" xsi:type="string">20</item>
                                                     <item name="config" xsi:type="array">
-                                                        <item name="template" xsi:type="string">Svea_SveaPayment/checkout/calculator-btn</item>
+                                                        <item name="template" xsi:type="string">Svea_SveaPayment/checkout/calculator-layout</item>
                                                         <item name="title" xsi:type="string" translate="true">TEST Fee</item>
                                                     </item>
                                                 </item>
+                                                <referenceBlock name="calculator.handler" />
                                             </item>
                                         </item>
                                     </item>

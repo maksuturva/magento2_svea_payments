@@ -83,3 +83,11 @@
   border: 0;
   opacity: 0;
 }
+
+.displayNone {
+    display: none;
+}
+
+.displayBlock {
+    display: block;
+}

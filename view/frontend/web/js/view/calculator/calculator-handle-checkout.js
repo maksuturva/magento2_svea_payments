@@ -28,7 +28,44 @@ define([
             this._super();
             this.observeCalcBtnAction();
             this.subscribeAmountHandler();
-            this.displayCalculator(false);
+            this.repositionPartPaymentCalculatorInDOM();
+        },
+
+        waitForElm: function (selector) {
+        return new Promise(resolve => {
+                if (document.querySelector(selector)) {
+                    return resolve(document.querySelector(selector));
+                }
+
+                const observer = new MutationObserver(mutations => {
+                    if (document.querySelector(selector)) {
+                        observer.disconnect();
+                        resolve(document.querySelector(selector));
+                    }
+                });
+
+                // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        },
+
+        repositionPartPaymentCalculatorInDOM: function () {
+            const calcSelector = '#svea-pp-calculator-container';
+            const checkoutPosSelector = '.opc-block-summary';
+
+
+            this.waitForElm(calcSelector).then((elm) => {
+                this.waitForElm(checkoutPosSelector).then((elm2) => {
+                    //if (this.state.isShowed()) {
+                        // Reposition calculator to the div defined in calculator-layout.html
+                        var calculatorElement = document.querySelector(calcSelector);
+                        document.querySelector(checkoutPosSelector).appendChild(calculatorElement);
+                    //}
+                });
+            });
         },
 
         subscribeAmountHandler: function () {
@@ -137,6 +174,7 @@ define([
             const calcMessageSelector = '#svea-calc-msg-info';
 
             $(document).on('click', calcButtonSelector, function () {
+                console.log("### calculator-handle.js - observeCalcBtnAction - click")
                 if (self.state.isPriceAboveThreshold()) {
                     // Show notification message
                     $('body').find(calcMessageSelector).removeClass('show-notification');
@@ -180,7 +218,7 @@ define([
             if (data !== undefined) {
                 $('body').find('.svea-pp-widget-part-payment').attr('data-price', data.grand_total);
                 this.updateCalc();
-                this.displayCalculator(true);
+                this.displayCalculator(this.state.isShowed());
             }
         },
 

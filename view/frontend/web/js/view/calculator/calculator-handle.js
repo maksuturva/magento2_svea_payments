@@ -160,13 +160,17 @@ define([
         displayCalculator: function (display) {
             const calcSelector = '#svea-pp-calculator-container';
             //document.querySelector(calcSelector).style["display"] = display;
+            const element = document.querySelector(calcSelector);
+            if (element === null) {
+                return;
+            }
 
             if (display) {
-                document.querySelector(calcSelector).classList.remove("displayNone");
-                document.querySelector(calcSelector).classList.add("displayBlock");
+                element.classList.remove("displayNone");
+                element.classList.add("displayBlock");
             } else {
-                document.querySelector(calcSelector).classList.remove("displayBlock");
-                document.querySelector(calcSelector).classList.add("displayNone");
+                element.classList.remove("displayBlock");
+                element.classList.add("displayNone");
             }
         },
 

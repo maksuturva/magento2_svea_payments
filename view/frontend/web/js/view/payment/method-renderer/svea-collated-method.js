@@ -175,9 +175,11 @@ define([
 
         afterPlaceOrder: function () {
             let self = this;
-            if (typeof svea_payment === "undefined" || svea_payment === null) {
+
+            if (typeof this.checkoutConfig.paymentDataUrl === "undefined" || this.checkoutConfig.paymentDataUrl === null) {
                 console.error('Payment data URL is undefined')
             }
+
             customerData.invalidate(['cart']);
 
             $.post(this.checkoutConfig.paymentDataUrl)

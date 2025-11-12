@@ -1,3 +1,13 @@
+/* Fix paddings when displayed through One Page Checkout extension */
+.opc-wrapper .svea-payment-methods {
+    padding: 0;
+}
+@media screen and (min-width: 768px) {
+    .opc-wrapper .svea-payment-methods {
+        margin-left: -20px;
+    }
+}
+
 .svea-payment-methods .sub-method-title {
     width: 100%;
     clear: both;

@@ -8,9 +8,11 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\Command\CommandPoolInterface;
 use Magento\Payment\Gateway\Command\ResultInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
-use Svea\SveaPayment\Gateway\Command\DeliveryCommand;
 use Svea\SveaPayment\Gateway\SubjectBuilder;
+use Svea\SveaPayment\Gateway\Command\DeliveryCommand;
+use Svea\SveaPayment\Gateway\Request\DeliveryInfo\DataBuilder;
 
 class DeliveryManagement
 {
@@ -104,6 +106,23 @@ class DeliveryManagement
         }
 
         return $result;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * Complete delivery of a virtual order in Svea with delivery type ELECT.
+     * Bypass a lot of the other layers that insist on checking actual shipments
+     * and shipped products quantity and directly build request and call SveaCommand.
+     */
+    public function completeVirtualOrder(Order $order)
+    {
+        $commandSubject = $this->subjectBuilder->build($order->getPayment());
+        $commandSubject[DataBuilder::INFO_ADD] = DataBuilder::INFO_VALUE_BY_METHOD;
+        $commandSubject[DataBuilder::METHOD_CODE] = 'ELECT';
+        $commandSubject[DataBuilder::ALL_SENT_FLAG] = true;
+
+        return $this->commandPool->get(DeliveryCommand::COMMAND_CODE_ADD)->execute($commandSubject);
     }
 
     /**

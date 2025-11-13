@@ -1,5 +1,11 @@
 # Changelog
 
+### [1.4.2] - 2025-11-13
+* New layout options for Part Payment calculator, button(old layout), mini, and full.
+* Delivery reporting of strictly virtual orders, orders with only virtual products will be reported to Svea as delivered when payment completes.
+* Layout compatibiliy improvements with Mageplaza One Step Checkout extension.
+* Bugfix: Remove browser console warning related to unused svea_payment variable.
+
 ### [1.4.1] - 2025-10-22
 * Fix handling of multiple Credit Memos on one order. The correct product will now be reported to Svea.
 

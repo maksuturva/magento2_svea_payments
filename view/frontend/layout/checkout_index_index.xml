@@ -41,7 +41,6 @@
                                                         <item name="title" xsi:type="string" translate="true">TEST Fee</item>
                                                     </item>
                                                 </item>
-                                                <referenceBlock name="calculator.handler" />
                                             </item>
                                         </item>
                                     </item>
@@ -134,6 +133,7 @@
                 </argument>
             </arguments>
         </referenceBlock>
+        <referenceBlock name="calculator.handler" />
 
         <referenceContainer name="content">
             <block name="calculator.handler"  template="Svea_SveaPayment::calculator/calculator-handler.phtml" after="checkout.cart.methods.bottom">

@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.4.2] - 2025-11-12
+### [1.4.2] - 2025-11-13
 * New layout options for Part Payment calculator, button(old layout), mini, and full.
 * Delivery reporting of strictly virtual orders, orders with only virtual products will be reported to Svea as delivered when payment completes.
 * Layout compatibiliy improvements with Mageplaza One Step Checkout extension.

@@ -4,6 +4,7 @@ namespace Svea\SveaPayment\Cron;
 
 use Exception;
 use Magento\Framework\Logger\Monolog as Logger;
+use Magento\Store\Model\StoreManagerInterface;
 use Svea\SveaPayment\Gateway\Config\Config;
 use Svea\SveaPayment\Model\Order\Status\Query;
 
@@ -24,23 +25,33 @@ class OrderStatusCheck
      */
     private $config;
 
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
     public function __construct(
         Logger $logger,
         Query  $query,
-        Config $config
+        Config $config,
+        StoreManagerInterface $storeManager
     ) {
         $this->logger = $logger;
         $this->query = $query;
         $this->config = $config;
+        $this->storeManager = $storeManager;
     }
 
     public function execute(): void
     {
         if ($this->config->isCronActive()) {
-            try {
-                $this->executeQuery();
-            } catch (Exception $e) {
-                $this->logger->error('Scheduled payment status query failed, reason: ' . $e->getMessage());
+            foreach ($this->storeManager->getStores(true) as $store) {
+                $this->storeManager->setCurrentStore($store->getId());
+                try {
+                    $this->executeQuery();
+                } catch (Exception $e) {
+                    $this->logger->error('Scheduled payment status query failed for store ID ' . $store->getId() . ', reason: ' . $e->getMessage());
+                }
             }
         }
     }

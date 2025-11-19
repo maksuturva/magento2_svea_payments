@@ -38,7 +38,7 @@ class PaymentStatusQueryBuilder
         $result = [
             self::ACTION => 'PAYMENT_STATUS_QUERY',
             self::VERSION => '0005',
-            self::SELLER_ID => $this->config->getSellerId(),
+            self::SELLER_ID => $payment->getData(Config::SVEA_SELLER_ID),
             self::ID => $this->paymentData->getSveaTransactionId($payment),
             self::RESP_TYPE => 'XML',
             self::KEY_GENERATION => $this->config->getKeyVersion(),

@@ -152,7 +152,7 @@ class OrderDataBuilder implements BuilderInterface
         $additionalData[AdditionalData::SVEA_TRANSACTION_ID] = $pmtId;
         $this->paymentData->setData($payment, $additionalData);
         $payment->setData(Config::SVEA_PAYMENT_ID, $pmtId);
-        $payment->setData(Config::SVEA_SELLER_IR, $this->config->getSellerId());
+        $payment->setData(Config::SVEA_SELLER_ID, $this->config->getSellerId());
 
         return $pmtId;
     }

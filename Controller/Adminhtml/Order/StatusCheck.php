@@ -8,6 +8,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Svea\SveaPayment\Model\Order\Status\Query;
 use Svea\SveaPayment\Model\Order\Status\Query\Status;
 use Svea\SveaPayment\Model\Order\Status\Query\Validators\ManualQueryValidator;
@@ -37,21 +38,29 @@ class StatusCheck extends Action
     private ManualQueryValidator $manualQueryValidator;
 
     /**
+    * @var StoreManagerInterface
+    */
+    protected StoreManagerInterface $storeManager;
+
+    /**
      * @param Action\Context $context
      * @param OrderRepositoryInterface $orderRepository
      * @param Query $statusQuery
      * @param ManualQueryValidator $manualQueryValidator
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Action\Context           $context,
         OrderRepositoryInterface $orderRepository,
         Query                    $statusQuery,
-        ManualQueryValidator     $manualQueryValidator
+        ManualQueryValidator     $manualQueryValidator,
+        StoreManagerInterface    $storeManager
     ) {
         parent::__construct($context);
         $this->orderRepository = $orderRepository;
         $this->statusQuery = $statusQuery;
         $this->manualQueryValidator = $manualQueryValidator;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -79,8 +88,11 @@ class StatusCheck extends Action
     private function check()
     {
         $orderId = $this->getRequest()->getParam('order_id', false);
+        $storeId = $this->getRequest()->getParam('store_id', 0);
         $time = $this->getRequest()->getParam('period', '-1 day');
+
         $statuses = [];
+        $this->storeManager->setCurrentStore($storeId);
         if ($orderId !== false) {
             $order = $this->orderRepository->get($orderId);
             if ($order) {

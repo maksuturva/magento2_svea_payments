@@ -15,7 +15,7 @@ class OrderStatusQueryButton extends Field
     {
         $this->setElement($element);
         $data = $element->getOriginalData();
-        $button = $this->createButtonBlock($data['button_label'], $this->resolveUrl($data['time_period'], $data['query_type']));
+        $button = $this->createButtonBlock($data['button_label'], $this->resolveUrl($data['time_period'], $data['query_type'], $element->getScopeId()));
 
         return $button->toHtml();
     }
@@ -26,9 +26,9 @@ class OrderStatusQueryButton extends Field
      *
      * @return string
      */
-    private function resolveUrl(string $timePeriod, string $type)
+    private function resolveUrl(string $timePeriod, string $type, string $storeId)
     {
-        return $this->getUrl('svea_payment/order/statusCheck', ['period' => $timePeriod, 'query_type' => $type]);
+        return $this->getUrl('svea_payment/order/statusCheck', ['period' => $timePeriod, 'query_type' => $type, 'store_id' => $storeId]);
     }
 
     /**

@@ -15,7 +15,17 @@ class OrderStatusQueryButton extends Field
     {
         $this->setElement($element);
         $data = $element->getOriginalData();
-        $button = $this->createButtonBlock($data['button_label'], $this->resolveUrl($data['time_period'], $data['query_type'], $element->getScopeId()));
+
+        if ($element->getScope() == "stores") {
+            $storeId = $element->getScopeId();
+        } elseif ($element->getScope() == "websites") {
+            $website = $this->_storeManager->getWebsite($element->getScopeId());
+            $storeId = $website->getDefaultStore()->getId();
+        } else {
+            $storeId = null;
+        }
+
+        $button = $this->createButtonBlock($data['button_label'], $this->resolveUrl($data['time_period'], $data['query_type'], $storeId));
 
         return $button->toHtml();
     }
@@ -26,9 +36,12 @@ class OrderStatusQueryButton extends Field
      *
      * @return string
      */
-    private function resolveUrl(string $timePeriod, string $type, string $storeId)
+    private function resolveUrl(string $timePeriod, string $type, $storeId)
     {
-        return $this->getUrl('svea_payment/order/statusCheck', ['period' => $timePeriod, 'query_type' => $type, 'store_id' => $storeId]);
+        if ($storeId) {
+            return $this->getUrl('svea_payment/order/statusCheck', ['period' => $timePeriod, 'query_type' => $type, 'store_id' => $storeId]);
+        }
+        return $this->getUrl('svea_payment/order/statusCheck', ['period' => $timePeriod, 'query_type' => $type]);
     }
 
     /**

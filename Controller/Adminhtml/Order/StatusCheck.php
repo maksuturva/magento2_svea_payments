@@ -92,7 +92,9 @@ class StatusCheck extends Action
         $time = $this->getRequest()->getParam('period', '-1 day');
 
         $statuses = [];
-        $this->storeManager->setCurrentStore($storeId);
+        if ($storeId != 0) {
+            $this->storeManager->setCurrentStore($storeId);    
+        }
         if ($orderId !== false) {
             $order = $this->orderRepository->get($orderId);
             if ($order) {

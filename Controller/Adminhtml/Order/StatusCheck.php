@@ -92,15 +92,17 @@ class StatusCheck extends Action
         $time = $this->getRequest()->getParam('period', '-1 day');
 
         $statuses = [];
-        if ($storeId != 0) {
-            $this->storeManager->setCurrentStore($storeId);    
-        }
+
         if ($orderId !== false) {
             $order = $this->orderRepository->get($orderId);
             if ($order) {
+                $this->storeManager->setCurrentStore($order->getStoreId());
                 $statuses = $this->statusQuery->queryOrders([$order], true);
             }
         } elseif (!empty($time)) {
+            if ($storeId != 0) {
+                $this->storeManager->setCurrentStore($storeId);    
+            }
             $statuses = $this->statusQuery->querySince($time, '-1 minutes', true);
         } else {
             throw new Exception('No target order id or period specified');

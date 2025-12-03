@@ -44,9 +44,15 @@ class OrderStatusCheck
 
     public function execute(): void
     {
-        if ($this->config->isCronActive()) {
-            foreach ($this->storeManager->getStores(true) as $store) {
-                $this->storeManager->setCurrentStore($store->getId());
+        $checkedSellerIds = [];
+        foreach ($this->storeManager->getStores(true) as $store) {
+            $this->storeManager->setCurrentStore($store->getId());
+            if ($this->config->isCronActive()) {
+                $sellerId = $this->config->getSellerId();
+                if (in_array($sellerId, $checkedSellerIds, true)) {
+                    continue;
+                }
+                $checkedSellerIds[] = $sellerId;
                 try {
                     $this->executeQuery();
                 } catch (Exception $e) {

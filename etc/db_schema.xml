@@ -3,6 +3,7 @@
     <table name="sales_order_payment">
         <column xsi:type="varchar" name="svea_payment_id" length="255" nullable="true" comment="Svea Payment Id"/>
         <column xsi:type="varchar" name="svea_seller_id" length="255" nullable="true" comment="Svea Seller Id"/>
+        <column xsi:type="varchar" name="svea_merchant_reference" length="255" nullable="true" comment="Svea Payment Reference"/>
     </table>
     <table name="sales_order">
         <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>

@@ -454,6 +454,7 @@ class SuccessHandler
         $processState = Order::STATE_PROCESSING;
         $order->setState($processState);
         $order->addStatusToHistory($processStatus, $msg);
+        $order->getPayment()->setData(Config::SVEA_MERCHANT_REFERENCE, $response['pmt_reference']);
         $this->orderResource->save($order);
 
         $this->logger->info($this->formatLogMessage('Updated order'));

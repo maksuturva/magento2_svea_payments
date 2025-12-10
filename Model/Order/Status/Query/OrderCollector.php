@@ -52,7 +52,7 @@ class OrderCollector
         $collection->join(['payment' => 'sales_order_payment'], 'main_table.entity_id=parent_id', 'method')
             ->addFieldToFilter('status', ['in' => [$this->config->getNewOrderStatus(), Order::STATE_PENDING_PAYMENT]])
             ->addFieldToFilter('payment.method', $this->paymentMethod->getSveaCollectionFilter())
-            ->addFieldToFilter('payment.' . Config::SVEA_SELLER_IR, $this->config->getSellerId())
+            ->addFieldToFilter('payment.' . Config::SVEA_SELLER_ID, $this->config->getSellerId())
             ->addAttributeToFilter('created_at', ['gteq' => $this->formatDate($createdStart)])
             ->addAttributeToFilter('created_at', ['lt' => $this->formatDate($createdEnd)]);
 

@@ -51,7 +51,7 @@ class SellerIdValidator implements OrderValidatorInterface
         if ($this->method->isMaksuturva($method)) {
             return true;
         }
-        $orderSellerId = (string)$payment->getData(Config::SVEA_SELLER_IR);
+        $orderSellerId = (string)$payment->getData(Config::SVEA_SELLER_ID);
         $configSellerId = $this->config->getSellerId();
         $this->setErrorMessage($orderSellerId, $configSellerId);
 

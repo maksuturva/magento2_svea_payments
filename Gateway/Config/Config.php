@@ -15,7 +15,7 @@ use function substr;
 class Config extends GatewayConfig
 {
     const SVEA_PAYMENT_ID = 'svea_payment_id';
-    const SVEA_SELLER_IR = 'svea_seller_id';
+    const SVEA_SELLER_ID = 'svea_seller_id';
     const SVEA_MERCHANT_REFERENCE = 'svea_merchant_reference';
     const SELLER_ID = 'svea_config/svea_payment/sellerid';
     const SECRET_KEY = 'svea_config/svea_payment/secretkey';

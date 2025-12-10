@@ -1,5 +1,9 @@
 # Changelog
 
+### [1.4.3] - 2025-12-10
+* Make order status check buttons and cron always use the correct seller ID.
+* Store settlement reference (pmt_reference in Svea API) in the payments table in database and display it in admin order view.
+
 ### [1.4.2] - 2025-11-13
 * New layout options for Part Payment calculator, button(old layout), mini, and full.
 * Delivery reporting of strictly virtual orders, orders with only virtual products will be reported to Svea as delivered when payment completes.

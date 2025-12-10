@@ -32,7 +32,7 @@
                     <?php
                         $additionalInfoBlock = $block->getChildBlock('order_payment_additional');
                         if ($additionalInfoBlock && strpos($block->getChildHtml('order_payment_additional'), 'not available') !== false) {
-                            echo "Migrated payment method. Additional information is not available.";                            
+                            echo "Migrated payment method. Additional information is not available.";
                         } else {
                             echo $block->getChildHtml('order_payment_additional');
                         }
@@ -44,6 +44,11 @@
                     <?php if(!empty($block->getPaymentMethodGroup())): ?>
                     <div class="order-payment-group">
                         <?= $block->escapeHtml(\__('Method group: %1', $block->getPaymentMethodGroup())) ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if (!empty($block->getOrder()->getPayment()->getData('svea_merchant_reference'))): ?>
+                    <div class="order-payment-merchant-reference">
+                        <?= $block->escapeHtml(\__('Settlement reference: %1', $block->getOrder()->getPayment()->getData('svea_merchant_reference'))) ?>
                     </div>
                     <?php endif; ?>
                 </div>

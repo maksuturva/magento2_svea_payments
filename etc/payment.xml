@@ -12,6 +12,9 @@
         <method name="svea_collated_payment">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="svea_facelift_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="svea_generic_payment">
             <allow_multiple_address>1</allow_multiple_address>
         </method>

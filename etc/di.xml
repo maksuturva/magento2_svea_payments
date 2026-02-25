@@ -30,6 +30,11 @@
                 <item name="svea_collated_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_3_handling_fee</item>
                 <item name="svea_collated_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_4_handling_fee</item>
                 <item name="svea_collated_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_5_handling_fee</item>
+                <item name="svea_facelift_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_facelift_payment/payment_method_subgroup_1_handling_fee</item>
+                <item name="svea_facelift_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_facelift_payment/payment_method_subgroup_2_handling_fee</item>
+                <item name="svea_facelift_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_facelift_payment/payment_method_subgroup_3_handling_fee</item>
+                <item name="svea_facelift_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_facelift_payment/payment_method_subgroup_4_handling_fee</item>
+                <item name="svea_facelift_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_facelift_payment/payment_method_subgroup_5_handling_fee</item>
                 <item name="svea_card_payment" xsi:type="string">payment/svea_card_payment/handling_fee</item>
                 <item name="svea_generic_payment" xsi:type="string">payment/svea_generic_payment/handling_fee</item>
                 <item name="svea_invoice_payment" xsi:type="string">payment/svea_invoice_payment/handling_fee</item>
@@ -93,6 +98,18 @@
             <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">SveaCollatedPaymentValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">SveaCollatedPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Facelift Svea Payment Facade-->
+    <virtualType name="SveaFaceliftPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_facelift_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaFaceliftPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaFaceliftPaymentValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
         </arguments>
     </virtualType>
@@ -214,6 +231,13 @@
                  type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="string">svea_collated_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaFaceliftPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_facelift_payment</argument>
         </arguments>
     </virtualType>
 
@@ -432,6 +456,37 @@
                  type="Magento\Payment\Gateway\Validator\CountryValidator">
         <arguments>
             <argument name="config" xsi:type="object">SveaCollatedPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea Facelift Payment -->
+
+    <virtualType name="SveaFaceliftPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaFaceliftPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaFaceliftPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaFaceliftPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaFaceliftPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaFaceliftPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaFaceliftPaymentCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaFaceliftPaymentConfig</argument>
         </arguments>
     </virtualType>
 

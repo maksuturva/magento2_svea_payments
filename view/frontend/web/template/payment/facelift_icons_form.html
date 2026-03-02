@@ -18,31 +18,75 @@
             <!--/ko-->
         </div>
 
+        <fieldset class="paymentSelectionType" id="payNowOrLater">
+            <legend class="sr-only">Valitse henkilö- tai yritys asiointi</legend>
+            <label class="radio_button payNow" for="payNow" id="payNowLabel">
+                <input type="radio" name="invoiceDistributionType" id="payNow" value="payNow" class="" data-bind="click: showPaymentMethods('payNow')">
+                <div>
+                    <span data-bind="text: $t('Pay Now')"></span>
+                </div>
+            </label>
+            <label class="radio_button payLater" for="payLater" id="payLaterLabel">
+                <input type="radio" name="invoiceDistributionType" id="payLater" value="payLater" class="" data-bind="click: showPaymentMethods('payLater')">
+                <div>
+                    <span data-bind="text: $t('Pay Later')"></span>
+                </div>
+            </label>
+        </fieldset>
+
         <form data-bind="attr: {id: 'svea_' + getCode() +'-form'}, data-role: 'svea_' + getCode() + '-form'" class="form form-purchase-order" >
             <div class="svea-payment-methods" data-bind="attr: {id: 'payment_form_'+ getCode()}">
                 <div class="svea-payment-methods" data-bind="foreach: {data: allMethods, as: 'smethod'} ">
-                    <fieldset>
-                    <legend class="sub-method-title" data-bind="text: smethod.title"><hr></legend>
-                        <!-- ko foreach: smethod.methods -->
-                        <div class="payment-method">
-                            <label class="payment-method-label"
-                                   data-bind="attr: { for: identifier, title: displayname },
-                                              css: {'radio-active': (code == $parents[1].selectedMethod()) }
-                                            ">
-                                <input class="payment-method-radio"
-                                   type="radio"
-                                   data-bind="
-                                    attr: { id: identifier, name: identifier },
-                                    css: {'radio-active': (code == $parents[1].selectedMethod()) },
-                                    value: code,
-                                    event:{ click: $parents[1].selectMethod.bind($parents[1], $parent) }"
-                                   tabindex="0"
-                                   data-validate="{required:true}">
-                                <img data-bind="attr: { src: imageurl, alt: displayname } "/>
-                            </label>
-                        </div>
-                        <!-- /ko -->
-                    </fieldset>
+                    
+                    <section 
+                        class="checkout__radio-container none"
+                        data-bind="attr: { id: ko.unwrap(smethod.code) },
+                          click: smethod.code !== 'payment_method_subgroup_4' ? $parent.showPaymentSubMethods(ko.unwrap(smethod.code)) : null">
+
+                        <fieldset class="payment__button-fieldset">
+                            <div class="payment__button-header">
+                                <legend class="sub-method-title title__line" data-bind="text: smethod.title"><hr></legend>
+                                <div class="payment__button-header-icons">
+                                <!-- ko if: smethod.code === 'payment_method_subgroup_1' -->
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI01_en.png') }" />
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI02_en.png') }" />
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI06_en.png') }" />
+                                <!-- /ko -->
+                                <!-- ko if: smethod.code === 'payment_method_subgroup_2' -->
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI54_en.png') }" />
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'SIIR.png') }" />
+                                <!-- /ko -->
+                                <!-- ko if: smethod.code === 'payment_method_subgroup_3' -->
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI50_en.png') }" />
+                                    <img data-bind="attr: { src: $parent.getImageUrl(smethod, 'FI52_en.png') }" />
+                                    <!--<img data-bind="attr: { src: ko.unwrap(smethod.methods)[0].imageurl, alt: ko.unwrap(smethod.methods)[0].displayname }" />-->
+                                <!-- /ko -->
+                                </div>
+                            </div>
+                            <div class="payment__button-set" aria-expanded="false"
+                              data-bind="css: { none: smethod.code !== 'payment_method_subgroup_4' }">
+                                <!-- ko foreach: smethod.methods -->
+                                <div class="payment-method">
+                                    <label class="payment-method-label"
+                                        data-bind="attr: { for: identifier, title: displayname },
+                                                    css: {'radio-active': (code == $parents[1].selectedMethod()) }
+                                                    ">
+                                        <input class="payment-method-radio"
+                                        type="radio"
+                                        data-bind="
+                                            attr: { id: identifier, name: identifier },
+                                            css: {'radio-active': (code == $parents[1].selectedMethod()) },
+                                            value: code,
+                                            event:{ click: $parents[1].selectMethod.bind($parents[1], $parent) }"
+                                        tabindex="0"
+                                        data-validate="{required:true}">
+                                        <img data-bind="attr: { src: imageurl, alt: displayname } "/>
+                                    </label>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                        </fieldset>
+                    </section>
                 </div>
             </div>
         </form>

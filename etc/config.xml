@@ -59,11 +59,13 @@
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
-                <payment_method_subgroup_3_title>Pay Later</payment_method_subgroup_3_title>
-                <payment_method_subgroup_3_method_filter>FI70,FI71,FI72,FIIN,FIPP,FIBI</payment_method_subgroup_3_method_filter>
-                <payment_method_subgroup_2_title>Pay now with mobile payment or card</payment_method_subgroup_2_title>
-                <payment_method_subgroup_2_method_filter>FI50,FI51,FI52,FI53,FI54,PIVO,SIIR</payment_method_subgroup_2_method_filter>
-                <payment_method_subgroup_1_title>Pay now with online banking</payment_method_subgroup_1_title>
+                <payment_method_subgroup_4_title>Pay Later</payment_method_subgroup_4_title>
+                <payment_method_subgroup_4_method_filter>FI70,FI71,FI72,FIIN,FIPP,FIBI</payment_method_subgroup_4_method_filter>
+                <payment_method_subgroup_3_title>Pay With Card</payment_method_subgroup_3_title>
+                <payment_method_subgroup_3_method_filter>FI50,FI51,FI52,FI53</payment_method_subgroup_3_method_filter>
+                <payment_method_subgroup_2_title>Pay With mobile payment</payment_method_subgroup_2_title>
+                <payment_method_subgroup_2_method_filter>FI54,PIVO,SIIR,APPL,GPAY</payment_method_subgroup_2_method_filter>
+                <payment_method_subgroup_1_title>Pay With Online Banking</payment_method_subgroup_1_title>
                 <payment_method_subgroup_1_method_filter>FI01,FI02,FI03,FI04,FI05,FI06,FI07,FI08,FI09,FI10,FI11,FI12,FI13,FI14,FI15</payment_method_subgroup_1_method_filter>
             </svea_facelift_payment>
             <svea_part_payment>

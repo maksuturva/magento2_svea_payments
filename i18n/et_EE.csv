@@ -11,3 +11,8 @@
 "Your order is not valid or is already paid.", "Tellimus ei kehti või on juba tasutud."
 "Payment Method", "Makseviis"
 "Place Order", "Esita tellimus"
+"Pay Now","Maksa kohe"
+"Pay Later","Maksa hiljem"
+"Online Banking","Internetipank"
+"Mobile Payment","Mobiilimakse"
+"Card","Kaart"

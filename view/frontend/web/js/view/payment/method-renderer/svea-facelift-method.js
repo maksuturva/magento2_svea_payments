@@ -235,5 +235,78 @@ define([
         getTermsText: function () {
             return this.getMethodData('termstext');
         },
+
+        /** Facelift payment options */
+        showPaymentMethods: function (selection) {
+            // hide all
+            var nodes = document.querySelectorAll(".checkout__radio-container");
+            nodes.forEach(node => {
+                if (node && !node.classList.contains('none')) {
+                    node.classList.add('none');
+                }
+            });
+
+            // show selected
+            if (selection === 'payNow') {
+                var node = document.querySelector("#payment_method_subgroup_1");
+                if (node)
+                    node.classList.remove('none');
+                node = document.querySelector("#payment_method_subgroup_2");
+                if (node)
+                    node.classList.remove('none');
+                node = document.querySelector("#payment_method_subgroup_3");
+                if (node)
+                    node.classList.remove('none');
+            } else if (selection === 'payLater') {
+                var node = document.querySelector("#payment_method_subgroup_4");
+                if (node)
+                    node.classList.remove('none');
+            }
+
+            this.showPaymentSubMethods();
+        },
+
+        showPaymentSubMethods: function (selectedId) {
+            if (!selectedId)
+                return;
+
+            // Remove leading "#" if present
+            selectedId = selectedId.replace(/^#/, '');
+
+            document.querySelectorAll('.checkout__radio-container').forEach(parent => {
+                const children = parent.querySelectorAll('.payment__button-set');
+
+                // Don't process 'payment_method_subgroup_4' = Pay Later
+                if (parent.id === 'payment_method_subgroup_4')
+                    return;
+
+                children.forEach(child => {
+                    if (parent.id === selectedId) {
+                        // toggle 'none' on matching parent
+                        child.classList.toggle('none');
+                    } else {
+                        // ensure 'none' is added for non-matching parents
+                        child.classList.add('none');
+                    }
+                });
+            });
+        },
+
+        getImageUrl: function (smethod, imgFileName) {
+            var methods = ko.unwrap(smethod.methods);
+
+            if (methods && methods.length) {
+                var originalUrl = ko.unwrap(methods[0].imageurl);
+
+                if (originalUrl) {
+                    // Remove filename and keep folder path
+                    var basePath = originalUrl.substring(0, originalUrl.lastIndexOf('/') + 1);
+
+                    return basePath + imgFileName;
+                }
+            }
+
+            return '';
+        }
     });
 });

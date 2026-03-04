@@ -21,13 +21,21 @@
         <fieldset class="paymentSelectionType" id="payNowOrLater">
             <legend class="sr-only">Valitse henkilö- tai yritys asiointi</legend>
             <label class="radio_button payNow" for="payNow" id="payNowLabel">
-                <input type="radio" name="invoiceDistributionType" id="payNow" value="payNow" class="" data-bind="click: showPaymentMethods('payNow')">
+                <input type="radio"
+                    name="invoiceDistributionType"
+                    id="payNow"
+                    value="payNow"
+                    data-bind="click: function() { showPaymentMethods('payNow') }">
                 <div>
                     <span data-bind="text: $t('Pay Now')"></span>
                 </div>
             </label>
             <label class="radio_button payLater" for="payLater" id="payLaterLabel">
-                <input type="radio" name="invoiceDistributionType" id="payLater" value="payLater" class="" data-bind="click: showPaymentMethods('payLater')">
+                <input type="radio"
+                    name="invoiceDistributionType"
+                    id="payLater"
+                    value="payLater"
+                    data-bind="click: function() { showPaymentMethods('payLater') }">
                 <div>
                     <span data-bind="text: $t('Pay Later')"></span>
                 </div>
@@ -40,8 +48,13 @@
                     
                     <section 
                         class="checkout__radio-container none"
-                        data-bind="attr: { id: ko.unwrap(smethod.code) },
-                          click: smethod.code !== 'payment_method_subgroup_4' ? $parent.showPaymentSubMethods(ko.unwrap(smethod.code)) : null">
+                        data-bind="
+                            attr: { id: ko.unwrap(smethod.code) },
+                            click: function () {
+                                if (smethod.code !== 'payment_method_subgroup_4') {
+                                    $parent.showPaymentSubMethods(ko.unwrap(smethod.code));
+                                }
+                            }">
 
                         <fieldset class="payment__button-fieldset">
                             <div class="payment__button-header">

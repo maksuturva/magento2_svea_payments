@@ -67,6 +67,8 @@ define([
                 }
                 this.prepareMethods();
             }
+            // Observable to track which radio is selected
+            this.selectionPayNowOrLater = ko.observable('');
         },
         preparePaymentHook: function () {
            this.selectedMethod.subscribe(function (value) {
@@ -237,6 +239,15 @@ define([
         },
 
         /** Facelift payment options */
+        // Helper for CSS binding
+        isSelected: function (option) {
+            return this.selectionPayNowOrLater() === option;
+        },
+
+        setSelected: function (option) {
+            this.selectionPayNowOrLater(option); // update observable
+        },
+
         showPaymentMethods: function (selection) {
             // hide all
             var nodes = document.querySelectorAll(".checkout__radio-container");
@@ -274,13 +285,13 @@ define([
             selectedId = selectedId.replace(/^#/, '');
 
             document.querySelectorAll('.checkout__radio-container').forEach(parent => {
-                const children = parent.querySelectorAll('.payment__button-set');
-
                 // Don't process 'payment_method_subgroup_4' = Pay Later
                 if (parent.id === 'payment_method_subgroup_4')
                     return;
 
-                children.forEach(child => {
+                const chButtonSet = parent.querySelectorAll('.payment__button-set');
+
+                chButtonSet.forEach(child => {
                     if (parent.id === selectedId) {
                         // toggle 'none' on matching parent
                         child.classList.toggle('none');
@@ -289,7 +300,31 @@ define([
                         child.classList.add('none');
                     }
                 });
+
+                const chHeaderIcons = parent.querySelectorAll('.payment__button-header-icons');
+
+                chHeaderIcons.forEach(child => {
+                    if (parent.id === selectedId) {
+                        // toggle 'none' on matching parent
+                        child.classList.toggle('none');
+                    } else {
+                        // ensure 'none' is removed from non-matching parents
+                        child.classList.remove('none');
+                    }
+                });
             });
+        },
+
+        getTopImages: function (smethod, priority) {
+            if (!smethod || !smethod.methods || !Array.isArray(priority)) {
+                return [];
+            }
+
+            return priority.map(function (code) {
+                return smethod.methods.find(function (m) {
+                    return m.code === code;
+                });
+            }).filter(Boolean);
         },
 
         getImageUrl: function (smethod, imgFileName) {

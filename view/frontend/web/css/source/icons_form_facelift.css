@@ -1,4 +1,5 @@
 :root {
+  --color-svea-dark-blue: #00325c;
   --color-disable-back: #e0e0e0;
   --color-white: #ffffff;
   --button-background: #007bff;
@@ -9,6 +10,42 @@
 
 .none{
 	display: none !important;
+}
+
+h1.title__line {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  color: var(--color-svea-dark-blue);
+  font-size: 2.6rem;
+}
+
+
+.svea-payment-methods .payment-method-label {
+    cursor: pointer;
+    display: flex;
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+    width: 100%;
+    border-radius: 8px;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.1),1px 1px 7px rgba(0,0,0,.1);
+    overflow: hidden;
+}
+
+.svea-payment-methods .payment-method-label:focus, .svea-payment-methods .payment-method-label:hover {
+    border: 2px solid var(--partpayment-selected);
+}
+
+#payment_form_svea_facelift_payment .svea-payment-methods .payment-method .radio-active {
+    /* border: 1px solid rgba(0, 0, 0, 0.2); */
+    /* border-bottom: 2px solid var(--partpayment-selected); */
+    border: 2px solid var(--partpayment-selected);
+    /* box-shadow: 0 0 10px 0 rgb(0 0 0 / 40%); */
 }
 
 .svea-payment-methods, .svea-payment-methods > fieldset {
@@ -93,18 +130,11 @@
 }
 
 .paymentSelectionType .radio_button div {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem;
+  font-size: 2rem; /* default for above mobile */
 }
 
-/* Respond Above Mobile */
-@media (min-width: 768px) {
-  .paymentSelectionType .radio_button div {
-    font-size: 2rem;
-  }
-}
-
-/* Respond Below Mobile */
-@media (max-width: 767px) {
+@media (max-width: 767px) { /* replace 767px with your mobile breakpoint */
   .paymentSelectionType .radio_button div {
     font-size: 1.4rem;
   }
@@ -115,32 +145,36 @@
   -webkit-appearance: none;
   width: 2.4rem;
   height: 2.4rem;
-  border: 2px solid #666;
+  /* border: 2px solid #666; */
   border-radius: 50%;
   position: relative;
   cursor: pointer;
   transition: border-color 0.2s ease;
+
+  border: 2px solid var(--color-disable-back);
 }
 
 .paymentSelectionType .radio_button input[type="radio"]::before {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 49%;
-  width: 1.20rem;
-  height: 1.20rem;
+  top: 0%;
+  left: 0%;
+  width: 1rem;
+  height: 1rem;
   background-color: var(--button-background);
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(50%, 50%) scale(0);
   transition: transform 0.2s ease;
 }
 
-.paymentSelectionType .radio_button input[type="radio"]:checked {
-  border-color: var(--button-background);
+.paymentSelectionType .radio_button input[type="radio"]:checked,
+.paymentSelectionType .radio_button input[type="radio"].selected {
+  border: 2px solid var(--button-background);
 }
 
-.paymentSelectionType .radio_button input[type="radio"]:checked::before {
-  transform: translate(-50%, -50%) scale(1);
+.paymentSelectionType .radio_button input[type="radio"]:checked::before,
+.paymentSelectionType .radio_button input[type="radio"].selected::before {
+  transform: translate(50%, 50%) scale(1.2)
 }
 
 .paymentSelectionType .radio_button input[type="radio"]:focus-visible {
@@ -148,35 +182,7 @@
   outline-offset: 2px;
 }
 
-.paymentSelectionType input[type="radio"]:checked {
-  outline: 2px solid var(--button-background);
-  outline-offset: -2px;
-  box-shadow: none;
-}
-
-/* Pay Now ID */
-.paymentSelectionType .radio_button #payNow {
-  border: 2px solid var(--color-disable-back);
-}
-
-.paymentSelectionType .radio_button #payNow.selected {
-  border: 2px solid var(--button-background);
-}
-
-.paymentSelectionType .radio_button #payNow:hover {
-  box-shadow: none;
-}
-
-/* Pay Later ID */
-.paymentSelectionType .radio_button #payLater {
-  border: 2px solid var(--color-disable-back);
-}
-
-.paymentSelectionType .radio_button #payLater.selected {
-  border: 2px solid var(--button-background);
-}
-
-.paymentSelectionType .radio_button #payLater:hover {
+.paymentSelectionType .radio_button input[type="radio"]:hover {
   box-shadow: none;
 }
 
@@ -186,7 +192,7 @@
 }
 
 .paymentSelectionType .radio_button:hover input[type="radio"] {
-  border-color: var(--partpayment-hover);
+  /* border-color: var(--partpayment-hover); */
 }
 
 .paymentSelectionType .radio_button:hover input[type="radio"]:checked {
@@ -202,7 +208,7 @@
   align-content: stretch;
   width: 100%;
   grid-gap: 1rem;
-  cursor: pointer;
+  /* cursor: pointer; */
   border: 1px solid #d3d3d3;
   padding: 1rem;
   border-radius: 8px;
@@ -215,6 +221,8 @@
   min-height: 50px;
 
   font-size: 2rem;
+
+  cursor: pointer;
 }
 
 .payment__button-header-icons {
@@ -232,10 +240,11 @@
 }
 
 .payment__button-set {
-    display: grid;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     max-width: 100%;
-    justify-items: center;
     width: 100%;
     row-gap: .5rem;
     column-gap: 1rem;

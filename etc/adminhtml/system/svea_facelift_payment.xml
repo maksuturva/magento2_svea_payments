@@ -37,12 +37,12 @@
             <label>Payment Method Subgroup - Pay With Online Banking</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <comment>Default: Pay now with online banking</comment>
+                <comment>Default: Pay With Online Banking</comment>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
-                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsOnlineBanking</source_model>
                 <comment>Default: FI01;FI02;FI03;FI04;FI05;FI06;FI07;FI08;FI09;FI10;FI11;FI12;FI13;FI14;FI15</comment>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
@@ -59,12 +59,12 @@
             <label>Payment Method Subgroup - Pay With Mobile Payment</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <comment>Default: Pay now with mobile payment or card</comment>
+                <comment>Default: Pay With Mobile Payment</comment>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_2_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
-                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsMobilePayment</source_model>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_2_method_filter</config_path>
                 <comment>Default: FI54,PIVO,SIIR,USPP,APPL</comment>
                 <can_be_empty>1</can_be_empty>
@@ -86,7 +86,7 @@
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
-                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsCard</source_model>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_3_method_filter</config_path>
                 <comment>Default: FI50,FI51,FI52,FI53</comment>
                 <can_be_empty>1</can_be_empty>
@@ -108,7 +108,7 @@
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
-                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethods</source_model>
+                <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsPayLater</source_model>
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_4_method_filter</config_path>
                 <comment>Default: FI70;FI71;FI72;FIIN;FIPP;FIBI</comment>
                 <can_be_empty>1</can_be_empty>

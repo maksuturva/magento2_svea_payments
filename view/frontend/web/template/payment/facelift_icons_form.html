@@ -1,4 +1,6 @@
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <!-- Only show the Radiobutton, if this is not the only payment method -->
+    <!-- ko if: require('Magento_Checkout/js/model/payment-service').getAvailablePaymentMethods().length !== 1 -->
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -8,6 +10,8 @@
             <span data-bind="text: getTitle()"></span>
         </label>
     </div>
+    <!-- /ko -->
+
     <div class="payment-method-content">
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->

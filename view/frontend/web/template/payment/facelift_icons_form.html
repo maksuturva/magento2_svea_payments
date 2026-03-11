@@ -24,9 +24,15 @@
 
         <h1 class="title__line" id="selectpaymentMethodTitle" data-bind="text: $t('Choose Payment Method')"></h1>
 
-        <fieldset class="paymentSelectionType" id="payNowOrLater">
+        <fieldset class="paymentSelectionType" id="payNowOrLater"
+            data-bind="css: { 
+                none: (paymentSubMethodPayNowAvailable() ? 1 : 0) + (paymentSubMethodPayLaterAvailable() ? 1 : 0) === 1
+            }">
             <legend class="sr-only">Valitse henkilö- tai yritys asiointi</legend>
-            <label class="radio_button payNow" for="payNow" id="payNowLabel">
+            <label class="radio_button payNow" for="payNow" id="payNowLabel"
+              data-bind="css: { 
+                    disabled: !paymentSubMethodPayNowAvailable()
+                }">
                 <input type="radio"
                     name="invoiceDistributionType"
                     id="payNow"
@@ -37,7 +43,10 @@
                       css: { selected: isSelected('payNow') }">
                 <div data-bind="text: $t('Pay Now')"></div>
             </label>
-            <label class="radio_button payLater" for="payLater" id="payLaterLabel">
+            <label class="radio_button payLater" for="payLater" id="payLaterLabel"
+              data-bind="css: { 
+                    disabled: !paymentSubMethodPayLaterAvailable()
+                }">
                 <input type="radio"
                     name="invoiceDistributionType"
                     id="payLater"
@@ -54,19 +63,19 @@
             <div class="svea-payment-methods" data-bind="attr: {id: 'payment_form_'+ getCode()}">
                 <div class="svea-payment-methods" data-bind="foreach: {data: allMethods, as: 'smethod'} ">
                     
-                    <section
-                        class="checkout__radio-container none"
-                        data-bind="attr: { id: ko.unwrap(smethod.code) }">
+                    <section class="checkout__radio-container"
+                        data-bind="attr: { id: ko.unwrap(smethod.code) },
+                                    css: { 
+                                        none: (!$parent.isSelected('payNow') && ['payment_method_subgroup_1','payment_method_subgroup_2','payment_method_subgroup_3'].indexOf(smethod.code) !== -1)
+                                            || (!$parent.isSelected('payLater') && smethod.code === 'payment_method_subgroup_4')
+                                    }">
 
                         <fieldset class="payment__button-fieldset">
                             <div class="payment__button-header"
                               data-bind="
-                                click: function () {
-                                    if (smethod.code !== 'payment_method_subgroup_4') {
-                                        $parent.showPaymentSubMethods(ko.unwrap(smethod.code));
-                                    }
-                                }"
-                            >
+                                click: function () { 
+                                    $parent.showPaymentSubMethods(ko.unwrap(smethod.code));
+                                }">
                                 <!-- Title from admin configuration -->
                                 <!-- ko if: smethod.title -->
                                   <legend class="sub-method-title title__line" data-bind="text: smethod.title"><hr></legend>
@@ -88,7 +97,8 @@
                                 <!-- /ko -->
                                 
                                 <!-- Title icons -->
-                                <div class="payment__button-header-icons">
+                                <div class="payment__button-header-icons"
+                                    data-bind="css: { none: ($parent.paymentSubMethodsOnlyAvailablePerGroup(ko.unwrap(smethod.code))) }">
                                 <!-- ko if: smethod.code === 'payment_method_subgroup_1' -->
                                   <!-- ko foreach: $parent.getTopImages(smethod, ['FI01','FI02','FI06']) -->
                                     <img data-bind="attr: { src: imageurl, alt: displayname }" />
@@ -108,7 +118,7 @@
                                 </div>
                             </div>
                             <div class="payment__button-set" aria-expanded="false"
-                              data-bind="css: { none: smethod.code !== 'payment_method_subgroup_4' }">
+                              data-bind="css: { none: (!$parent.paymentSubMethodsOnlyAvailablePerGroup(ko.unwrap(smethod.code))) }">
                                 <!-- ko foreach: smethod.methods -->
                                 <div class="payment-method">
                                     <label class="payment-method-label"

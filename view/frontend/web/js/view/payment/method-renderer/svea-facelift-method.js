@@ -33,12 +33,17 @@ define([
 ) {
     'use strict';
 
-    const subPMethods = {};
-    subPMethods.payment_method_subgroup_1 = 'payment_method_subgroup_1';
-    subPMethods.payment_method_subgroup_2 = 'payment_method_subgroup_2';
-    subPMethods.payment_method_subgroup_3 = 'payment_method_subgroup_3';
-    subPMethods.payment_method_subgroup_4 = 'payment_method_subgroup_4';
-    subPMethods.payment_method_subgroup_5 = 'payment_method_subgroup_5';
+    const PAYMENT_METHOD_GROUPS_PAY_NOW = [
+        'payment_method_subgroup_1',
+        'payment_method_subgroup_2',
+        'payment_method_subgroup_3'
+    ];
+
+    const PAYMENT_METHOD_GROUPS_PAY_LATER = [
+        'payment_method_subgroup_4'
+    ];
+
+    const PAYMENT_METHOD_GROUPS_ALL = [...PAYMENT_METHOD_GROUPS_PAY_NOW, ...PAYMENT_METHOD_GROUPS_PAY_LATER];
 
     return Component.extend({
         defaults: {
@@ -69,6 +74,9 @@ define([
             }
             // Observable to track which radio is selected
             this.selectionPayNowOrLater = ko.observable('');
+            
+            // Auto-select logic on initialization
+            this.autoSelectPaymentMethod();
         },
         preparePaymentHook: function () {
            this.selectedMethod.subscribe(function (value) {
@@ -95,19 +103,25 @@ define([
             }.bind(this));
         },
         prepareMethods: function () {
-            for(let subPMethod in subPMethods) {
-                if (!this.checkoutConfig['methods'].hasOwnProperty(subPMethod)) {
-                    continue;
+            PAYMENT_METHOD_GROUPS_ALL.forEach(function (group) {
+
+                if (!this.checkoutConfig['methods'].hasOwnProperty(group)) {
+                    return;
                 }
-                this.allMethods.push(this.checkoutConfig['methods'][subPMethods[subPMethod]]);
-                for (let method of this.checkoutConfig['methods'][subPMethods[subPMethod]]['methods']) {
+
+                this.allMethods.push(this.checkoutConfig['methods'][group]);
+
+                for (let method of this.checkoutConfig['methods'][group]['methods']) {
+
                     method.identifier = this.getCode() + '_' + method.code;
-                    method.paymentgroup = this.getCode() + '_' + subPMethods[subPMethod];
+                    method.paymentgroup = this.getCode() + '_' + group;
+
                     if (method.code === this.checkoutConfig['defaultPaymentMethod']) {
                         this.selectedMethod(method.code);
                     }
                 }
-            }
+
+            }.bind(this));
         },
 
         getSelectedMethod: function () {
@@ -239,6 +253,21 @@ define([
         },
 
         /** Facelift payment options */
+
+        autoSelectPaymentMethod: function () {
+            var payNowAvailable = this.paymentSubMethodPayNowAvailable();
+            var payLaterAvailable = this.paymentSubMethodPayLaterAvailable();
+
+            // Only select if exactly one of them is available
+            if (payNowAvailable && !payLaterAvailable) {
+                this.showPaymentMethods('payNow');
+                this.setSelected('payNow'); // updates selectionPayNowOrLater
+            } else if (payLaterAvailable && !payNowAvailable) {
+                this.showPaymentMethods('payLater');
+                this.setSelected('payLater'); // updates selectionPayNowOrLater
+            }
+        },
+
         // Helper for CSS binding
         isSelected: function (option) {
             return this.selectionPayNowOrLater() === option;
@@ -258,36 +287,46 @@ define([
             });
 
             // show selected
-            if (selection === 'payNow') {
-                var node = document.querySelector("#payment_method_subgroup_1");
-                if (node)
+            var groups = selection === 'payNow' ? PAYMENT_METHOD_GROUPS_PAY_NOW : PAYMENT_METHOD_GROUPS_PAY_LATER;
+
+            groups.forEach(function (group) {
+                var node = document.querySelector("#" + group);
+                if (node) {
                     node.classList.remove('none');
-                node = document.querySelector("#payment_method_subgroup_2");
-                if (node)
-                    node.classList.remove('none');
-                node = document.querySelector("#payment_method_subgroup_3");
-                if (node)
-                    node.classList.remove('none');
-            } else if (selection === 'payLater') {
-                var node = document.querySelector("#payment_method_subgroup_4");
-                if (node)
-                    node.classList.remove('none');
-            }
+                }
+            });
 
             this.showPaymentSubMethods();
         },
 
         showPaymentSubMethods: function (selectedId) {
-            if (!selectedId)
+
+            if (!selectedId) {
                 return;
+            }
 
             // Remove leading "#" if present
             selectedId = selectedId.replace(/^#/, '');
 
+            // Determine which group set the selectedId belongs to
+            let groupSet = null;
+
+            if (PAYMENT_METHOD_GROUPS_PAY_NOW.includes(selectedId)) {
+                groupSet = PAYMENT_METHOD_GROUPS_PAY_NOW;
+            } else if (PAYMENT_METHOD_GROUPS_PAY_LATER.includes(selectedId)) {
+                groupSet = PAYMENT_METHOD_GROUPS_PAY_LATER;
+            }
+
+            if (!groupSet) {
+                return;
+            }
+
             document.querySelectorAll('.checkout__radio-container').forEach(parent => {
-                // Don't process 'payment_method_subgroup_4' = Pay Later
-                if (parent.id === 'payment_method_subgroup_4')
+
+                // Only process parents belonging to the same group set
+                if (!groupSet.includes(parent.id)) {
                     return;
+                }
 
                 const chButtonSet = parent.querySelectorAll('.payment__button-set');
 
@@ -311,6 +350,100 @@ define([
                         // ensure 'none' is removed from non-matching parents
                         child.classList.remove('none');
                     }
+                });
+
+            });
+        },
+
+        paymentSubMethodPayNowAvailable: function () {
+            return this.paymentSubMethodsAvailable.apply(this, PAYMENT_METHOD_GROUPS_PAY_NOW);
+        },
+
+        paymentSubMethodPayLaterAvailable: function () {
+            return this.paymentSubMethodsAvailable.apply(this, PAYMENT_METHOD_GROUPS_PAY_LATER);
+        },
+
+        // Checks if payment SubMethods are available for codes mathing those given as parameter(s)
+        // Parameter(s): code (for example: payment_method_subgroup_1)
+        // Usage: paymentSubMethodsAvailable('payment_method_subgroup_1','payment_method_subgroup_2');
+        paymentSubMethodsAvailable: function () {
+            var codes = Array.prototype.slice.call(arguments);
+            var groups = this.allMethods();
+            var map = {};
+
+            groups.forEach(function (smethod) {
+                map[smethod.code] = ko.unwrap(smethod.methods);
+            });
+
+            return codes.some(function (code) {
+                var methods = map[code];
+                return methods && methods.length > 0;
+            });
+        },
+
+        // Checks if ONLY those payment SubMethods are available that match codes given as parameter(s)
+        // Parameter(s): code (for example: payment_method_subgroup_1)
+        // Usage: paymentSubMethodsOnlyAvailable('payment_method_subgroup_1','payment_method_subgroup_2');
+        paymentSubMethodsOnlyAvailable: function () {
+            var codes = Array.prototype.slice.call(arguments);
+            var groups = this.allMethods();
+            var map = {};
+
+            console.log(codes);
+
+            groups.forEach(function (smethod) {
+                map[smethod.code] = ko.unwrap(smethod.methods);
+            });
+
+            return groups.every(function (smethod) {
+                var methods = map[smethod.code] || [];
+                var hasMethods = methods.length > 0;
+
+                if (codes.indexOf(smethod.code) !== -1) {
+                    // codes we care about must have methods
+                    return hasMethods;
+                }
+
+                // all other groups must NOT have methods
+                return !hasMethods;
+            });
+        },
+
+        // Checks if ONLY those payment SubMethods are available that match codes given as parameter(s),
+        // Checks based on the payment group set (is payment the only one available in its group set)
+        // Parameter(s): code (for example: payment_method_subgroup_1)
+        // Usage: paymentSubMethodsOnlyAvailablePerGroup('payment_method_subgroup_1','payment_method_subgroup_2');
+        paymentSubMethodsOnlyAvailablePerGroup: function () {
+            var codes = Array.prototype.slice.call(arguments);
+            var groups = this.allMethods();
+
+            var sets = [
+                PAYMENT_METHOD_GROUPS_PAY_NOW,
+                PAYMENT_METHOD_GROUPS_PAY_LATER
+            ];
+
+            return sets.some(function (set) {
+
+                var active = groups
+                    .filter(function (smethod) {
+                        return set.indexOf(smethod.code) !== -1;
+                    })
+                    .filter(function (smethod) {
+                        var methods = ko.unwrap(smethod.methods) || [];
+                        return methods.length > 0;
+                    })
+                    .map(function (smethod) {
+                        return smethod.code;
+                    });
+
+                if (active.length === 0) {
+                    return false;
+                }
+
+                return active.every(function (code) {
+                    return codes.indexOf(code) !== -1;
+                }) && codes.every(function (code) {
+                    return set.indexOf(code) === -1 || active.indexOf(code) !== -1;
                 });
             });
         },

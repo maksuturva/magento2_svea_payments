@@ -12,6 +12,12 @@
 	display: none !important;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 h1.title__line {
   margin-bottom: 1.5rem;
   margin-top: 1.5rem;

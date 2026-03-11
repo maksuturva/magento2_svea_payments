@@ -157,8 +157,8 @@ h1.title__line {
 .paymentSelectionType .radio_button input[type="radio"]::before {
   content: "";
   position: absolute;
-  top: 0%;
-  left: 0%;
+  top: 1px;
+  left: 1px;
   width: 1rem;
   height: 1rem;
   background-color: var(--button-background);
@@ -174,7 +174,7 @@ h1.title__line {
 
 .paymentSelectionType .radio_button input[type="radio"]:checked::before,
 .paymentSelectionType .radio_button input[type="radio"].selected::before {
-  transform: translate(50%, 50%) scale(1.2)
+  transform: translate(50%, 48%) scale(1.25)
 }
 
 .paymentSelectionType .radio_button input[type="radio"]:focus-visible {

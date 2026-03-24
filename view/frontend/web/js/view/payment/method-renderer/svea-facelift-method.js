@@ -43,6 +43,13 @@ define([
         'payment_method_subgroup_4'
     ];
 
+    const PAYMENT_METHOD_GROUPS_SUBORDER = {
+        payment_method_subgroup_1: ['FI01', 'FI02', 'FI06'],
+        payment_method_subgroup_2: ['FI54', 'APPL', 'SIIR'],
+        payment_method_subgroup_3: ['FI50', 'FI52'],
+        payment_method_subgroup_4: ['FI70', 'FI71', 'FI72']
+    };
+
     const PAYMENT_METHOD_GROUPS_ALL = [...PAYMENT_METHOD_GROUPS_PAY_NOW, ...PAYMENT_METHOD_GROUPS_PAY_LATER];
 
     return Component.extend({
@@ -109,9 +116,35 @@ define([
                     return;
                 }
 
-                this.allMethods.push(this.checkoutConfig['methods'][group]);
+                var groupData = this.checkoutConfig['methods'][group];
+                var desiredOrder = PAYMENT_METHOD_GROUPS_SUBORDER[group] || [];
+                var methods = groupData.methods;
 
-                for (let method of this.checkoutConfig['methods'][group]['methods']) {
+                // 🔽 BUILD NEW ORDERED ARRAY
+                var ordered = [];
+                var remaining = [];
+
+                // First: pick methods in desired order
+                desiredOrder.forEach(function (code) {
+                    var match = methods.find(m => m.code === code);
+                    if (match) {
+                        ordered.push(match);
+                    }
+                });
+
+                // Then: everything else (preserve original order)
+                methods.forEach(function (method) {
+                    if (!desiredOrder.includes(method.code)) {
+                        remaining.push(method);
+                    }
+                });
+
+                // Combine
+                groupData.methods = ordered.concat(remaining);
+
+                this.allMethods.push(groupData);
+
+                for (let method of groupData.methods) {
 
                     method.identifier = this.getCode() + '_' + method.code;
                     method.paymentgroup = this.getCode() + '_' + group;

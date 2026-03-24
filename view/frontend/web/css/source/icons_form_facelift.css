@@ -225,6 +225,8 @@ h1.title__line {
   display: flex;
   overflow: hidden;
   min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
 
   font-size: 2rem;
 
@@ -260,4 +262,14 @@ h1.title__line {
 
 .payment__button-set.none {
     transform: translate(0%, -10%) scale(50%);
+}
+
+.payment__button-icon-expand {
+  min-width: 24px;
+  margin-left: 1rem;
+  transform: rotate(0deg); transition: 0.3s;;
+}
+
+.payment__button-icon-expand.open {
+  transform: rotate(180deg); transition: 0.3s;;
 }

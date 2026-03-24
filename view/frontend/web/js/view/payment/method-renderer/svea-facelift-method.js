@@ -352,6 +352,18 @@ define([
                     }
                 });
 
+                // toggle expand icon
+                const iconsExpand = parent.querySelectorAll('.payment__button-icon-expand');
+                iconsExpand.forEach(child => {
+                    if (parent.id === selectedId) {
+                        // toggle 'none' on matching parent
+                        child.classList.toggle('open');
+                    } else {
+                        // ensure 'none' is removed from non-matching parents
+                        child.classList.remove('open');
+                    }
+                });
+
             });
         },
 

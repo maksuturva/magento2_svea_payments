@@ -47,13 +47,6 @@
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Invoicing Fee</label>
-                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_handling_fee</config_path>
-                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
-                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
-            </field>
         </group>
         <group id="payment_method_subgroup_2" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment Method Subgroup - Pay With Mobile Payment</label>
@@ -69,13 +62,6 @@
                 <comment>Default: FI54,PIVO,SIIR,USPP,APPL</comment>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Invoicing Fee</label>
-                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_2_handling_fee</config_path>
-                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
-                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
-            </field>
         </group>
         <group id="payment_method_subgroup_3" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment Method Subgroup - Pay With Card</label>
@@ -90,13 +76,6 @@
                 <config_path>payment/svea_facelift_payment/payment_method_subgroup_3_method_filter</config_path>
                 <comment>Default: FI50,FI51,FI52,FI53</comment>
                 <can_be_empty>1</can_be_empty>
-            </field>
-            <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Invoicing Fee</label>
-                <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_3_handling_fee</config_path>
-                <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
-                <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
             </field>
         </group>
         <group id="payment_method_subgroup_4" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">

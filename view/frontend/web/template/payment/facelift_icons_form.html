@@ -100,17 +100,17 @@
                                 <div class="payment__button-header-icons"
                                     data-bind="css: { none: ($parent.paymentSubMethodsOnlyAvailablePerGroup(ko.unwrap(smethod.code))) }">
                                 <!-- ko if: smethod.code === 'payment_method_subgroup_1' -->
-                                  <!-- ko foreach: $parent.getTopImages(smethod, ['FI01','FI02','FI06']) -->
+                                  <!-- ko foreach: $parent.getTopPaymentMethods(smethod, 3) -->
                                     <img data-bind="attr: { src: imageurl, alt: displayname }" />
                                   <!-- /ko -->
                                 <!-- /ko -->
                                 <!-- ko if: smethod.code === 'payment_method_subgroup_2' -->
-                                  <!-- ko foreach: $parent.getTopImages(smethod, ['FI54','SIIR']) -->
+                                  <!-- ko foreach: $parent.getTopPaymentMethods(smethod, 3) -->
                                     <img data-bind="attr: { src: imageurl }" />
                                   <!-- /ko -->
                                 <!-- /ko -->
                                 <!-- ko if: smethod.code === 'payment_method_subgroup_3' -->
-                                  <!-- ko foreach: $parent.getTopImages(smethod, ['FI50','FI52']) -->
+                                  <!-- ko foreach: $parent.getTopPaymentMethods(smethod, 3) -->
                                     <img data-bind="attr: { src: imageurl }" />
                                   <!-- /ko -->
                                 <!-- /ko -->

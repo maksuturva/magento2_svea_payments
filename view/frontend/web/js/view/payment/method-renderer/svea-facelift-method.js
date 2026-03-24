@@ -493,7 +493,19 @@ define([
             });
         },
 
-        getTopImages: function (smethod, priority) {
+        // Get top images up to the amount given in the count parameter.
+        //Example usage in HTML: <!-- ko foreach: $parent.getTopPaymentMethods(smethod, 3) -->
+        getTopPaymentMethods: function (smethod, count) {
+            if (!smethod || !Array.isArray(smethod.methods) || !count) {
+                return [];
+            }
+
+            return smethod.methods.slice(0, count);
+        },
+
+        // Get top images according to the codes given in the priority parameter.
+        // Example usage in HTML: <!-- ko foreach: $parent.getTopPaymentMethodsForPriority(smethod, ['FI01','FI02','FI06']) -->
+        getTopPaymentMethodsForPriority: function (smethod, priority) {
             if (!smethod || !smethod.methods || !Array.isArray(priority)) {
                 return [];
             }

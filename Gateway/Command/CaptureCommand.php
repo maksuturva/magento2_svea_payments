@@ -8,6 +8,7 @@ use Magento\Payment\Model\Method\Adapter;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Svea\SveaPayment\Gateway\SubjectReaderInterface;
+use Svea\SveaPayment\Gateway\Request\DeliveryInfo\DataBuilder;
 use Svea\SveaPayment\Gateway\Validator\OrderValidatorInterface;
 use Svea\SveaPayment\Model\Payment\Method;
 
@@ -53,9 +54,14 @@ class CaptureCommand implements CommandInterface
         $payment = $this->subjectReader->readPayment($commandSubject);
         $this->orderValidator->validate($payment->getOrder()->getCurrentOrder());
         /** @var Adapter $method */
-        $method = $payment->getPayment()->getMethodInstance();
-        if ($this->method->isDelayedCapture($method->getCode())) {
-            $result = $this->commandPool->get(DeliveryCommand::COMMAND_CODE_UPDATE)->execute($commandSubject);
+        $method = $payment->getPayment()->getAdditionalInformation('svea_method_code');
+        if ($this->method->isDelayedCapture($method)) {
+            $commandSubject[DataBuilder::METHOD_CODE] = "ODLVR";
+            $commandSubject[DataBuilder::INFO_ADD] = DataBuilder::INFO_VALUE_BY_METHOD;
+            $commandSubject[DataBuilder::ALL_SENT_FLAG] = "Y";
+            $commandSubject[DataBuilder::FORCE_UPDATE] = "Y";
+
+            $result = $this->commandPool->get(DeliveryCommand::COMMAND_CODE_ADD)->execute($commandSubject);
             $this->updateTransaction($payment->getPayment(), $result->get());
         }
     }

@@ -1,5 +1,8 @@
 # Changelog
 
+### [1.4.4] - 2026-03-25
+* Fix delayed capture triggered by invoice creation.
+
 ### [1.4.3] - 2025-12-10
 * Make order status check buttons and cron always use the correct seller ID.
 * Store settlement reference (pmt_reference in Svea API) in the payments table in database and display it in admin order view.

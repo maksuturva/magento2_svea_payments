@@ -183,8 +183,8 @@
                 <fieldset_css>complex svea-top-section svea-other-header</fieldset_css>
                 <frontend_model>Svea\SveaPayment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
                 <attribute type="displayIn">recommended_solutions</attribute>
-                <include path="Svea_SveaPayment::system/svea_collated_payment.xml"/>
                 <include path="Svea_SveaPayment::system/svea_facelift_payment.xml"/>
+                <include path="Svea_SveaPayment::system/svea_collated_payment.xml"/>
                 <include path="Svea_SveaPayment::system/svea_separate_payment_methods.xml"/>
                 <include path="Svea_SveaPayment::system/svea_payment.xml"/>
             </group>

@@ -4,6 +4,6 @@
     <head>
         <css src="Svea_SveaPayment::css/source/icons_form.css" />
         <css src="Svea_SveaPayment::css/source/icons_form_facelift.css" />
-        <!--<css src="Svea_SveaPayment::css/source/icons_form_collated.css" />-->
+        <css src="Svea_SveaPayment::css/source/icons_form_collated.css" />
     </head>
 </page>

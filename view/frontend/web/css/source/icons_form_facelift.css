@@ -8,6 +8,17 @@
   --mobile-breakpoint: 768px;
 }
 
+/* Fix margins when displayed through One Page Checkout extension */
+.one-step-checkout-container .payment-methods {
+    /*padding: 0;*/
+    margin-left: -22px;
+}
+@media screen and (max-width: 768px) {
+    .one-step-checkout-container .payment-methods {
+        margin-left: 0;
+    }
+}
+
 .none{
 	display: none !important;
 }

@@ -10,12 +10,20 @@
 
 /* Fix margins when displayed through One Page Checkout extension */
 .one-step-checkout-container .payment-methods {
-    /*padding: 0;*/
     margin-left: -22px;
 }
+
+.one-step-checkout-container .payment-method-title {
+    margin-left: 22px;
+}
+
 @media screen and (max-width: 768px) {
     .one-step-checkout-container .payment-methods {
         margin-left: 0;
+    }
+
+    .one-step-checkout-container .payment-method-title {
+        margin-left: 15px;
     }
 }
 
@@ -160,10 +168,10 @@ h1.title__line {
 .paymentSelectionType .radio_button input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 26px;
+  height: 26px;
   /* border: 2px solid #666; */
-  border-radius: 50%;
+  border-radius: 50% !important;
   position: relative;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -174,12 +182,12 @@ h1.title__line {
 .paymentSelectionType .radio_button input[type="radio"]::before {
   content: "";
   position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 1rem;
-  height: 1rem;
+  /*top: 0;
+  left: 0;*/
+  width: 50%;
+  height: 50%;
   background-color: var(--button-background);
-  border-radius: 50%;
+  border-radius: 50% !important;
   transform: translate(50%, 50%) scale(0);
   transition: transform 0.2s ease;
 }

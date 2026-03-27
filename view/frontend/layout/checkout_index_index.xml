@@ -70,10 +70,10 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                                                <item name="svea_facelift_payment-payments" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea-facelift-payments</item>
+                                                                <item name="svea_paynowpaylatersplit_payment-payments" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Svea_SveaPayment/js/view/payment/svea-paynowpaylatersplit-payments</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="svea_facelift_payment" xsi:type="array">
+                                                                        <item name="svea_paynowpaylatersplit_payment" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>

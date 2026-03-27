@@ -58,7 +58,7 @@ h1.title__line {
     border: 2px solid var(--partpayment-selected);
 }
 
-#payment_form_svea_facelift_payment .svea-payment-methods .payment-method .radio-active {
+#payment_form_svea_paynowpaylatersplit_payment .svea-payment-methods .payment-method .radio-active {
     /* border: 1px solid rgba(0, 0, 0, 0.2); */
     /* border-bottom: 2px solid var(--partpayment-selected); */
     border: 2px solid var(--partpayment-selected);

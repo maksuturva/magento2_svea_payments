@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="svea_facelift_payment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>facelift Payment Methods</label>
+    <group id="svea_paynowpaylatersplit_payment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Pay Now / Pay Later Split Payment Methods</label>
         <comment>All payment methods are collected and shown under the same payment method in Magento checkout.</comment>
         <group id="common" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Common</label>
             <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Enabled</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <config_path>payment/svea_facelift_payment/active</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/active</config_path>
             </field>
             <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Title</label>
-                <config_path>payment/svea_facelift_payment/title</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/title</config_path>
             </field>
             <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Sort Order</label>
-                <config_path>payment/svea_facelift_payment/sort_order</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/sort_order</config_path>
             </field>
             <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1">
                 <label>Payment From Applicable Countries</label>
                 <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
                 <comment>Based on the delivery address given by the buyer.</comment>
-                <config_path>payment/svea_facelift_payment/allowspecific</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/allowspecific</config_path>
             </field>
             <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1">
                 <label>Payment From Specific Countries</label>
                 <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                <config_path>payment/svea_facelift_payment/specificcountry</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/specificcountry</config_path>
                 <depends>
                     <field id="allowspecific">1</field>
                 </depends>
@@ -38,13 +38,13 @@
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
                 <comment>Default: Pay With Online Banking</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_title</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_1_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
                 <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsOnlineBanking</source_model>
                 <comment>Default: FI01;FI02;FI03;FI04;FI05;FI06;FI07;FI08;FI09;FI10;FI11;FI12;FI13;FI14;FI15</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_1_method_filter</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_1_method_filter</config_path>
                 <can_be_empty>1</can_be_empty>
             </field>
         </group>
@@ -53,12 +53,12 @@
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
                 <comment>Default: Pay With Mobile Payment</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_2_title</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_2_title</config_path>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
                 <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsMobilePayment</source_model>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_2_method_filter</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_2_method_filter</config_path>
                 <comment>Default: FI54,PIVO,SIIR,USPP,APPL</comment>
                 <can_be_empty>1</can_be_empty>
             </field>
@@ -67,13 +67,13 @@
             <label>Payment Method Subgroup - Pay With Card</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_3_title</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_3_title</config_path>
                 <comment>Default: Pay With Card</comment>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
                 <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsCard</source_model>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_3_method_filter</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_3_method_filter</config_path>
                 <comment>Default: FI50,FI51,FI52,FI53</comment>
                 <can_be_empty>1</can_be_empty>
             </field>
@@ -82,20 +82,20 @@
             <label>Payment Method Subgroup - Pay Later</label>
             <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Subgroup Title</label>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_4_title</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_4_title</config_path>
                 <comment>Default: Pay Later</comment>
             </field>
             <field id="method_filter" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Payment Methods Filter</label>
                 <source_model>Svea\SveaPayment\Model\System\Config\Source\PaymentMethodsPayLater</source_model>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_4_method_filter</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_4_method_filter</config_path>
                 <comment>Default: FI70;FI71;FI72;FIIN;FIPP;FIBI</comment>
                 <can_be_empty>1</can_be_empty>
             </field>
             <field id="handling_fee" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Invoicing Fee</label>
                 <comment>Enter Invoicing fee amount(s) that will be added to total when a payment method is selected.</comment>
-                <config_path>payment/svea_facelift_payment/payment_method_subgroup_4_handling_fee</config_path>
+                <config_path>payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_4_handling_fee</config_path>
                 <frontend_model>Svea\SveaPayment\Block\Adminhtml\Form\Field\HandlingFee</frontend_model>
                 <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
             </field>

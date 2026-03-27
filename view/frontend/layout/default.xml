@@ -3,7 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Svea_SveaPayment::css/source/icons_form.css" />
-        <css src="Svea_SveaPayment::css/source/icons_form_facelift.css" />
+        <css src="Svea_SveaPayment::css/source/icons_form_paynowpaylatersplit.css" />
         <css src="Svea_SveaPayment::css/source/icons_form_collated.css" />
     </head>
 </page>

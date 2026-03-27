@@ -10,8 +10,8 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'svea_facelift_payment',
-                component: 'Svea_SveaPayment/js/view/payment/method-renderer/svea-facelift-method'
+                type: 'svea_paynowpaylatersplit_payment',
+                component: 'Svea_SveaPayment/js/view/payment/method-renderer/svea-paynowpaylatersplit-method'
             }
         );
         return Component.extend({});

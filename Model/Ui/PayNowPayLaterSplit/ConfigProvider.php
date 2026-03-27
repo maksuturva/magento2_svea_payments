@@ -1,6 +1,6 @@
 <?php
 
-namespace Svea\SveaPayment\Model\Ui\Facelift;
+namespace Svea\SveaPayment\Model\Ui\PayNowPayLaterSplit;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -102,7 +102,7 @@ class ConfigProvider extends \Svea\SveaPayment\Model\Ui\Payment\ConfigProvider i
         return [
             'methodData' => $this->methodCollector->getQuoteMethods(),
             'methods' => $this->subMethods($method),
-            'template' => 'Svea_SveaPayment/payment/facelift_icons_form',
+            'template' => 'Svea_SveaPayment/payment/paynowpaylatersplit_icons_form',
             'preselectRequired' => (bool)$method->getConfigData('is_preselect_required'),
             'paymentDataUrl' => $this->getPaymentDataUrl(),
         ];

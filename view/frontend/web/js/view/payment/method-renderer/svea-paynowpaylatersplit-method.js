@@ -285,7 +285,7 @@ define([
             return this.getMethodData('termstext');
         },
 
-        /** Facelift payment options */
+        /** Pay Now / Pay Later Split payment options */
 
         autoSelectPaymentMethod: function () {
             var payNowAvailable = this.paymentSubMethodPayNowAvailable();

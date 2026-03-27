@@ -389,8 +389,20 @@ define([
                 const iconsExpand = parent.querySelectorAll('.payment__button-icon-expand');
                 iconsExpand.forEach(child => {
                     if (parent.id === selectedId) {
-                        // toggle 'none' on matching parent
+                        const willOpen = !child.classList.contains('open');
+
+                        // toggle class
                         child.classList.toggle('open');
+
+                        // 👉 scroll ONLY when it becomes open
+                        if (willOpen) {
+                            child.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'nearest'
+                            });
+                        }
+
                     } else {
                         // ensure 'none' is removed from non-matching parents
                         child.classList.remove('open');

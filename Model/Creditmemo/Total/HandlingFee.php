@@ -48,6 +48,7 @@ class HandlingFee extends AbstractTotal
             $desiredAmount = $allowedAmount;
         }
         $this->handlingFee->setValue($creditmemo, $desiredAmount);
+        $this->handlingFee->setBaseValue($creditmemo, $desiredAmount);
         $creditmemo->setGrandTotal($creditmemo->getGrandTotal() + $desiredAmount);
         $creditmemo->setBaseGrandTotal($creditmemo->getBaseGrandTotal() + $desiredAmount);
 

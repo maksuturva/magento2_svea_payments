@@ -30,4 +30,10 @@
         <column xsi:type="decimal" name="svea_base_handling_fee_tax" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee Tax"/>
         <column xsi:type="decimal" name="svea_handling_fee_tax_percentage" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee Tax Percentage"/>
     </table>
+    <table name="sales_creditmemo">
+        <column xsi:type="decimal" name="svea_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee"/>
+        <column xsi:type="decimal" name="svea_base_handling_fee" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee"/>
+        <column xsi:type="decimal" name="svea_handling_fee_tax" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Handling Fee Tax"/>
+        <column xsi:type="decimal" name="svea_base_handling_fee_tax" scale="4" precision="12" unsigned="false" nullable="true" comment="Svea Base Handling Fee Tax"/>
+    </table>
 </schema>

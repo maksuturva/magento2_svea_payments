@@ -194,16 +194,16 @@ h1.title__line {
 
 .paymentSelectionType .radio_button input[type="radio"]:checked,
 .paymentSelectionType .radio_button input[type="radio"].selected {
-  border: 2px solid var(--button-background);
+  border: 3px solid var(--button-background);
 }
 
 .paymentSelectionType .radio_button input[type="radio"]:checked::before,
 .paymentSelectionType .radio_button input[type="radio"].selected::before {
-  transform: translate(50%, 48%) scale(1.25)
+  transform: translate(50%, 50%) scale(1.25)
 }
 
 .paymentSelectionType .radio_button input[type="radio"]:focus-visible {
-  outline: 2px solid var(--button-background);
+  outline: 3px solid var(--button-background);
   outline-offset: 2px;
 }
 

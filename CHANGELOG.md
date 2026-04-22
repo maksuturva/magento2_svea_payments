@@ -1,5 +1,9 @@
 # Changelog
 
+### [1.5.0] - 2026-04-22
+* New Payment Method grouping: Pay Now / Pay Later
+* Bugfix: Handling fee not shown on Credit Memo
+
 ### [1.4.4] - 2026-03-25
 * Fix delayed capture triggered by invoice creation.
 

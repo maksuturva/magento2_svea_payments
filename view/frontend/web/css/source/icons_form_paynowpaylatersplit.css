@@ -1,0 +1,297 @@
+:root {
+  --color-svea-dark-blue: #00325c;
+  --color-disable-back: #e0e0e0;
+  --color-white: #ffffff;
+  --button-background: #007bff;
+  --partpayment-hover: #999999;
+  --partpayment-selected: #0056b3;
+  --mobile-breakpoint: 768px;
+}
+
+/* Fix margins when displayed through One Page Checkout extension */
+.one-step-checkout-container .payment-methods {
+    margin-left: -22px;
+}
+
+.one-step-checkout-container .payment-method-title {
+    margin-left: 22px;
+}
+
+@media screen and (max-width: 768px) {
+    .one-step-checkout-container .payment-methods {
+        margin-left: 0;
+    }
+
+    .one-step-checkout-container .payment-method-title {
+        margin-left: 15px;
+    }
+}
+
+.none{
+	display: none !important;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+h1.title__line {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  color: var(--color-svea-dark-blue);
+  font-size: 2.6rem;
+}
+
+
+.svea-payment-methods .payment-method-label {
+    cursor: pointer;
+    display: flex;
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+    width: 100%;
+    border-radius: 8px;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.1),1px 1px 7px rgba(0,0,0,.1);
+    overflow: hidden;
+}
+
+.svea-payment-methods .payment-method-label:focus, .svea-payment-methods .payment-method-label:hover {
+    border: 2px solid var(--partpayment-selected);
+}
+
+#payment_form_svea_paynowpaylatersplit_payment .svea-payment-methods .payment-method .radio-active {
+    /* border: 1px solid rgba(0, 0, 0, 0.2); */
+    /* border-bottom: 2px solid var(--partpayment-selected); */
+    border: 2px solid var(--partpayment-selected);
+    /* box-shadow: 0 0 10px 0 rgb(0 0 0 / 40%); */
+}
+
+.svea-payment-methods, .svea-payment-methods > fieldset {
+  /*display: inline-flex;*/
+  /*flex-wrap: wrap;*/
+  /*padding: 1.5rem 0 0 1.5rem;*/
+  /*border: none;*/
+
+  width: 100%;
+  
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0.5rem;
+}
+
+.svea-payment-methods fieldset {
+  /*display: inline-flex;*/
+  /*flex-wrap: wrap;*/
+  /*padding: 1.5rem 0 0 1.5rem;*/
+  /*border: none;*/
+  
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.title__line {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+}
+
+.title__line.noMargin {
+  margin-bottom: 0rem !important;
+  margin-top: 0rem !important;
+}
+
+.title__line img {
+  max-height: 80px;
+  max-width: 170px;
+}
+
+.paymentSelectionType {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 8px;
+  gap: 1px;
+  background: var(--color-disable-back);
+  margin-bottom: 1rem;
+
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.paymentSelectionType .radio_button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem 0rem;
+  justify-content: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-disable-back);
+  cursor: pointer;
+}
+
+/* Pay Now */
+.paymentSelectionType .radio_button.payNow {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-right: 0;
+}
+
+/* Pay Later */
+.paymentSelectionType .radio_button.payLater {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-left: 0;
+}
+
+.paymentSelectionType .radio_button div {
+  padding: 0.5rem;
+  font-size: 2rem; /* default for above mobile */
+}
+
+@media (max-width: 767px) { /* replace 767px with your mobile breakpoint */
+  .paymentSelectionType .radio_button div {
+    font-size: 1.4rem;
+  }
+}
+
+.paymentSelectionType .radio_button input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  /* border: 2px solid #666; */
+  border-radius: 50% !important;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  border: 2px solid var(--color-disable-back);
+}
+
+.paymentSelectionType .radio_button input[type="radio"]::before {
+  content: "";
+  position: absolute;
+  /*top: 0;
+  left: 0;*/
+  width: 50%;
+  height: 50%;
+  background-color: var(--button-background);
+  border-radius: 50% !important;
+  transform: translate(50%, 50%) scale(0);
+  transition: transform 0.2s ease;
+}
+
+.paymentSelectionType .radio_button input[type="radio"]:checked,
+.paymentSelectionType .radio_button input[type="radio"].selected {
+  border: 3px solid var(--button-background);
+}
+
+.paymentSelectionType .radio_button input[type="radio"]:checked::before,
+.paymentSelectionType .radio_button input[type="radio"].selected::before {
+  transform: translate(50%, 50%) scale(1.25)
+}
+
+.paymentSelectionType .radio_button input[type="radio"]:focus-visible {
+  outline: 3px solid var(--button-background);
+  outline-offset: 2px;
+}
+
+.paymentSelectionType .radio_button input[type="radio"]:hover {
+  box-shadow: none;
+}
+
+.paymentSelectionType .radio_button label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.paymentSelectionType .radio_button:hover input[type="radio"] {
+  /* border-color: var(--partpayment-hover); */
+}
+
+.paymentSelectionType .radio_button:hover input[type="radio"]:checked {
+  border-color: var(--partpayment-selected);
+}
+
+
+.checkout__radio-container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  width: 100%;
+  grid-gap: 1rem;
+  /* cursor: pointer; */
+  border: 1px solid #d3d3d3;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.checkout__radio-container .payment__button-header {
+  display: flex;
+  overflow: hidden;
+  min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 2rem;
+
+  cursor: pointer;
+}
+
+.payment__button-header-icons {
+  display: flex;
+}
+
+.checkout__radio-container .payment__button-header img {
+  width: 100%;
+  height: 5rem;
+  object-fit: contain;
+}
+
+.payment__button-fieldset {
+    width: 100%;
+}
+
+.payment__button-set {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    max-width: 100%;
+    width: 100%;
+    row-gap: .5rem;
+    column-gap: 1rem;
+    transform: translate(0%, 0%) scale(100%);
+    transition: transform 0.2s ease;
+}
+
+.payment__button-set.none {
+    transform: translate(0%, -10%) scale(50%);
+}
+
+.payment__button-icon-expand {
+  min-width: 24px;
+  margin-left: 1rem;
+  transform: rotate(0deg); transition: 0.3s;
+
+  scroll-margin-top: 30px;
+  scroll-margin-bottom: 30px;
+}
+
+.payment__button-icon-expand.open {
+  transform: rotate(180deg); transition: 0.3s;
+}

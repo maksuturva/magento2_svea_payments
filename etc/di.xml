@@ -25,6 +25,11 @@
     <type name="Svea\SveaPayment\Model\Config\HandlingFee\ConfigProvider">
         <arguments>
             <argument name="feesConfigPaths" xsi:type="array">
+                <item name="svea_paynowpaylatersplit_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_1_handling_fee</item>
+                <item name="svea_paynowpaylatersplit_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_2_handling_fee</item>
+                <item name="svea_paynowpaylatersplit_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_3_handling_fee</item>
+                <item name="svea_paynowpaylatersplit_payment_payment_method_subgroup_4" xsi:type="string">payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_4_handling_fee</item>
+                <item name="svea_paynowpaylatersplit_payment_payment_method_subgroup_5" xsi:type="string">payment/svea_paynowpaylatersplit_payment/payment_method_subgroup_5_handling_fee</item>
                 <item name="svea_collated_payment_payment_method_subgroup_1" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_1_handling_fee</item>
                 <item name="svea_collated_payment_payment_method_subgroup_2" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_2_handling_fee</item>
                 <item name="svea_collated_payment_payment_method_subgroup_3" xsi:type="string">payment/svea_collated_payment/payment_method_subgroup_3_handling_fee</item>
@@ -81,6 +86,18 @@
             <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">CardSveaPaymentValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">CardSveaPaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!--PayNowPayLaterSplit Svea Payment Facade-->
+    <virtualType name="SveaPayNowPayLaterSplitPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_paynowpaylatersplit_payment</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Svea\SveaPayment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SveaPayNowPayLaterSplitPaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SveaPayNowPayLaterSplitPaymentValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">SveaCommandPool</argument>
         </arguments>
     </virtualType>
@@ -207,6 +224,13 @@
                  type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="string">svea_card_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentConfig"
+                 type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">svea_paynowpaylatersplit_payment</argument>
         </arguments>
     </virtualType>
 
@@ -401,6 +425,37 @@
                  type="Magento\Payment\Gateway\Validator\CountryValidator">
         <arguments>
             <argument name="config" xsi:type="object">CardSveaPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Svea PayNowPayLaterSplit Payment -->
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SveaPayNowPayLaterSplitPaymentCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SveaPayNowPayLaterSplitPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SveaPayNowPayLaterSplitPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentCountryValidator"
+                 type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">SveaPayNowPayLaterSplitPaymentConfig</argument>
         </arguments>
     </virtualType>
 

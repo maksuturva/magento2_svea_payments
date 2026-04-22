@@ -9,6 +9,9 @@
         <method name="svea_card_payment">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="svea_paynowpaylatersplit_payment">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="svea_collated_payment">
             <allow_multiple_address>1</allow_multiple_address>
         </method>

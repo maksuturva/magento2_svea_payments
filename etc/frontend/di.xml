@@ -6,6 +6,7 @@
             <argument name="configProviders" xsi:type="array">
                 <item name="svea_payment_config_provider" xsi:type="object">SveaConfigProvider</item>
                 <item name="svea_card_payment_config_provider" xsi:type="object">CardSveaPaymentConfigProvider</item>
+                <item name="svea_paynowpaylatersplit_payment_config_provider" xsi:type="object">SveaPayNowPayLaterSplitPaymentConfigProvider</item>
                 <item name="svea_collated_payment_config_provider" xsi:type="object">SveaCollatedPaymentConfigProvider</item>
                 <item name="svea_generic_payment_config_provider" xsi:type="object">SveaGenericConfigProvider</item>
                 <item name="svea_invoice_payment_config_provider" xsi:type="object">SveaInvoicePaymentConfigProvider</item>
@@ -27,6 +28,13 @@
                  type="Svea\SveaPayment\Model\Ui\Payment\ConfigProvider">
         <arguments>
             <argument name="code" xsi:type="string">svea_card_payment</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SveaPayNowPayLaterSplitPaymentConfigProvider"
+                 type="Svea\SveaPayment\Model\Ui\PayNowPayLaterSplit\ConfigProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">svea_paynowpaylatersplit_payment</argument>
         </arguments>
     </virtualType>
 

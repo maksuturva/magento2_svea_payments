@@ -54,6 +54,7 @@ class MigrateConfig implements MigrateConfigInterface
      */
     private array $maksuturvaConfigPaths = [
         "maksuturva_config/maksuturva_payment" => "svea_config/svea_payment",
+        "payment/maksuturva_paynowpaylatersplit_payment" => "payment/svea_paynowpaylatersplit_payment",
         "payment/maksuturva_collated_payment" => "payment/svea_collated_payment",
         "payment/maksuturva_part_payment_payment" => "payment/svea_part_payment",
         "payment/maksuturva_invoice_payment" => "payment/svea_invoice_payment",

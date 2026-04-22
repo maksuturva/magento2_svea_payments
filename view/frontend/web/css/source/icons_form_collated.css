@@ -1,10 +1,19 @@
-/* Fix paddings when displayed through One Page Checkout extension */
-.opc-wrapper .svea-payment-methods {
-    padding: 0;
+/* Fix margins when displayed through One Page Checkout extension */
+.one-step-checkout-container .payment-methods {
+    margin-left: -22px;
 }
-@media screen and (min-width: 768px) {
-    .opc-wrapper .svea-payment-methods {
-        margin-left: -20px;
+
+.one-step-checkout-container .payment-method-title {
+    margin-left: 22px;
+}
+
+@media screen and (max-width: 768px) {
+    .one-step-checkout-container .payment-methods {
+        margin-left: 0;
+    }
+
+    .one-step-checkout-container .payment-method-title {
+        margin-left: 15px;
     }
 }
 
@@ -18,7 +27,7 @@
     padding-left: 0.5rem;
     padding-bottom: 0.5rem;
     font-size: 1.2em;
-    border-bottom: 1px solid #eee;
+    /*border-bottom: 1px solid #eee;*/
 }
 
 #payment_form_svea_collated_payment .svea-payment-methods .payment-method .radio-active {

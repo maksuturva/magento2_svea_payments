@@ -24,6 +24,29 @@
             </calculator_config>
         </svea_part_payment_calculator>
         <payment>
+            <svea_paynowpaylatersplit_payment>
+                <active>0</active>
+                <title>Svea Pay Now / Pay Later Split</title>
+                <model>SveaPayNowPayLaterSplitPaymentFacade</model>
+                <order_status>pending</order_status>
+                <is_preselect_required>1</is_preselect_required>
+                <payment_action>authorize</payment_action>
+                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <payment_method_subgroup_4_title>Pay Later</payment_method_subgroup_4_title>
+                <payment_method_subgroup_4_method_filter>FI70,FI71,FI72,FIIN,FIPP,FIBI</payment_method_subgroup_4_method_filter>
+                <payment_method_subgroup_3_title>Card</payment_method_subgroup_3_title>
+                <payment_method_subgroup_3_method_filter>FI50,FI51,FI52,FI53</payment_method_subgroup_3_method_filter>
+                <payment_method_subgroup_2_title>Mobile Payment</payment_method_subgroup_2_title>
+                <payment_method_subgroup_2_method_filter>FI54,PIVO,SIIR,APPL,GPAY</payment_method_subgroup_2_method_filter>
+                <payment_method_subgroup_1_title>Online Banking</payment_method_subgroup_1_title>
+                <payment_method_subgroup_1_method_filter>FI01,FI02,FI03,FI04,FI05,FI06,FI07,FI08,FI09,FI10,FI11,FI12,FI13,FI14,FI15</payment_method_subgroup_1_method_filter>
+            </svea_paynowpaylatersplit_payment>
             <svea_collated_payment>
                 <active>0</active>
                 <title>Svea Collated Payment</title>
